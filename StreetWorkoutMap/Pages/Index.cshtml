@@ -8,3 +8,23 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<div id="map"></div>
+
+
+
+
+@section Scripts {
+    <script>
+        const map = L.map('map').setView([43.0757, 25.6172], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker([43.0757, 25.6172])
+            .addTo(map)
+            .bindPopup('Лостове във Велико Търново');
+    </script>
+}
