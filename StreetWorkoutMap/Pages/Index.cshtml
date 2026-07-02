@@ -23,6 +23,14 @@
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
+        const spots = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Spots));
+
+        spots.forEach(spot => {
+            L.marker([spot.Latitude, spot.Longitude])
+                .addTo(map)
+                .bindPopup(spot.Name);
+        });
+
         // l.marker([43.0757, 25.6172])
         //     .addto(map)
         //     .bindpopup('лостове във велико търново');
