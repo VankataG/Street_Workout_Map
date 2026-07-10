@@ -14,11 +14,21 @@ spots = JSON.parse(mapElement.dataset.spots);
 
 spots.forEach(spot => {
     const popup = `
+                     <div class="spot-popup">
                         <h3>${spot.Name}</h3>
 
                         <p>${spot.Description}</p>
 
-                        <strong>⭐ ${spot.Rating}</strong>
+                        <p><strong>Рейтинг:</strong>⭐ ${spot.Rating}</strong>
+
+                        <p>
+                            ${spot.HasParallelBars ? "✅ Има успоредка" : "❌ Няма успоредка"}
+                        </p>
+
+                        <p>
+                            ${spot.HasRings ? "✅ Има халки" : "❌ Няма халки"}
+                        </p>
+                    </div>
             `;
 
     L.marker([spot.Latitude, spot.Longitude])
