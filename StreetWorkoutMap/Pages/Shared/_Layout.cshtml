@@ -28,6 +28,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <button id="theme-toggle"
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            aria-label="Смени темата">
+                        🌙
+                    </button>
                 </div>
             </div>
         </nav>
@@ -47,6 +53,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

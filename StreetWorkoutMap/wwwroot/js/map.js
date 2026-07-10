@@ -29,8 +29,7 @@ function addMarkers(map, spots) {
 }
 
 function createPopup(spot) {
-    return
-            `
+    return `
                      <div class="spot-popup">
                         <h3>${spot.Name}</h3>
 
