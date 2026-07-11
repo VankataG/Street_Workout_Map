@@ -1,14 +1,16 @@
 ﻿const mapElement = document.getElementById('map');
 
-const map = createMap();
-
-const spots = await getSpotsAsync()
+InitializeMap();
 
 
 
-addMarkers(map, spots);
 
+async function InitializeMap() {
+    const map = createMap();
+    const spots = await getSpotsAsync();
 
+    addMarkers(map, spots);
+}
 
 async function getSpotsAsync() {
     const response = await fetch("/data/spots.json");

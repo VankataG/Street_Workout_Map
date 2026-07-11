@@ -11,28 +11,7 @@ namespace StreetWorkoutMap.Pages
         public List<WorkoutSpot> Spots { get; set; } = new();
         public void OnGet()
         {
-            Spots =
-            [
-                new()
-                {
-                    Name = "Марно поле",
-                    Latitude = 43.082,
-                    Longitude = 25.629,
-                    Rating = 5,
-                    HasParallelBars = true,
-                    HasRings = false
-                },
-
-                new()
-                {
-                    Name = "Картала",
-                    Latitude = 43.071,
-                    Longitude = 25.640,
-                    Rating = 4,
-                    HasParallelBars = true,
-                    HasRings = true
-                }
-            ];
+            
         }
     }
 }
