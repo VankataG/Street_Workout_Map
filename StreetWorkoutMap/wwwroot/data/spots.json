@@ -12,7 +12,7 @@
     "HasParallelBars": true,
     "HasRings": false,
     "HasMonkeyBars": false,
-    "ImageUrl": "",
+    "ImageUrl": "/images/spots/Turnovo/Kartala/kartala_1.png",
     "IsIndoor": false,
     "HasLighting": true
   },
@@ -29,7 +29,7 @@
     "HasParallelBars": true,
     "HasRings": false,
     "HasMonkeyBars": true,
-    "ImageUrl": "",
+    "ImageUrl": "/images/spots/Turnovo/Drujba/drujba_1.png",
     "IsIndoor": false,
     "HasLighting": false
   },
