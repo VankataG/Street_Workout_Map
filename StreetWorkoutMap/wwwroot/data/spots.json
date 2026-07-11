@@ -56,7 +56,7 @@
     "HasLighting": false
   },
   {
-    "Id": 4,
+    "Id": 5,
     "Name": "Парк Бузлуджа",
     "Description": "Малка площадка",
     "City": "Велико Търново",
@@ -68,6 +68,20 @@
     "ImageUrl": "",
     "IsIndoor": false,
     "HasLighting": false
+  },
+  {
+    "Id": 6,
+    "Name": "Стадиона",
+    "Description": "Нова площадка, доста горещо през слънчевоите часове",
+    "City": "Велико Търново",
+    "Latitude": 43.07762042438744,
+    "Longitude": 25.621221409713858,
+    "Rating": 6,
+    "HasParallelBars": true,
+    "HasRings": true,
+    "ImageUrl": "",
+    "IsIndoor": false,
+    "HasLighting": false
   }
-  
+
 ]
