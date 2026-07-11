@@ -1,11 +1,20 @@
 ﻿const mapElement = document.getElementById('map');
 
 const map = createMap();
-const spots = JSON.parse(mapElement.dataset.spots);
+
+const spots = await getSpotsAsync()
+
 
 
 addMarkers(map, spots);
 
+
+
+async function getSpotsAsync() {
+    const response = await fetch("/data/spots.json");
+
+    return await response.json();
+}
 
 function createMap() {
     const map = L.map('map').setView([43.0757, 25.6172], 14);
