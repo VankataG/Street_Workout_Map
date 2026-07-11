@@ -111,31 +111,43 @@ function createPopup(spot) {
                     ${spot.Description}
                 </p>
 
-                <details class="spot-equipment">
-                    <summary>Оборудване и условия</summary>
+                <div class="spot-equipment">
+                    <button class="equipment-toggle"
+                            type="button"
+                            aria-expanded="false">
+                        <span>Оборудване и условия</span>
+                        <span class="equipment-toggle-icon">⌄</span>
+                    </button>
 
-                    <ul>
-                        ${createEquipmentItem(
+                    <div class="equipment-content" hidden>
+                        <ul>
+                            ${createEquipmentItem(
+        "Лостове",
+        spot.HasPullUpBars
+    )}
+
+                            ${createEquipmentItem(
         "Успоредка",
         spot.HasParallelBars
     )}
 
-                        ${createEquipmentItem(
+                            ${createEquipmentItem(
         "Халки",
         spot.HasRings
     )}
 
-                        ${createEquipmentItem(
+                            ${createEquipmentItem(
         "Осветление",
         spot.HasLighting
     )}
 
-                        ${createEquipmentItem(
+                            ${createEquipmentItem(
         "Закрита площадка",
         spot.IsIndoor
     )}
-                    </ul>
-                </details>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </article>
     `;
@@ -281,3 +293,27 @@ function hideSearchResults(searchResults) {
     searchResults.hidden = true;
     searchResults.innerHTML = "";
 }
+
+
+
+document.addEventListener("click", event => {
+    const toggleButton = event.target.closest(".equipment-toggle");
+
+    if (!toggleButton) {
+        return;
+    }
+
+    const equipmentSection = toggleButton.closest(".spot-equipment");
+    const equipmentContent =
+        equipmentSection.querySelector(".equipment-content");
+
+    const isOpen =
+        toggleButton.getAttribute("aria-expanded") === "true";
+
+    toggleButton.setAttribute(
+        "aria-expanded",
+        String(!isOpen)
+    );
+
+    equipmentContent.hidden = isOpen;
+});

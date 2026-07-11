@@ -382,55 +382,105 @@ html[data-theme="dark"] .leaflet-popup-tip {
     background-color: #111713;
 }
 
-
-/* =========================================================
-   EQUIPMENT DROPDOWN
-   ========================================================= */
-
-html[data-theme="dark"] .spot-equipment summary {
-    color: white;
+.leaflet-popup-content-wrapper {
+    background-color: var(--surface-color) !important;
+    color: var(--text-color) !important;
 }
 
+.leaflet-popup-tip {
+    background-color: var(--surface-color) !important;
+}
+
+.spot-popup {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+}
+
+.spot-popup-body {
+    background-color: var(--surface-color);
+}
+
+.spot-popup-heading h3 {
+    color: var(--text-color) !important;
+}
+
+.spot-description {
+    color: var(--secondary-text-color) !important;
+}
+
+html[data-theme="dark"] .leaflet-popup-content-wrapper,
+html[data-theme="dark"] .spot-popup,
+html[data-theme="dark"] .spot-popup-body {
+    background-color: #111713 !important;
+}
+
+html[data-theme="dark"] .leaflet-popup-tip {
+    background-color: #111713 !important;
+}
+
+html[data-theme="dark"] .spot-popup-heading h3,
+html[data-theme="dark"] .equipment-toggle {
+    color: #f2f7f3 !important;
+}
+
+html[data-theme="dark"] .spot-description,
+html[data-theme="dark"] .equipment-content li {
+    color: #aebbb1 !important;
+}
+
+/* =========================================================
+   EQUIPMENT PANEL
+   ========================================================= */
+
 .spot-equipment {
+    margin-top: 14px;
+    padding-top: 12px;
     border-top: 1px solid var(--border-color);
+}
+
+.equipment-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-color);
+    font: inherit;
+    font-weight: 750;
+    text-align: left;
+    cursor: pointer;
+}
+
+.equipment-toggle-icon {
+    color: var(--accent-color);
+    font-size: 1.25rem;
+    transition: transform 0.2s ease;
+}
+
+.equipment-toggle[aria-expanded="true"]
+.equipment-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.equipment-content {
     padding-top: 12px;
 }
 
-    .spot-equipment summary {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: var(--text-color);
-        font-weight: 750;
-        cursor: pointer;
-        list-style: none;
-        user-select: none;
+    .equipment-content[hidden] {
+        display: none;
     }
 
-        .spot-equipment summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .spot-equipment summary::after {
-            content: "⌄";
-            color: var(--accent-color);
-            font-size: 1.2rem;
-            transition: transform 0.2s ease;
-        }
-
-    .spot-equipment[open] summary::after {
-        transform: rotate(180deg);
-    }
-
-    .spot-equipment ul {
+    .equipment-content ul {
         display: grid;
-        gap: 8px;
-        margin: 12px 0 0;
+        gap: 9px;
+        margin: 0;
         padding: 0;
         list-style: none;
     }
 
-    .spot-equipment li {
+    .equipment-content li {
         display: flex;
         gap: 9px;
         align-items: center;
@@ -439,8 +489,8 @@ html[data-theme="dark"] .spot-equipment summary {
 
 .equipment-status {
     display: grid;
-    width: 21px;
-    height: 21px;
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
     place-items: center;
     border-radius: 50%;
