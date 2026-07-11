@@ -28,5 +28,21 @@ function applyTheme(theme) {
 
     if (themeToggleButton) {
         themeToggleButton.textContent = theme === "dark" ? "☀️" : "🌙";
+
     }
+
+    updateLogo(theme);
+}
+
+
+function updateLogo(theme) {
+    const logo = document.getElementById("site-logo");
+
+    if (!logo) {
+        return;
+    }
+
+    logo.src = theme === "dark"
+        ? "/images/logo/icon.png"
+        : "/images/logo/icon_light.png";
 }
