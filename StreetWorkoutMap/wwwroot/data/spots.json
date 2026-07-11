@@ -11,7 +11,7 @@
     "HasRings": false,
     "ImageUrl": "",
     "IsIndoor": false,
-    "HasLighting":  true
+    "HasLighting": true
   },
   {
     "Id": 2,
@@ -20,11 +20,54 @@
     "City": "Велико Търново",
     "Latitude": 43.074241115521204,
     "Longitude": 25.62993934894477,
+    "Rating": 8,
+    "HasParallelBars": true,
+    "HasRings": false,
+    "ImageUrl": "",
+    "IsIndoor": false,
+    "HasLighting": false
+  },
+  {
+    "Id": 3,
+    "Name": "Парк Света Гора",
+    "Description": "Голяма площадка в гората",
+    "City": "Велико Търново",
+    "Latitude": 43.07604671381678,
+    "Longitude": 25.644280431422278,
     "Rating": 7,
     "HasParallelBars": true,
     "HasRings": false,
     "ImageUrl": "",
     "IsIndoor": false,
     "HasLighting": false
+  },
+  {
+    "Id": 4,
+    "Name": "Парк Колю Фичето",
+    "Description": "Нови лостове,малка площадка, много деца",
+    "City": "Велико Търново",
+    "Latitude": 43.07812500067741,
+    "Longitude": 25.605895021148637,
+    "Rating": 5,
+    "HasParallelBars": true,
+    "HasRings": false,
+    "ImageUrl": "",
+    "IsIndoor": false,
+    "HasLighting": false
+  },
+  {
+    "Id": 4,
+    "Name": "Парк Бузлуджа",
+    "Description": "Малка площадка",
+    "City": "Велико Търново",
+    "Latitude": 43.06862393992219,
+    "Longitude": 25.607654795432666,
+    "Rating": 3,
+    "HasParallelBars": true,
+    "HasRings": false,
+    "ImageUrl": "",
+    "IsIndoor": false,
+    "HasLighting": false
   }
+  
 ]
