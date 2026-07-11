@@ -4,12 +4,22 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<section class="hero-section">
+    <p class="hero-label">STREET WORKOUT BULGARIA</p>
+
+    <h1>Открий следващото си място за тренировка</h1>
+
+    <p class="hero-description">
+        Намери street workout площадки, оборудване и полезна информация
+        на едно място.
+    </p>
+</section>
+
+<div class="map-wrapper">
+    <div id="map" data-spots='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Spots))'></div>
 </div>
 
-<div id="map" data-spots='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Spots))'></div>
+
 
 
 

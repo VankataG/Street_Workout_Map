@@ -1,86 +1,269 @@
+/* =========================================================
+   1. GLOBAL SETTINGS
+   ========================================================= */
+
 html {
-  font-size: 14px;
+    position: relative;
+    min-height: 100%;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+* {
+    box-sizing: border-box;
 }
 
 body {
-  margin-bottom: 60px;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: radial-gradient( circle at top, var(--background-glow) 0%, var(--background-color) 42% );
+    color: var(--text-color);
+    font-family: Arial, Helvetica, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 
-#map {
-    height: 80vh;
-    width: 100%;
-}
-
-
-.spot-popup h3 {
-    margin-bottom: 8px;
-}
-
-.spot-popup p {
-    margin: 5px 0;
-}
-
-.spot-popup {
-    min-width: 180px;
-}
+/* =========================================================
+   2. THEME VARIABLES
+   ========================================================= */
 
 :root {
-    --background-color: #ffffff;
-    --surface-color: #f8f9fa;
-    --text-color: #212529;
-    --border-color: #dee2e6;
+    --background-color: #f4f7f3;
+    --background-glow: #dcebd8;
+    --surface-color: #ffffff;
+    --surface-hover-color: #edf5ea;
+    --text-color: #182019;
+    --secondary-text-color: #5e6d61;
+    --border-color: #d3ddd1;
+    --accent-color: #2f8f46;
+    --accent-hover-color: #26763a;
+    --accent-soft-color: rgba(47, 143, 70, 0.14);
+    --shadow-color: rgba(22, 40, 25, 0.14);
 }
 
 html[data-theme="dark"] {
-    --background-color: #121212;
-    --surface-color: #1e1e1e;
-    --text-color: #f1f1f1;
-    --border-color: #3a3a3a;
+    --background-color: #090d0a;
+    --background-glow: #14281a;
+    --surface-color: #111713;
+    --surface-hover-color: #18221a;
+    --text-color: #f2f7f3;
+    --secondary-text-color: #9eada1;
+    --border-color: #28352b;
+    --accent-color: #72ff6a;
+    --accent-hover-color: #9aff94;
+    --accent-soft-color: rgba(114, 255, 106, 0.14);
+    --shadow-color: rgba(0, 0, 0, 0.45);
 }
 
-body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color 0.2s ease, color 0.2s ease;
+
+/* =========================================================
+   3. NAVIGATION
+   ========================================================= */
+
+.navbar {
+    background-color: rgba(17, 23, 19, 0.92) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    backdrop-filter: blur(12px);
 }
 
-.navbar,
-.footer {
-    background-color: var(--surface-color) !important;
-    border-color: var(--border-color) !important;
+html:not([data-theme="dark"]) .navbar {
+    background-color: rgba(255, 255, 255, 0.92) !important;
 }
 
-    .navbar-brand,
-    .navbar .nav-link,
-    .footer {
-        color: var(--text-color) !important;
+.navbar-brand {
+    color: var(--text-color) !important;
+    font-weight: 800;
+    letter-spacing: 0.02rem;
+}
+
+.navbar .nav-link {
+    color: var(--secondary-text-color) !important;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+    .navbar .nav-link:hover {
+        color: var(--accent-color) !important;
+        transform: translateY(-1px);
     }
 
+
+/* =========================================================
+   4. THEME TOGGLE BUTTON
+   ========================================================= */
+
+#theme-toggle {
+    min-width: 46px;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+    #theme-toggle:hover {
+        border-color: var(--accent-color);
+        background-color: var(--accent-soft-color);
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   5. HERO SECTION
+   ========================================================= */
+
+.hero-section {
+    max-width: 900px;
+    margin: 50px auto 34px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.hero-label {
+    margin-bottom: 12px;
+    color: var(--accent-color);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+}
+
+.hero-section h1 {
+    margin-bottom: 18px;
+    color: var(--text-color);
+    font-size: clamp(2.2rem, 5vw, 4.6rem);
+    font-weight: 900;
+    line-height: 1.02;
+}
+
+.hero-description {
+    max-width: 680px;
+    margin: 0 auto;
+    color: var(--secondary-text-color);
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   6. MAP
+   ========================================================= */
+
+.map-wrapper {
+    max-width: 1450px;
+    margin: 0 auto 55px;
+    padding: 0 20px;
+}
+
+#map {
+    width: 100%;
+    height: 72vh;
+    min-height: 520px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 26px;
+    box-shadow: 0 24px 70px var(--shadow-color);
+}
+
+
+/* =========================================================
+   7. LEAFLET POPUP
+   ========================================================= */
+
+.leaflet-popup-content-wrapper {
+    border-radius: 16px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 16px 45px var(--shadow-color);
+}
+
+.leaflet-popup-tip {
+    background-color: var(--surface-color);
+}
+
+.leaflet-popup-content {
+    margin: 16px 18px;
+}
+
 .spot-popup {
-    color: #212529;
+    min-width: 210px;
+    color: var(--text-color);
+}
+
+    .spot-popup h3 {
+        margin: 0 0 10px;
+        color: var(--accent-color);
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+
+    .spot-popup p {
+        margin: 6px 0;
+        color: var(--secondary-text-color);
+        line-height: 1.45;
+    }
+
+    .spot-popup strong {
+        color: var(--text-color);
+    }
+
+
+/* =========================================================
+   8. FOOTER
+   ========================================================= */
+
+.footer {
+    position: static;
+    width: 100%;
+    padding: 20px 0;
+    border-top: 1px solid var(--border-color) !important;
+    background-color: var(--surface-color) !important;
+    color: var(--secondary-text-color) !important;
+}
+
+
+/* =========================================================
+   9. FORM AND BUTTON FOCUS
+   ========================================================= */
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.12rem var(--surface-color), 0 0 0 0.28rem var(--accent-soft-color);
+}
+
+
+/* =========================================================
+   10. RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .hero-section {
+        margin-top: 34px;
+    }
+
+        .hero-section h1 {
+            font-size: 2.45rem;
+        }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .map-wrapper {
+        padding: 0 12px;
+    }
+
+    #map {
+        height: 68vh;
+        min-height: 440px;
+        border-radius: 18px;
+    }
 }
