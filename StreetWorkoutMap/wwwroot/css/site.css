@@ -251,6 +251,48 @@ html[data-theme="dark"] .navbar {
 
 
 /* =========================================================
+   LOCATION CONTROL
+   ========================================================= */
+
+.location-control {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 13px;
+    background-color: var(--surface-color);
+    color: var(--accent-color);
+    font-size: 1.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+    .location-control:hover {
+        border-color: var(--accent-color);
+        background-color: var(--surface-hover-color);
+        transform: scale(1.05);
+    }
+
+    .location-control.is-loading {
+        opacity: 0.65;
+        pointer-events: none;
+        animation: location-pulse 0.9s infinite alternate;
+    }
+
+@keyframes location-pulse {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(0.9);
+    }
+}
+
+/* =========================================================
    LEAFLET POPUP
    ========================================================= */
 

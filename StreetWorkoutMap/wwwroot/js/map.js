@@ -9,9 +9,11 @@ async function InitializeMap() {
     const map = createMap();
     const spots = await getSpotsAsync();
 
-    const spotMarkers = addMarkers(map, spots)
+    const spotMarkers = addMarkers(map, spots);
 
-    initializeSearch(map, spots, spotMarkers)
+    initializeSearch(map, spots, spotMarkers);
+    addLocationControl(map);
+    initializeNearestSpotButton(map, spots, spotMarkers);
 }
 
 async function getSpotsAsync() {
@@ -317,3 +319,136 @@ document.addEventListener("click", event => {
 
     equipmentContent.hidden = isOpen;
 });
+
+
+let userLocationMarker = null;
+let userAccuracyCircle = null;
+
+function addLocationControl(map) {
+    const LocationControl = L.Control.extend({
+        options: {
+            position: "topleft"
+        },
+
+        onAdd: function () {
+            const button = L.DomUtil.create(
+                "button",
+                "location-control"
+            );
+
+            button.type = "button";
+            button.title = "Покажи моята локация";
+            button.setAttribute(
+                "aria-label",
+                "Покажи моята локация"
+            );
+
+            button.innerHTML = "⌖";
+
+            L.DomEvent.disableClickPropagation(button);
+
+            L.DomEvent.on(button, "click", () => {
+                locateUser(map, button);
+            });
+
+            return button;
+        }
+    });
+
+    map.addControl(new LocationControl());
+}
+
+
+function locateUser(map, button) {
+    if (!navigator.geolocation) {
+        alert("Браузърът не поддържа геолокация.");
+        return;
+    }
+
+    button.classList.add("is-loading");
+
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            showUserLocation(
+                map,
+                latitude,
+                longitude,
+                accuracy
+            );
+
+            button.classList.remove("is-loading");
+        },
+        error => {
+            button.classList.remove("is-loading");
+            handleLocationError(error);
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 30000
+        }
+    );
+}
+
+function showUserLocation(
+    map,
+    latitude,
+    longitude,
+    accuracy
+) {
+    const coordinates = [latitude, longitude];
+
+    if (userLocationMarker) {
+        userLocationMarker.setLatLng(coordinates);
+        userAccuracyCircle.setLatLng(coordinates);
+        userAccuracyCircle.setRadius(accuracy);
+    } else {
+        userLocationMarker = L.circleMarker(coordinates, {
+            radius: 9,
+            color: "#ffffff",
+            weight: 3,
+            fillColor: "#258cfb",
+            fillOpacity: 1
+        })
+            .addTo(map)
+            .bindPopup("Вие сте тук");
+
+        userAccuracyCircle = L.circle(coordinates, {
+            radius: accuracy,
+            color: "#258cfb",
+            weight: 1,
+            fillColor: "#258cfb",
+            fillOpacity: 0.12
+        }).addTo(map);
+    }
+
+    map.setView(coordinates, 16, {
+        animate: true
+    });
+
+    userLocationMarker.openPopup();
+}
+
+
+function handleLocationError(error) {
+    let message = "Не успяхме да определим локацията ви.";
+
+    if (error.code === error.PERMISSION_DENIED) {
+        message =
+            "Достъпът до локацията е отказан. Разрешете го от настройките на браузъра.";
+    } else if (error.code === error.POSITION_UNAVAILABLE) {
+        message =
+            "Информацията за текущата локация не е налична.";
+    } else if (error.code === error.TIMEOUT) {
+        message =
+            "Определянето на локацията отне прекалено много време.";
+    }
+
+    alert(message);
+}
+
+
