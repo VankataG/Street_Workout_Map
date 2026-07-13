@@ -1,0 +1,282 @@
+﻿/* =========================================================
+   LEAFLET POPUP
+   ========================================================= */
+
+.leaflet-popup-content-wrapper {
+    overflow: hidden;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 20px 55px var(--shadow-color);
+}
+
+.leaflet-popup-content {
+    width: auto !important;
+    margin: 0;
+}
+
+.leaflet-popup-tip {
+    background-color: var(--surface-color);
+}
+
+.leaflet-popup-close-button {
+    z-index: 10;
+    top: 8px !important;
+    right: 8px !important;
+    display: grid !important;
+    width: 30px !important;
+    height: 30px !important;
+    place-items: center;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.62) !important;
+    color: #ffffff !important;
+    font-size: 20px !important;
+}
+
+.spot-popup {
+    width: 300px;
+    color: var(--text-color);
+}
+
+.spot-popup-media {
+    width: 100%;
+    height: 155px;
+    background-color: var(--surface-hover-color);
+}
+
+.spot-popup-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.spot-popup-image-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient( 135deg, #16291a, #0d1210 );
+    color: white;
+}
+
+    .spot-popup-image-placeholder span {
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--accent-color);
+    }
+
+    .spot-popup-image-placeholder small {
+        margin-top: 6px;
+        color: #b7c3b8;
+    }
+
+.spot-popup-body {
+    padding: 17px 18px 18px;
+}
+
+.spot-popup-heading {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+    .spot-popup-heading h3 {
+        margin: 0;
+        color: var(--text-color);
+        font-size: 1.15rem;
+        font-weight: 850;
+        line-height: 1.25;
+    }
+
+html[data-theme="dark"] .spot-popup-heading h3 {
+    color: white;
+}
+
+.spot-rating {
+    flex-shrink: 0;
+    padding: 5px 8px;
+    border: 1px solid var(--accent-color);
+    border-radius: 9px;
+    background-color: var(--accent-soft-color);
+    color: var(--accent-color);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.spot-location {
+    margin: 6px 0 12px !important;
+    color: var(--accent-color) !important;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.spot-description {
+    margin: 0 0 14px !important;
+    color: var(--secondary-text-color) !important;
+    line-height: 1.5;
+}
+
+html[data-theme="dark"] .spot-description {
+    color: #c9d2cb !important;
+}
+
+html[data-theme="dark"] .leaflet-popup-content-wrapper {
+    background-color: #111713;
+    border: 1px solid #2c3a2f;
+}
+
+html[data-theme="dark"] .leaflet-popup-tip {
+    background-color: #111713;
+}
+
+.leaflet-popup-content-wrapper {
+    background-color: var(--surface-color) !important;
+    color: var(--text-color) !important;
+}
+
+.leaflet-popup-tip {
+    background-color: var(--surface-color) !important;
+}
+
+.spot-popup {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+}
+
+.spot-popup-body {
+    background-color: var(--surface-color);
+}
+
+.spot-popup-heading h3 {
+    color: var(--text-color) !important;
+}
+
+.spot-description {
+    color: var(--secondary-text-color) !important;
+}
+
+html[data-theme="dark"] .leaflet-popup-content-wrapper,
+html[data-theme="dark"] .spot-popup,
+html[data-theme="dark"] .spot-popup-body {
+    background-color: #111713 !important;
+}
+
+html[data-theme="dark"] .leaflet-popup-tip {
+    background-color: #111713 !important;
+}
+
+html[data-theme="dark"] .spot-popup-heading h3,
+html[data-theme="dark"] .equipment-toggle {
+    color: #f2f7f3 !important;
+}
+
+html[data-theme="dark"] .spot-description,
+html[data-theme="dark"] .equipment-content li {
+    color: #aebbb1 !important;
+}
+
+.spot-popup-actions {
+    margin-top: 16px;
+}
+
+.spot-directions-button {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--accent-color);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+    .spot-directions-button:hover {
+        background: var(--accent-hover-color);
+        color: white;
+    }
+/* =========================================================
+   EQUIPMENT PANEL
+   ========================================================= */
+
+.spot-equipment {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.equipment-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border: 0;
+    background: transparent;
+    color: var(--text-color);
+    font: inherit;
+    font-weight: 750;
+    text-align: left;
+    cursor: pointer;
+}
+
+.equipment-toggle-icon {
+    color: var(--accent-color);
+    font-size: 1.25rem;
+    transition: transform 0.2s ease;
+}
+
+.equipment-toggle[aria-expanded="true"]
+.equipment-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.equipment-content {
+    padding-top: 12px;
+}
+
+    .equipment-content[hidden] {
+        display: none;
+    }
+
+    .equipment-content ul {
+        display: grid;
+        gap: 9px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .equipment-content li {
+        display: flex;
+        gap: 9px;
+        align-items: center;
+        color: var(--secondary-text-color);
+    }
+
+.equipment-status {
+    display: grid;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 900;
+}
+
+.equipment-available .equipment-status {
+    background-color: #2faf54;
+}
+
+.equipment-unavailable .equipment-status {
+    background-color: #d84a4a;
+}
