@@ -91,3 +91,25 @@ function createEquipmentItem(label, isAvailable) {
         </li>
     `;
 }
+
+document.addEventListener("click", event => {
+    const toggleButton = event.target.closest(".equipment-toggle");
+
+    if (!toggleButton) {
+        return;
+    }
+
+    const equipmentSection = toggleButton.closest(".spot-equipment");
+    const equipmentContent =
+        equipmentSection.querySelector(".equipment-content");
+
+    const isOpen =
+        toggleButton.getAttribute("aria-expanded") === "true";
+
+    toggleButton.setAttribute(
+        "aria-expanded",
+        String(!isOpen)
+    );
+
+    equipmentContent.hidden = isOpen;
+});
