@@ -72,6 +72,16 @@
                         </ul>
                     </div>
                 </div>
+
+                <div class="spot-popup-actions">
+                    <a
+                        class="spot-directions-button"
+                        href="https://www.google.com/maps/dir/?api=1&destination=${spot.Latitude},${spot.Longitude}"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                         Навигация
+                    </a>
+                </div>
             </div>
         </article>
     `;

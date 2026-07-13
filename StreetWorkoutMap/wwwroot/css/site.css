@@ -475,6 +475,27 @@ html[data-theme="dark"] .equipment-content li {
     color: #aebbb1 !important;
 }
 
+.spot-popup-actions {
+    margin-top: 16px;
+}
+
+.spot-directions-button {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--accent-color);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+    .spot-directions-button:hover {
+        background: var(--accent-hover-color);
+        color: white;
+    }
 /* =========================================================
    EQUIPMENT PANEL
    ========================================================= */
