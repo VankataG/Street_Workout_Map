@@ -14,11 +14,8 @@
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        //Rating
-        public double Rating { get; set; }
-
         //Media
-        public List<string> Images { get; set; } = new();
+        public ICollection<SpotImage> Images { get; set; } = [];
 
         //Equipment
         public bool HasPullUpBars { get; set; }
@@ -27,11 +24,11 @@
 
         public bool HasRings { get; set; }
 
-        public bool HasMonkeyBars { get; set; }
-
         //Features
         public bool HasLighting { get; set; }
 
         public bool IsIndoor { get; set; }
+
+        public SpotStatus Status { get; set; } = SpotStatus.Pending;
     }
 }

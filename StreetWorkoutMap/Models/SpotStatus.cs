@@ -1,6 +1,9 @@
 ﻿namespace StreetWorkoutMap.Models
 {
-    public class SpotStatus
+    public enum SpotStatus
     {
+        Pending = 1,
+        Approved = 2,
+        Rejected = 3
     }
 }

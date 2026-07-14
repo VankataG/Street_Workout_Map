@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using StreetWorkoutMap.Data;
+
 namespace StreetWorkoutMap
 {
     public class Program
@@ -5,6 +8,11 @@ namespace StreetWorkoutMap
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //Add DbContext
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
             builder.Services.AddRazorPages();
