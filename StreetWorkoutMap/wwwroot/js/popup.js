@@ -1,4 +1,4 @@
-﻿function createPopup(spot, distance = null) {
+﻿function createPopup(spot) {
     const imageContent = spot.ImageUrl
         ? `
             <img class="spot-popup-image"
@@ -12,6 +12,14 @@
             </div>
         `;
 
+    const ratingContent = spot.Rating !== null
+        ? `
+            <span class="spot-rating">
+                ★ ${spot.Rating}
+            </span>
+        `
+        : "";
+
     return `
         <article class="spot-popup">
             <div class="spot-popup-media">
@@ -21,10 +29,7 @@
             <div class="spot-popup-body">
                 <div class="spot-popup-heading">
                     <h3>${spot.Name}</h3>
-
-                    <span class="spot-rating">
-                        ★ ${spot.Rating}
-                    </span>
+                    ${ratingContent}
                 </div>
 
                 <p class="spot-location">
@@ -64,11 +69,6 @@
         "Осветление",
         spot.HasLighting
     )}
-
-                            ${createEquipmentItem(
-        "Закрита площадка",
-        spot.IsIndoor
-    )}
                         </ul>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                         href="https://www.google.com/maps/dir/?api=1&destination=${spot.Latitude},${spot.Longitude}"
                         target="_blank"
                         rel="noopener noreferrer">
-                         Навигация
+                        Навигация
                     </a>
                 </div>
             </div>

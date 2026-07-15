@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\logo\" />
-    <Folder Include="wwwroot\images\spots\Turnovo\" />
   </ItemGroup>
 
   <ItemGroup>
