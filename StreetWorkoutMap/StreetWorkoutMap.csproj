@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="wwwroot\images\logo\" />
     <Folder Include="wwwroot\images\spots\Turnovo\" />
   </ItemGroup>

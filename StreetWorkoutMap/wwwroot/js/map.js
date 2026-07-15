@@ -18,7 +18,7 @@ async function InitializeMap() {
 }
 
 async function getSpotsAsync() {
-    const response = await fetch("/data/spots.json");
+    const response = await fetch("/api/workoutspots");
 
     return await response.json();
 }

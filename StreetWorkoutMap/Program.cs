@@ -16,6 +16,7 @@ namespace StreetWorkoutMap
                     builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
+            builder.Services.AddControllers();
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<WorkoutSpotService>();
 
@@ -35,6 +36,7 @@ namespace StreetWorkoutMap
 
             app.UseAuthorization();
 
+            app.MapControllers();
             app.MapStaticAssets();
             app.MapRazorPages()
                .WithStaticAssets();
