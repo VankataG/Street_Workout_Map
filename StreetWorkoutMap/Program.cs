@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StreetWorkoutMap.Data;
+using StreetWorkoutMap.Services;
 
 namespace StreetWorkoutMap
 {
@@ -16,6 +17,7 @@ namespace StreetWorkoutMap
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddScoped<WorkoutSpotService>();
 
             var app = builder.Build();
 
