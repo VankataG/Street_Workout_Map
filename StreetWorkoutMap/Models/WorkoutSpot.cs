@@ -1,4 +1,6 @@
-﻿namespace StreetWorkoutMap.Models
+﻿using StreetWorkoutMap.Data;
+
+namespace StreetWorkoutMap.Models
 {
     public class WorkoutSpot
     {
@@ -30,5 +32,10 @@
         public bool IsIndoor { get; set; }
 
         public SpotStatus Status { get; set; } = SpotStatus.Pending;
+
+        //Other
+        public string? SubmittedByUserId { get; set; }
+
+        public ApplicationUser? SubmittedByUser { get; set; }
     }
 }
