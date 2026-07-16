@@ -1,0 +1,45 @@
+﻿
+@page
+@model StreetWorkoutMap.Pages.Spots.CreateModel
+@{
+    ViewData["Title"] = "Добави площадка";
+}
+
+<section class="create-spot-page">
+    <h1>Предложи площадка</h1>
+
+    <p>
+        Попълни информацията. Предложението ще бъде публикувано
+        след одобрение от администратор.
+    </p>
+
+    <form method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <div>
+            <label asp-for="Input.Name">Име</label>
+            <input asp-for="Input.Name" />
+            <span asp-validation-for="Input.Name"></span>
+        </div>
+
+        <div>
+            <label asp-for="Input.Description">Описание</label>
+            <textarea asp-for="Input.Description"></textarea>
+            <span asp-validation-for="Input.Description"></span>
+        </div>
+
+        <div>
+            <label asp-for="Input.City">Град</label>
+            <input asp-for="Input.City" />
+            <span asp-validation-for="Input.City"></span>
+        </div>
+
+        <div>
+            <label asp-for="Input.District">Квартал/район</label>
+            <input asp-for="Input.District" />
+            <span asp-validation-for="Input.District"></span>
+        </div>
+
+        <button type="submit">Продължи</button>
+    </form>
+</section>
