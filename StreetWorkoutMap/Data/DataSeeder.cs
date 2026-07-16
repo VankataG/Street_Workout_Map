@@ -6,7 +6,7 @@ namespace StreetWorkoutMap.Data
 {
     public static class DataSeeder
     {
-        public static async Task DataSeedAsync(IServiceProvider services)
+        public static async Task SeedAsync(IServiceProvider services)
         {
             using var scope = services.CreateScope();
 

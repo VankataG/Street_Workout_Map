@@ -33,7 +33,8 @@ namespace StreetWorkoutMap
 
             var app = builder.Build();
 
-            await DataSeeder.DataSeedAsync(app.Services);
+            await DataSeeder.SeedAsync(app.Services);
+            await IdentitySeeder.SeedAsync(app.Services);
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
