@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 using StreetWorkoutMap.Data;
 using StreetWorkoutMap.Services;
 
@@ -14,6 +16,15 @@ namespace StreetWorkoutMap
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            //Add Identity
+            builder.Services
+                .AddDefaultIdentity<ApplicationUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             // Add services to the container.
             builder.Services.AddControllers().AddJsonOptions( options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
@@ -35,7 +46,7 @@ namespace StreetWorkoutMap
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
