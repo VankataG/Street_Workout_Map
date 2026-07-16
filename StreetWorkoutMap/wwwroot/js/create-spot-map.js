@@ -163,9 +163,6 @@ function updateCoordinateInputs(
 ) {
     latitudeInput.value = latitude.toFixed(6);
     longitudeInput.value = longitude.toFixed(6);
-
-    latitudeInput.dispatchEvent(new Event("change", { bubbles: true }));
-    longitudeInput.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
 function locateCurrentUser(
