@@ -4,6 +4,7 @@ using StreetWorkoutMap.Data;
 using StreetWorkoutMap.DTOs;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
 using StreetWorkoutMap.Models;
+using StreetWorkoutMap.Services.ImageStorage;
 using System.Collections;
 using System.Security.Claims;
 
@@ -15,11 +16,14 @@ namespace StreetWorkoutMap.Services
 
         private readonly UserManager<ApplicationUser> userManager;
 
+        private readonly IImageStorageService imageStorageService;
 
-        public WorkoutSpotService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+
+        public WorkoutSpotService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IImageStorageService imageStorageService)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
+            this.imageStorageService = imageStorageService;
         }
 
         public async Task<ICollection<MapSpotDto>> GetAllApprovedAsync()
@@ -74,8 +78,35 @@ namespace StreetWorkoutMap.Services
                 SubmittedByUserId = userId
             };
 
-            await dbContext.WorkoutSpots.AddAsync(workoutSpot);
-            await dbContext.SaveChangesAsync();
+
+            var uploadedPaths = new List<string>();
+            try
+            {
+                uploadedPaths = await imageStorageService.UploadImagesAsync(workoutSpot.Id, dto.Images);
+
+                var images = uploadedPaths
+                    .Select(path => new SpotImage
+                    {
+                        WorkoutSpotId = workoutSpot.Id,
+                        StoragePath = path
+                    })
+                    .ToList();
+
+                await dbContext.SpotImages.AddRangeAsync(images);
+                await dbContext.WorkoutSpots.AddAsync(workoutSpot);
+                await dbContext.SaveChangesAsync();
+
+            }
+            catch
+            {
+                if (uploadedPaths.Count > 0)
+                {
+                    await imageStorageService.DeleteImagesAsync(uploadedPaths);
+                }
+                
+                throw;
+            }
+            
         }
     }
 }
