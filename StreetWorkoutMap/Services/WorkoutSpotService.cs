@@ -45,7 +45,10 @@ namespace StreetWorkoutMap.Services
                     HasLighting = spot.HasLighting,
                     IsIndoor = spot.IsIndoor,
                     Rating = null,
-                    ImageUrl = spot.Images.Select(image => image.StoragePath).FirstOrDefault()
+                    ImageUrl = spot.Images
+                        .Select(image => image.StoragePath)
+                        .Select(path => imageStorageService.GetPublicUrl(path))
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
         }

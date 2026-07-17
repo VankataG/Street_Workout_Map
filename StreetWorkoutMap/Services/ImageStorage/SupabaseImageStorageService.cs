@@ -28,6 +28,12 @@ public class SupabaseImageStorageService : IImageStorageService
                 "Supabase:ServiceRoleKey is missing.");
     }
 
+
+    public string GetPublicUrl(string storagePath)
+    {
+        return $"{supabaseUrl.TrimEnd('/')}/storage/v1/object/public/{BucketName}/{storagePath}";
+    }
+
     public async Task<List<string>> UploadImagesAsync(
         Guid workoutSpotId,
         IEnumerable<IFormFile> images)

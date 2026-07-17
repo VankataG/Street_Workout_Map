@@ -5,5 +5,7 @@
         Task<List<string>> UploadImagesAsync(Guid workoutSpotId, IEnumerable<IFormFile> images);
 
         Task DeleteImagesAsync(IEnumerable<string> paths);
+
+        string GetPublicUrl(string storagePath);
     }
 }

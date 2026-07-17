@@ -232,19 +232,37 @@
             </div>
 
             <div class="image-upload">
-                <label asp-for="Input.Images"
-                       class="image-upload-label">
+                <label for="image-upload-input"
+                       class="image-upload-label"
+                       id="image-upload-label">
 
                     <span class="image-upload-icon">＋</span>
-                    <strong>Избери снимки</strong>
-                    <small>JPG, PNG или WEBP — до 5 MB на снимка</small>
+
+                    <strong id="image-upload-title">
+                        Избери снимки
+                    </strong>
+
+                    <small id="image-upload-description">
+                        JPG, PNG или WEBP — до 5 MB на снимка
+                    </small>
                 </label>
 
                 <input asp-for="Input.Images"
                        class="image-upload-input"
+                       id="image-upload-input"
                        type="file"
                        accept=".jpg,.jpeg,.png,.webp"
                        multiple />
+
+                <div id="image-preview"
+                     class="image-preview"
+                     aria-live="polite">
+                </div>
+
+                <p id="image-upload-message"
+                   class="image-upload-message"
+                   role="status">
+                </p>
 
                 <span asp-validation-for="Input.Images"
                       class="form-validation-message">
@@ -269,4 +287,5 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script src="~/js/create-spot-map.js" asp-append-version="true"></script>
+    <script src="~/js/image-preview.js" asp-append-version="true"></script>
 }
