@@ -26,5 +26,7 @@ namespace StreetWorkoutMap.Controllers
 
             return Ok(spots);
         }
+
+
     }
 }

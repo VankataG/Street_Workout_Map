@@ -6,6 +6,13 @@
 
 <section class="hero-section">
 
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="alert alert-success" role="alert">
+            @successMessage
+        </div>
+    }
+
     <img class="hero-logo"
          src="~/images/logo/full_logo_cropped.png"
          alt="SW-MAP" />

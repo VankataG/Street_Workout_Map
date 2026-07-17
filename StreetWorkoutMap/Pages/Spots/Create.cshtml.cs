@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
+using StreetWorkoutMap.Services;
 
 namespace StreetWorkoutMap.Pages.Spots
 {
@@ -10,6 +11,32 @@ namespace StreetWorkoutMap.Pages.Spots
     {
         [BindProperty]
         public CreateSpotDto Input { get; set; } = new();
+
+
+        private readonly WorkoutSpotService workoutSpotService;
+
+        public CreateModel(WorkoutSpotService workoutSpotService)
+        {
+            this.workoutSpotService = workoutSpotService;
+        }
+
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            await workoutSpotService.CreateAsync(Input, User);
+
+            TempData["SuccessMessage"] = "Площадката беше изпратена успешно и очаква одобрение.";
+
+            return RedirectToPage("/Index");
+        }
+
+
+
         public void OnGet()
         {
         }
