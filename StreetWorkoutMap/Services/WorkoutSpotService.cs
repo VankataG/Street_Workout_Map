@@ -158,7 +158,9 @@ namespace StreetWorkoutMap.Services
                             .Select(img => imageStorageService.GetPublicUrl(img.StoragePath))
                             .ToList(),
 
-                CanEdit = canEdit
+                CanEdit = canEdit,
+                IsAdmin = isAdmin,
+                IsOwner = isOwner
             };
         }
     }

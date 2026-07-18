@@ -40,5 +40,9 @@ namespace StreetWorkoutMap.DTOs.WorkoutSpot
         public string? SubmittedByUser { get; set; }
 
         public bool CanEdit { get; set; }
+
+        public bool IsOwner { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }
