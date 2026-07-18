@@ -4,13 +4,14 @@ using StreetWorkoutMap.Data;
 using StreetWorkoutMap.DTOs;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
 using StreetWorkoutMap.Models;
+using StreetWorkoutMap.Services.Contrancts;
 using StreetWorkoutMap.Services.ImageStorage;
 using System.Collections;
 using System.Security.Claims;
 
 namespace StreetWorkoutMap.Services
 {
-    public class WorkoutSpotService
+    public class WorkoutSpotService : IWorkoutSpotService
     {
         private readonly ApplicationDbContext dbContext;
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
 using StreetWorkoutMap.Services;
+using StreetWorkoutMap.Services.Contrancts;
 
 namespace StreetWorkoutMap.Pages.Spots
 {
@@ -13,9 +14,9 @@ namespace StreetWorkoutMap.Pages.Spots
         public CreateSpotDto Input { get; set; } = new();
 
 
-        private readonly WorkoutSpotService workoutSpotService;
+        private readonly IWorkoutSpotService workoutSpotService;
 
-        public CreateModel(WorkoutSpotService workoutSpotService)
+        public CreateModel(IWorkoutSpotService workoutSpotService)
         {
             this.workoutSpotService = workoutSpotService;
         }

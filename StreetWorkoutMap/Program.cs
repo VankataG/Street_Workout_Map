@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using StreetWorkoutMap.Data;
 using StreetWorkoutMap.Services;
 using StreetWorkoutMap.Services.ImageStorage;
+using StreetWorkoutMap.Services.Contrancts;
 
 namespace StreetWorkoutMap
 {
@@ -30,7 +31,7 @@ namespace StreetWorkoutMap
             // Add services to the container.
             builder.Services.AddControllers().AddJsonOptions( options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             builder.Services.AddRazorPages();
-            builder.Services.AddScoped<WorkoutSpotService>();
+            builder.Services.AddScoped<IWorkoutSpotService, WorkoutSpotService>();
             builder.Services.AddHttpClient<IImageStorageService, SupabaseImageStorageService>();
 
             var app = builder.Build();

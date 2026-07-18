@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StreetWorkoutMap.DTOs;
 using StreetWorkoutMap.Services;
+using StreetWorkoutMap.Services.Contrancts;
 
 namespace StreetWorkoutMap.Controllers
 {
@@ -10,9 +11,9 @@ namespace StreetWorkoutMap.Controllers
     public class WorkoutSpotsController : ControllerBase
     {
 
-        private readonly WorkoutSpotService workoutSpotService;
+        private readonly IWorkoutSpotService workoutSpotService;
 
-        public WorkoutSpotsController(WorkoutSpotService workoutSpotService)
+        public WorkoutSpotsController(IWorkoutSpotService workoutSpotService)
         {
             this.workoutSpotService = workoutSpotService;
         }
