@@ -126,8 +126,8 @@ function initializeDetailsMap() {
             `${latitude.toString()},${longitude.toString()}`;
 
         directionsLink.href =
-            "https://www.google.com/maps/dir/?api=1" +
-            `&destination=${encodeURIComponent(destination)}`;
+            "https://www.google.com/maps/search/?api=1" +
+            `&query=${encodeURIComponent(destination)}`;
     }
 
     window.setTimeout(() => {

@@ -20,6 +20,12 @@
         `
         : "";
 
+    const destination = `${spot.Latitude},${spot.Longitude}`;
+
+    const mapsUrl =
+        "https://www.google.com/maps/search/?api=1" +
+        `&query=${encodeURIComponent(destination)}`;
+
     return `
         <article class="spot-popup">
             <div class="spot-popup-media">
@@ -75,11 +81,11 @@
 
                 <div class="spot-popup-actions">
                     <a
-                        class="spot-directions-button"
-                        href="https://www.google.com/maps/dir/?api=1&destination=${spot.Latitude},${spot.Longitude}"
+                        href="${mapsUrl}"
                         target="_blank"
-                        rel="noopener noreferrer">
-                        Навигация
+                        rel="noopener noreferrer"
+                        class="spot-directions-button">
+                        Отвори в Google Maps
                     </a>
                 </div>
             </div>
