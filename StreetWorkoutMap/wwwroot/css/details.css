@@ -1,0 +1,732 @@
+﻿/* =========================================================
+   WORKOUT SPOT DETAILS PAGE
+   ========================================================= */
+
+.spot-details-page {
+    width: min(100% - 32px, 1180px);
+    margin: 38px auto 80px;
+}
+
+
+/* =========================================================
+   BREADCRUMB
+   ========================================================= */
+
+.spot-details-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 22px;
+    color: var(--secondary-text-color);
+    font-size: 0.9rem;
+    font-weight: 650;
+}
+
+    .spot-details-breadcrumb a {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+
+        .spot-details-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.spot-details-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 28px;
+}
+
+.spot-details-heading {
+    min-width: 0;
+}
+
+.spot-details-title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+    .spot-details-title-row h1 {
+        margin: 0;
+        color: var(--text-color);
+        font-size: clamp(2rem, 5vw, 3.4rem);
+        font-weight: 900;
+        letter-spacing: -0.045em;
+        line-height: 1.05;
+    }
+
+.spot-details-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 13px 0 0;
+    color: var(--secondary-text-color);
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+    .spot-details-location span {
+        color: var(--accent-color);
+        font-size: 1.35rem;
+    }
+
+.spot-status-badge,
+.spot-summary-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 12px;
+    border: 1px solid;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.spot-status-approved {
+    border-color: rgba(47, 175, 84, 0.35);
+    background-color: rgba(47, 175, 84, 0.12);
+    color: #269145;
+}
+
+.spot-status-pending {
+    border-color: rgba(224, 157, 44, 0.4);
+    background-color: rgba(224, 157, 44, 0.13);
+    color: #b7770b;
+}
+
+.spot-status-rejected {
+    border-color: rgba(217, 74, 74, 0.38);
+    background-color: rgba(217, 74, 74, 0.12);
+    color: #c13d3d;
+}
+
+.spot-status-default {
+    border-color: var(--border-color);
+    background-color: var(--surface-hover-color);
+    color: var(--secondary-text-color);
+}
+
+html[data-theme="dark"] .spot-status-approved {
+    color: #74e68e;
+}
+
+html[data-theme="dark"] .spot-status-pending {
+    color: #ffc869;
+}
+
+html[data-theme="dark"] .spot-status-rejected {
+    color: #ff8181;
+}
+
+.spot-edit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    gap: 9px;
+    min-height: 48px;
+    padding: 12px 19px;
+    border: 1px solid var(--border-color);
+    border-radius: 13px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 9px 22px var(--shadow-color);
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+    .spot-edit-button span {
+        color: var(--accent-color);
+        font-size: 1.2rem;
+    }
+
+    .spot-edit-button:hover {
+        border-color: var(--accent-color);
+        background-color: var(--surface-hover-color);
+        color: var(--text-color);
+        transform: translateY(-2px);
+    }
+
+
+/* =========================================================
+   IMAGE GALLERY
+   ========================================================= */
+
+.spot-gallery {
+    margin-bottom: 30px;
+}
+
+.spot-gallery-main {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 7;
+    border: 1px solid var(--border-color);
+    border-radius: 26px;
+    background-color: var(--surface-hover-color);
+    box-shadow: 0 22px 60px var(--shadow-color);
+}
+
+.spot-main-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.18s ease, transform 0.35s ease;
+}
+
+.spot-gallery-main:hover .spot-main-image {
+    transform: scale(1.015);
+}
+
+.spot-main-image.is-changing {
+    opacity: 0.35;
+}
+
+.spot-image-counter {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    background-color: rgba(10, 14, 11, 0.75);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 800;
+    backdrop-filter: blur(9px);
+}
+
+.spot-gallery-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.spot-thumbnail-button {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    background-color: var(--surface-hover-color);
+    cursor: pointer;
+    opacity: 0.72;
+    box-shadow: 0 8px 22px var(--shadow-color);
+    transition: border-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+    .spot-thumbnail-button img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .spot-thumbnail-button:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+
+    .spot-thumbnail-button.is-active {
+        border-color: var(--accent-color);
+        opacity: 1;
+        box-shadow: 0 0 0 4px var(--accent-soft-color), 0 8px 22px var(--shadow-color);
+    }
+
+.spot-gallery-placeholder {
+    display: flex;
+    min-height: 410px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 38px 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 26px;
+    background: radial-gradient( circle at top, var(--accent-soft-color), transparent 54% ), var(--surface-color);
+    text-align: center;
+    box-shadow: 0 22px 60px var(--shadow-color);
+}
+
+.spot-placeholder-icon {
+    display: grid;
+    width: 74px;
+    height: 74px;
+    margin-bottom: 20px;
+    place-items: center;
+    border: 1px solid var(--accent-color);
+    border-radius: 23px;
+    background-color: var(--accent-soft-color);
+    color: var(--accent-color);
+    font-size: 1.4rem;
+    font-weight: 900;
+}
+
+.spot-gallery-placeholder h2 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.55rem;
+    font-weight: 850;
+}
+
+.spot-gallery-placeholder p {
+    max-width: 460px;
+    margin: 12px auto 0;
+    color: var(--secondary-text-color);
+    line-height: 1.6;
+}
+
+.spot-placeholder-action {
+    display: inline-flex;
+    margin-top: 20px;
+    padding: 11px 17px;
+    border-radius: 11px;
+    background-color: var(--accent-color);
+    color: var(--surface-color);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+html[data-theme="dark"] .spot-placeholder-action {
+    color: #071008;
+}
+
+
+/* =========================================================
+   DETAILS LAYOUT
+   ========================================================= */
+
+.spot-details-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 315px;
+    align-items: start;
+    gap: 25px;
+}
+
+.spot-details-content {
+    display: grid;
+    gap: 25px;
+}
+
+.spot-details-sidebar {
+    position: sticky;
+    top: 104px;
+    display: grid;
+    gap: 18px;
+}
+
+.spot-details-card,
+.spot-summary-card,
+.spot-notice-card,
+.spot-owner-card {
+    border: 1px solid var(--border-color);
+    border-radius: 22px;
+    background-color: var(--surface-color);
+    box-shadow: 0 15px 42px var(--shadow-color);
+}
+
+.spot-details-card {
+    padding: 30px;
+}
+
+.spot-summary-card,
+.spot-owner-card {
+    padding: 24px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.spot-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.spot-section-icon {
+    display: grid;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 12px;
+    background-color: var(--accent-color);
+    color: var(--surface-color);
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+html[data-theme="dark"] .spot-section-icon {
+    color: #071008;
+}
+
+.spot-section-heading h2 {
+    margin: 0 0 4px;
+    color: var(--text-color);
+    font-size: 1.25rem;
+    font-weight: 850;
+}
+
+.spot-section-heading p {
+    margin: 0;
+    color: var(--secondary-text-color);
+    font-size: 0.9rem;
+}
+
+.spot-details-description {
+    margin: 0;
+    color: var(--secondary-text-color);
+    font-size: 1.02rem;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+.spot-details-empty-text {
+    margin: 0;
+    color: var(--secondary-text-color);
+    font-style: italic;
+}
+
+
+/* =========================================================
+   FEATURES
+   ========================================================= */
+
+.spot-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.spot-feature {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 17px;
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    background-color: var(--background-color);
+}
+
+.spot-feature-status {
+    display: grid;
+    flex: 0 0 27px;
+    width: 27px;
+    height: 27px;
+    place-items: center;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.spot-feature.is-available .spot-feature-status {
+    background-color: #2faf54;
+}
+
+.spot-feature.is-unavailable {
+    opacity: 0.66;
+}
+
+    .spot-feature.is-unavailable .spot-feature-status {
+        background-color: #d84a4a;
+    }
+
+.spot-feature h3 {
+    margin: 2px 0 4px;
+    color: var(--text-color);
+    font-size: 0.96rem;
+    font-weight: 800;
+}
+
+.spot-feature p {
+    margin: 0;
+    color: var(--secondary-text-color);
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   DETAILS MAP
+   ========================================================= */
+
+#details-spot-map {
+    width: 100%;
+    height: 360px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 17px;
+    background-color: var(--background-color);
+}
+
+.spot-map-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: 15px;
+}
+
+.spot-directions-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background-color: var(--accent-color);
+    color: var(--surface-color);
+    font-weight: 800;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+html[data-theme="dark"] .spot-directions-link {
+    color: #071008;
+}
+
+.spot-directions-link:hover {
+    background-color: var(--accent-hover-color);
+    color: var(--surface-color);
+    transform: translateY(-1px);
+}
+
+html[data-theme="dark"] .spot-directions-link:hover {
+    color: #071008;
+}
+
+.spot-coordinates {
+    margin: 0;
+    color: var(--secondary-text-color);
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.spot-summary-card h2,
+.spot-owner-card h2 {
+    margin: 0 0 19px;
+    color: var(--text-color);
+    font-size: 1.12rem;
+    font-weight: 850;
+}
+
+.spot-summary-list {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+}
+
+    .spot-summary-list > div {
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .spot-summary-list > div:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+
+    .spot-summary-list dt {
+        margin-bottom: 5px;
+        color: var(--secondary-text-color);
+        font-size: 0.78rem;
+        font-weight: 750;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+    }
+
+    .spot-summary-list dd {
+        margin: 0;
+        color: var(--text-color);
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+.spot-notice-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 19px;
+    border-color: rgba(224, 157, 44, 0.38);
+    background-color: rgba(224, 157, 44, 0.08);
+}
+
+.spot-notice-icon {
+    display: grid;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    border-radius: 9px;
+    background-color: #d99a2b;
+    color: #ffffff;
+    font-weight: 900;
+}
+
+.spot-notice-card h2 {
+    margin: 1px 0 5px;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    font-weight: 850;
+}
+
+.spot-notice-card p,
+.spot-owner-card p {
+    margin: 0;
+    color: var(--secondary-text-color);
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.spot-owner-warning {
+    margin-top: 14px !important;
+    padding: 12px;
+    border-left: 3px solid #d99a2b;
+    border-radius: 0 9px 9px 0;
+    background-color: rgba(224, 157, 44, 0.09);
+}
+
+.spot-owner-edit-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 18px;
+    padding: 10px 15px;
+    border-radius: 11px;
+    background-color: var(--accent-color);
+    color: var(--surface-color);
+    font-weight: 800;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+html[data-theme="dark"] .spot-owner-edit-link {
+    color: #071008;
+}
+
+.spot-owner-edit-link:hover {
+    background-color: var(--accent-hover-color);
+    color: var(--surface-color);
+    transform: translateY(-1px);
+}
+
+html[data-theme="dark"] .spot-owner-edit-link:hover {
+    color: #071008;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 960px) {
+    .spot-details-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .spot-details-sidebar {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .spot-summary-card {
+        grid-row: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .spot-details-page {
+        width: min(100% - 20px, 1180px);
+        margin-top: 26px;
+    }
+
+    .spot-details-header {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .spot-edit-button {
+        width: 100%;
+    }
+
+    .spot-gallery-main {
+        aspect-ratio: 4 / 3;
+        border-radius: 20px;
+    }
+
+    .spot-gallery-placeholder {
+        min-height: 340px;
+        border-radius: 20px;
+    }
+
+    .spot-details-card {
+        padding: 24px 20px;
+    }
+
+    .spot-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .spot-details-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .spot-summary-card {
+        grid-row: auto;
+    }
+
+    #details-spot-map {
+        height: 320px;
+    }
+}
+
+@media (max-width: 520px) {
+    .spot-details-title-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .spot-gallery-thumbnails {
+        gap: 10px;
+    }
+
+    .spot-thumbnail-button {
+        border-radius: 12px;
+    }
+
+    .spot-map-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .spot-directions-link {
+        width: 100%;
+    }
+
+    .spot-coordinates {
+        text-align: center;
+    }
+}

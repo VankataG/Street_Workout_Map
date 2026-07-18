@@ -1,4 +1,368 @@
-﻿@page
+﻿@page "{id:guid}"
 @model StreetWorkoutMap.Pages.Spots.DetailsModel
+
 @{
+    ViewData["Title"] = Model.Spot.Name;
+
+    var hasImages = Model.Spot.ImageUrls.Count > 0;
+
+    var location = string.IsNullOrWhiteSpace(Model.Spot.District)
+        ? Model.Spot.City
+        : $"{Model.Spot.City}, {Model.Spot.District}";
+
+    var statusClass = Model.Spot.Status.ToLowerInvariant() switch
+    {
+        "approved" => "spot-status-approved",
+        "pending" => "spot-status-pending",
+        "rejected" => "spot-status-rejected",
+        _ => "spot-status-default"
+    };
+
+    var statusText = Model.Spot.Status.ToLowerInvariant() switch
+    {
+        "approved" => "Одобрена",
+        "pending" => "Очаква одобрение",
+        "rejected" => "Отхвърлена",
+        _ => Model.Spot.Status
+    };
+}
+
+<section class="spot-details-page">
+
+    <nav class="spot-details-breadcrumb"
+         aria-label="Навигация">
+
+        <a asp-page="/Index">
+            Карта
+        </a>
+
+        <span aria-hidden="true">›</span>
+
+        <span>@Model.Spot.Name</span>
+    </nav>
+
+    <header class="spot-details-header">
+        <div class="spot-details-heading">
+            <div class="spot-details-title-row">
+                <h1>@Model.Spot.Name</h1>
+
+                <span class="spot-status-badge @statusClass">
+                    @statusText
+                </span>
+            </div>
+
+            <p class="spot-details-location">
+                <span aria-hidden="true">⌖</span>
+                @location
+            </p>
+        </div>
+
+        @if (Model.Spot.CanEdit)
+        {
+            <a asp-page="/Spots/Edit"
+               asp-route-id="@Model.Spot.Id"
+               class="spot-edit-button">
+                <span aria-hidden="true">✎</span>
+                Редактирай
+            </a>
+        }
+    </header>
+
+    <section class="spot-gallery"
+             aria-label="Снимки на площадката">
+
+        @if (hasImages)
+        {
+            <div class="spot-gallery-main">
+                <img id="spot-main-image"
+                     src="@Model.Spot.ImageUrls[0]"
+                     alt="@Model.Spot.Name"
+                     class="spot-main-image" />
+
+                <span id="spot-image-counter"
+                      class="spot-image-counter">
+                    1 / @Model.Spot.ImageUrls.Count
+                </span>
+            </div>
+
+            @if (Model.Spot.ImageUrls.Count > 1)
+            {
+                <div class="spot-gallery-thumbnails">
+                    @for (var index = 0; index < Model.Spot.ImageUrls.Count; index++)
+                    {
+                        var imageUrl = Model.Spot.ImageUrls[index];
+
+                        <button type="button"
+                                class="spot-thumbnail-button @(index == 0 ? "is-active" : "")"
+                                data-image-url="@imageUrl"
+                                data-image-index="@index"
+                                aria-label="Покажи снимка @(index + 1)">
+
+                            <img src="@imageUrl"
+                                 alt="Снимка @(index + 1) на @Model.Spot.Name" />
+                        </button>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="spot-gallery-placeholder">
+                <div class="spot-placeholder-icon">
+                    SW
+                </div>
+
+                <h2>Все още няма снимки</h2>
+
+                <p>
+                    Когато площадката бъде редактирана, тук ще се
+                    появят нейните снимки.
+                </p>
+
+                @if (Model.Spot.CanEdit)
+                {
+                    <a asp-page="/Spots/Edit"
+                       asp-route-id="@Model.Spot.Id"
+                       class="spot-placeholder-action">
+                        Добави снимки
+                    </a>
+                }
+            </div>
+        }
+    </section>
+
+    <div class="spot-details-layout">
+
+        <main class="spot-details-content">
+
+            <section class="spot-details-card">
+                <div class="spot-section-heading">
+                    <span class="spot-section-icon"
+                          aria-hidden="true">
+                        i
+                    </span>
+
+                    <div>
+                        <h2>За площадката</h2>
+                        <p>Описание и полезна информация</p>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Spot.Description))
+                {
+                    <p class="spot-details-description">
+                        @Model.Spot.Description
+                    </p>
+                }
+                else
+                {
+                    <p class="spot-details-empty-text">
+                        За тази площадка все още няма добавено описание.
+                    </p>
+                }
+            </section>
+
+            <section class="spot-details-card">
+                <div class="spot-section-heading">
+                    <span class="spot-section-icon"
+                          aria-hidden="true">
+                        ✓
+                    </span>
+
+                    <div>
+                        <h2>Оборудване и условия</h2>
+                        <p>Какво ще намериш на място</p>
+                    </div>
+                </div>
+
+                <div class="spot-features-grid">
+
+                    <article class="spot-feature @(Model.Spot.HasPullUpBars ? "is-available" : "is-unavailable")">
+                        <span class="spot-feature-status">
+                            @(Model.Spot.HasPullUpBars ? "✓" : "×")
+                        </span>
+
+                        <div>
+                            <h3>Лостове</h3>
+                            <p>Лостове за набирания и упражнения</p>
+                        </div>
+                    </article>
+
+                    <article class="spot-feature @(Model.Spot.HasParallelBars ? "is-available" : "is-unavailable")">
+                        <span class="spot-feature-status">
+                            @(Model.Spot.HasParallelBars ? "✓" : "×")
+                        </span>
+
+                        <div>
+                            <h3>Успоредка</h3>
+                            <p>Подходяща за кофички и опори</p>
+                        </div>
+                    </article>
+
+                    <article class="spot-feature @(Model.Spot.HasRings ? "is-available" : "is-unavailable")">
+                        <span class="spot-feature-status">
+                            @(Model.Spot.HasRings ? "✓" : "×")
+                        </span>
+
+                        <div>
+                            <h3>Халки</h3>
+                            <p>Постоянно монтирани халки</p>
+                        </div>
+                    </article>
+
+                    <article class="spot-feature @(Model.Spot.HasLighting ? "is-available" : "is-unavailable")">
+                        <span class="spot-feature-status">
+                            @(Model.Spot.HasLighting ? "✓" : "×")
+                        </span>
+
+                        <div>
+                            <h3>Осветление</h3>
+                            <p>Подходяща за вечерни тренировки</p>
+                        </div>
+                    </article>
+
+                    <article class="spot-feature @(Model.Spot.IsIndoor ? "is-available" : "is-unavailable")">
+                        <span class="spot-feature-status">
+                            @(Model.Spot.IsIndoor ? "✓" : "×")
+                        </span>
+
+                        <div>
+                            <h3>Закрита площадка</h3>
+                            <p>На закрито или под постоянен навес</p>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+            <section class="spot-details-card">
+                <div class="spot-section-heading">
+                    <span class="spot-section-icon"
+                          aria-hidden="true">
+                        ⌖
+                    </span>
+
+                    <div>
+                        <h2>Местоположение</h2>
+                        <p>@location</p>
+                    </div>
+                </div>
+
+                <div id="details-spot-map"
+                     data-latitude="@Model.Spot.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                     data-longitude="@Model.Spot.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                     data-spot-name="@Model.Spot.Name">
+                </div>
+
+                <div class="spot-map-actions">
+                    <a id="spot-directions-link"
+                       class="spot-directions-link"
+                       href="#"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        <span aria-hidden="true">➜</span>
+                        Отвори навигация
+                    </a>
+
+                    <p class="spot-coordinates">
+                        @Model.Spot.Latitude.ToString("F6"),
+                        @Model.Spot.Longitude.ToString("F6")
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+        <aside class="spot-details-sidebar">
+
+            <section class="spot-summary-card">
+                <h2>Информация</h2>
+
+                <dl class="spot-summary-list">
+                    <div>
+                        <dt>Град</dt>
+                        <dd>@Model.Spot.City</dd>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Spot.District))
+                    {
+                        <div>
+                            <dt>Квартал или район</dt>
+                            <dd>@Model.Spot.District</dd>
+                        </div>
+                    }
+
+                    <div>
+                        <dt>Статус</dt>
+                        <dd>
+                            <span class="spot-summary-status @statusClass">
+                                @statusText
+                            </span>
+                        </dd>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Spot.SubmittedByUser))
+                    {
+                        <div>
+                            <dt>Добавена от</dt>
+                            <dd>@Model.Spot.SubmittedByUser</dd>
+                        </div>
+                    }
+                </dl>
+            </section>
+
+            @if (Model.Spot.Status.Equals(
+                "Pending",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                <section class="spot-notice-card">
+                    <span class="spot-notice-icon"
+                          aria-hidden="true">
+                        !
+                    </span>
+
+                    <div>
+                        <h2>Очаква проверка</h2>
+                        <p>
+                            Тази площадка все още не е видима публично.
+                        </p>
+                    </div>
+                </section>
+            }
+
+            @if (Model.Spot.CanEdit)
+            {
+                <section class="spot-owner-card">
+                    <h2>Управление</h2>
+
+                    <p>
+                        Можеш да промениш информацията и снимките
+                        на тази площадка.
+                    </p>
+
+                    @if (Model.Spot.IsOwner && !Model.Spot.IsAdmin)
+                    {
+                        <p class="spot-owner-warning">
+                            След редакция площадката ще трябва да бъде
+                            одобрена от администратор отново.
+                        </p>
+                    }
+
+                    <a asp-page="/Spots/Edit"
+                       asp-route-id="@Model.Spot.Id"
+                       class="spot-owner-edit-link">
+                        Редактирай площадката
+                    </a>
+                </section>
+            }
+
+        </aside>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/details-spot.js"
+            asp-append-version="true">
+    </script>
 }
