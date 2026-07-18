@@ -39,6 +39,6 @@ namespace StreetWorkoutMap.DTOs.WorkoutSpot
 
         public string? SubmittedByUser { get; set; }
 
-        public bool canEdit { get; set; }
+        public bool CanEdit { get; set; }
     }
 }

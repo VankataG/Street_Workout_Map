@@ -30,6 +30,7 @@ namespace StreetWorkoutMap.Services
         public async Task<ICollection<MapSpotDto>> GetAllApprovedAsync()
         {
             return await dbContext.WorkoutSpots
+                .Include(spot => spot.Images)
                 .Where(spot => spot.Status == SpotStatus.Approved)
                 .Select(spot => new MapSpotDto
                 {
@@ -111,6 +112,54 @@ namespace StreetWorkoutMap.Services
                 throw;
             }
             
+        }
+
+        public async Task<SpotDetailsDto?> GetDetailsAsync(Guid id, ClaimsPrincipal user)
+        {
+             var spot = await dbContext.WorkoutSpots
+                        .AsNoTracking()
+                        .Include(spot => spot.Images)
+                        .FirstOrDefaultAsync(spot => spot.Id == id);
+
+            if (spot is null) return null;
+
+            var currentUserId = userManager.GetUserId(user);
+
+            var isAdmin = user.Identity?.IsAuthenticated == true && user.IsInRole("Admin");
+            var isOwner = currentUserId is not null && spot.SubmittedByUserId == currentUserId;
+
+
+            var isApproved = spot.Status == SpotStatus.Approved;
+
+            if (!isApproved && !isAdmin && !isOwner)  return null;
+            
+
+            var canEdit = isAdmin || isOwner;
+
+            return new SpotDetailsDto
+            {
+                Id = spot.Id,
+                Name = spot.Name,
+                Description = spot.Description,
+                City = spot.City,
+                District = spot.District,
+                Latitude = spot.Latitude,
+                Longitude = spot.Longitude,
+                HasPullUpBars = spot.HasPullUpBars,
+                HasParallelBars = spot.HasParallelBars,
+                HasRings = spot.HasRings,
+                HasLighting = spot.HasLighting,
+                IsIndoor = spot.IsIndoor,
+
+                Status = spot.Status.ToString(),
+                SubmittedByUserId = spot.SubmittedByUserId,
+
+                ImageUrls = spot.Images
+                            .Select(img => imageStorageService.GetPublicUrl(img.StoragePath))
+                            .ToList(),
+
+                CanEdit = canEdit
+            };
         }
     }
 }
