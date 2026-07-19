@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StreetWorkoutMap.Constants;
 using StreetWorkoutMap.Data;
 using StreetWorkoutMap.DTOs;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
@@ -212,7 +213,7 @@ namespace StreetWorkoutMap.Services
             EditSpotDto dto,
             ClaimsPrincipal user)
         {
-            const int maxImages = 3;
+            var maxImages = SpotConstants.MaxImages;
 
             var currentUserId = userManager.GetUserId(user);
             var isAdmin =

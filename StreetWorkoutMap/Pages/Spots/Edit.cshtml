@@ -1,9 +1,12 @@
-﻿@page "{id:guid}"
+﻿
+@page "{id:guid}"
 @model StreetWorkoutMap.Pages.Spots.EditModel
 
 @{
     ViewData["Title"] = "Редактиране на площадка";
 }
+
+@using StreetWorkoutMap.Constants
 
 <div class="create-spot-page">
     <header class="create-spot-header">
@@ -177,7 +180,7 @@
 
             <div id="edit-images-manager"
                  class="edit-images-manager"
-                 data-max-images="3">
+                 data-max-images="@SpotConstants.MaxImages">
 
                 <div class="edit-images-group">
                     <div class="edit-images-group-heading">
