@@ -12,5 +12,9 @@ namespace StreetWorkoutMap.Services.Contrancts
         public Task CreateAsync(CreateSpotDto dto, ClaimsPrincipal user);
 
         public Task<SpotDetailsDto?> GetDetailsAsync(Guid id, ClaimsPrincipal user);
+
+        public Task<EditSpotDto?> GetForEditAsync(Guid id, ClaimsPrincipal user);
+
+        public Task EditAsync(EditSpotDto dto, ClaimsPrincipal user);
     }
 }

@@ -163,5 +163,104 @@ namespace StreetWorkoutMap.Services
                 IsOwner = isOwner
             };
         }
+
+        public async Task<EditSpotDto?> GetForEditAsync(Guid id, ClaimsPrincipal user)
+        {
+            var spot = await dbContext.WorkoutSpots
+                        .AsNoTracking()
+                        .Include(spot => spot.Images)
+                        .FirstOrDefaultAsync(spot => spot.Id == id);
+
+
+            if (spot is null) return null;
+
+            var currentUserId = userManager.GetUserId(user);
+
+            var isAdmin = user.Identity?.IsAuthenticated == true && user.IsInRole("Admin");
+            var isOwner = currentUserId is not null && spot.SubmittedByUserId == currentUserId;
+
+            if (!isAdmin && !isOwner) return null;
+
+            return new EditSpotDto
+            {
+                Id = spot.Id,
+                Name = spot.Name,
+                Description = spot.Description,
+                City = spot.City,
+                District = spot.District,
+                Latitude = spot.Latitude,
+                Longitude = spot.Longitude,
+                HasPullUpBars = spot.HasPullUpBars,
+                HasParallelBars = spot.HasParallelBars,
+                HasRings = spot.HasRings,
+                HasLighting = spot.HasLighting,
+                IsIndoor = spot.IsIndoor,
+
+                ExistingImages = spot.Images
+                            .Select(img => new ExistingImageDto 
+                            { 
+                                Id = img.Id, 
+                                Url = imageStorageService.GetPublicUrl(img.StoragePath)
+                            })
+                            .ToList()
+
+
+            };
+
+        }
+
+        public async Task EditAsync(EditSpotDto dto, ClaimsPrincipal user)
+        {
+            var spot = await dbContext.WorkoutSpots
+                        .Include(s => s.Images)
+                        .FirstOrDefaultAsync(s => s.Id == dto.Id);
+
+            if (spot is null)
+            {
+                throw new InvalidOperationException("Workout spot not found.");
+            }
+
+
+            var currentUserId = userManager.GetUserId(user);
+
+            var isAdmin =
+                user.Identity?.IsAuthenticated == true &&
+                user.IsInRole("Admin");
+
+            var isOwner =
+                currentUserId != null &&
+                spot.SubmittedByUserId == currentUserId;
+
+            if (!isAdmin && !isOwner)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+
+            spot.Name = dto.Name.Trim();
+            spot.Description = dto.Description.Trim();
+            spot.City = dto.City.Trim();
+            spot.District = dto.District.Trim();
+
+            spot.Latitude = dto.Latitude;
+            spot.Longitude = dto.Longitude;
+
+            spot.HasPullUpBars = dto.HasPullUpBars;
+            spot.HasParallelBars = dto.HasParallelBars;
+            spot.HasRings = dto.HasRings;
+            spot.HasLighting = dto.HasLighting;
+            spot.IsIndoor = dto.IsIndoor;
+
+            if (!isAdmin)
+            {
+                spot.Status = SpotStatus.Pending;
+            }
+
+
+            //Photo logic
+
+            await dbContext.SaveChangesAsync();
+
+        }
     }
 }
