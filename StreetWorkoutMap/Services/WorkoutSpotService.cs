@@ -6,7 +6,6 @@ using StreetWorkoutMap.DTOs.WorkoutSpot;
 using StreetWorkoutMap.Models;
 using StreetWorkoutMap.Services.Contrancts;
 using StreetWorkoutMap.Services.ImageStorage;
-using System.Collections;
 using System.Security.Claims;
 
 namespace StreetWorkoutMap.Services
@@ -108,18 +107,18 @@ namespace StreetWorkoutMap.Services
                 {
                     await imageStorageService.DeleteImagesAsync(uploadedPaths);
                 }
-                
+
                 throw;
             }
-            
+
         }
 
         public async Task<SpotDetailsDto?> GetDetailsAsync(Guid id, ClaimsPrincipal user)
         {
-             var spot = await dbContext.WorkoutSpots
-                        .AsNoTracking()
-                        .Include(spot => spot.Images)
-                        .FirstOrDefaultAsync(spot => spot.Id == id);
+            var spot = await dbContext.WorkoutSpots
+                       .AsNoTracking()
+                       .Include(spot => spot.Images)
+                       .FirstOrDefaultAsync(spot => spot.Id == id);
 
             if (spot is null) return null;
 
@@ -131,8 +130,8 @@ namespace StreetWorkoutMap.Services
 
             var isApproved = spot.Status == SpotStatus.Approved;
 
-            if (!isApproved && !isAdmin && !isOwner)  return null;
-            
+            if (!isApproved && !isAdmin && !isOwner) return null;
+
 
             var canEdit = isAdmin || isOwner;
 
@@ -197,9 +196,9 @@ namespace StreetWorkoutMap.Services
                 IsIndoor = spot.IsIndoor,
 
                 ExistingImages = spot.Images
-                            .Select(img => new ExistingImageDto 
-                            { 
-                                Id = img.Id, 
+                            .Select(img => new ExistingImageDto
+                            {
+                                Id = img.Id,
                                 Url = imageStorageService.GetPublicUrl(img.StoragePath)
                             })
                             .ToList()
@@ -209,26 +208,29 @@ namespace StreetWorkoutMap.Services
 
         }
 
-        public async Task EditAsync(EditSpotDto dto, ClaimsPrincipal user)
+        public async Task EditAsync(
+            EditSpotDto dto,
+            ClaimsPrincipal user)
         {
-            var spot = await dbContext.WorkoutSpots
-                        .Include(s => s.Images)
-                        .FirstOrDefaultAsync(s => s.Id == dto.Id);
-
-            if (spot is null)
-            {
-                throw new InvalidOperationException("Workout spot not found.");
-            }
-
+            const int maxImages = 3;
 
             var currentUserId = userManager.GetUserId(user);
-
             var isAdmin =
                 user.Identity?.IsAuthenticated == true &&
                 user.IsInRole("Admin");
 
+            var spot = await dbContext.WorkoutSpots
+                .Include(workoutSpot => workoutSpot.Images)
+                .FirstOrDefaultAsync(workoutSpot => workoutSpot.Id == dto.Id);
+
+            if (spot is null)
+            {
+                throw new KeyNotFoundException(
+                    "Площадката не беше намерена.");
+            }
+
             var isOwner =
-                currentUserId != null &&
+                currentUserId is not null &&
                 spot.SubmittedByUserId == currentUserId;
 
             if (!isAdmin && !isOwner)
@@ -236,31 +238,129 @@ namespace StreetWorkoutMap.Services
                 throw new UnauthorizedAccessException();
             }
 
+            dto.ImagesToDelete ??= [];
+            dto.NewImages ??= [];
 
-            spot.Name = dto.Name.Trim();
-            spot.Description = dto.Description.Trim();
-            spot.City = dto.City.Trim();
-            spot.District = dto.District.Trim();
+            var imageIdsToDelete = dto.ImagesToDelete
+                .Distinct()
+                .ToHashSet();
 
-            spot.Latitude = dto.Latitude;
-            spot.Longitude = dto.Longitude;
+            var imagesToDelete = spot.Images
+                .Where(image => imageIdsToDelete.Contains(image.Id))
+                .ToList();
 
-            spot.HasPullUpBars = dto.HasPullUpBars;
-            spot.HasParallelBars = dto.HasParallelBars;
-            spot.HasRings = dto.HasRings;
-            spot.HasLighting = dto.HasLighting;
-            spot.IsIndoor = dto.IsIndoor;
-
-            if (!isAdmin)
+            if (imagesToDelete.Count != imageIdsToDelete.Count)
             {
-                spot.Status = SpotStatus.Pending;
+                throw new InvalidOperationException(
+                    "Една или повече снимки за изтриване не принадлежат на площадката.");
             }
 
+            var resultingImageCount =
+                spot.Images.Count -
+                imagesToDelete.Count +
+                dto.NewImages.Count;
 
-            //Photo logic
+            if (resultingImageCount > maxImages)
+            {
+                throw new InvalidOperationException(
+                    $"Площадката може да има най-много {maxImages} снимки.");
+            }
 
-            await dbContext.SaveChangesAsync();
+            if (resultingImageCount < 1)
+            {
+                throw new InvalidOperationException(
+                    "Площадката трябва да има поне една снимка.");
+            }
 
+            var uploadedPaths = new List<string>();
+
+            try
+            {
+                if (dto.NewImages.Count > 0)
+                {
+                    uploadedPaths = await imageStorageService
+                        .UploadImagesAsync(spot.Id, dto.NewImages);
+                }
+
+                await using var transaction =
+                    await dbContext.Database.BeginTransactionAsync();
+
+                spot.Name = dto.Name.Trim();
+                spot.Description = dto.Description.Trim();
+                spot.City = dto.City.Trim();
+                spot.District = dto.District.Trim();
+                spot.Latitude = dto.Latitude;
+                spot.Longitude = dto.Longitude;
+                spot.HasPullUpBars = dto.HasPullUpBars;
+                spot.HasParallelBars = dto.HasParallelBars;
+                spot.HasRings = dto.HasRings;
+                spot.HasLighting = dto.HasLighting;
+                spot.IsIndoor = dto.IsIndoor;
+
+                if (!isAdmin)
+                {
+                    spot.Status = SpotStatus.Pending;
+                }
+
+                if (imagesToDelete.Count > 0)
+                {
+                    dbContext.SpotImages.RemoveRange(imagesToDelete);
+                }
+
+                if (uploadedPaths.Count > 0)
+                {
+                    var newImages = uploadedPaths
+                        .Select(path => new SpotImage
+                        {
+                            Id = Guid.NewGuid(),
+                            WorkoutSpotId = spot.Id,
+                            StoragePath = path
+                        })
+                        .ToList();
+
+                    await dbContext.SpotImages.AddRangeAsync(newImages);
+                }
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                if (uploadedPaths.Count > 0)
+                {
+                    try
+                    {
+                        await imageStorageService
+                            .DeleteImagesAsync(uploadedPaths);
+                    }
+                    catch
+                    {
+                        // По-късно може да се добави ILogger за orphan файлове.
+                    }
+                }
+
+                throw;
+            }
+
+            var oldStoragePaths = imagesToDelete
+                .Select(image => image.StoragePath)
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .Distinct()
+                .ToList();
+
+            if (oldStoragePaths.Count > 0)
+            {
+                try
+                {
+                    await imageStorageService
+                        .DeleteImagesAsync(oldStoragePaths);
+                }
+                catch
+                {
+                    // DB промените вече са записани. При нужда orphan
+                    // файловете могат да се логват и почистват отделно.
+                }
+            }
         }
     }
 }

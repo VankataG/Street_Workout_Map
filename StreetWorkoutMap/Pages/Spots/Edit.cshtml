@@ -8,15 +8,15 @@
 <div class="create-spot-page">
     <header class="create-spot-header">
         <span class="create-spot-eyebrow">Редактиране</span>
-
         <h1>Редактирай площадката</h1>
-
-        <p>
-            Актуализирай информацията, оборудването и локацията на площадката.
-        </p>
+        <p>Актуализирай информацията, оборудването, локацията и снимките.</p>
     </header>
 
-    <form method="post" class="create-spot-form">
+    <form method="post"
+          enctype="multipart/form-data"
+          class="create-spot-form"
+          id="edit-spot-form">
+
         <input asp-for="Input.Id" type="hidden" />
 
         <div asp-validation-summary="ModelOnly"
@@ -25,7 +25,6 @@
         <section class="form-section">
             <div class="form-section-heading">
                 <span class="form-section-number">1</span>
-
                 <div>
                     <h2>Основна информация</h2>
                     <p>Промени името и описанието на площадката.</p>
@@ -34,29 +33,19 @@
 
             <div class="form-grid">
                 <div class="form-field form-field-full">
-                    <label asp-for="Input.Name"
-                           class="form-label">
-                        Име
-                    </label>
-
+                    <label asp-for="Input.Name" class="form-label">Име</label>
                     <input asp-for="Input.Name"
                            class="form-input"
                            placeholder="Например: Стрийт фитнес парк Център" />
-
                     <span asp-validation-for="Input.Name"
                           class="form-validation-message"></span>
                 </div>
 
                 <div class="form-field form-field-full">
-                    <label asp-for="Input.Description"
-                           class="form-label">
-                        Описание
-                    </label>
-
+                    <label asp-for="Input.Description" class="form-label">Описание</label>
                     <textarea asp-for="Input.Description"
                               class="form-input form-textarea"
                               placeholder="Опиши площадката, състоянието и достъпа до нея."></textarea>
-
                     <span asp-validation-for="Input.Description"
                           class="form-validation-message"></span>
                 </div>
@@ -66,7 +55,6 @@
         <section class="form-section">
             <div class="form-section-heading">
                 <span class="form-section-number">2</span>
-
                 <div>
                     <h2>Оборудване</h2>
                     <p>Отбележи какво има на площадката.</p>
@@ -76,9 +64,7 @@
             <div class="equipment-options">
                 <label class="equipment-option">
                     <input asp-for="Input.HasPullUpBars" />
-
                     <span class="equipment-option-indicator"></span>
-
                     <span class="equipment-option-text">
                         <strong>Лостове</strong>
                         <small>Единични или комбинирани лостове</small>
@@ -87,9 +73,7 @@
 
                 <label class="equipment-option">
                     <input asp-for="Input.HasParallelBars" />
-
                     <span class="equipment-option-indicator"></span>
-
                     <span class="equipment-option-text">
                         <strong>Успоредка</strong>
                         <small>За кофички и други упражнения</small>
@@ -98,9 +82,7 @@
 
                 <label class="equipment-option">
                     <input asp-for="Input.HasRings" />
-
                     <span class="equipment-option-indicator"></span>
-
                     <span class="equipment-option-text">
                         <strong>Халки</strong>
                         <small>Гимнастически халки</small>
@@ -109,9 +91,7 @@
 
                 <label class="equipment-option">
                     <input asp-for="Input.HasLighting" />
-
                     <span class="equipment-option-indicator"></span>
-
                     <span class="equipment-option-text">
                         <strong>Осветление</strong>
                         <small>Подходяща за вечерни тренировки</small>
@@ -120,9 +100,7 @@
 
                 <label class="equipment-option">
                     <input asp-for="Input.IsIndoor" />
-
                     <span class="equipment-option-indicator"></span>
-
                     <span class="equipment-option-text">
                         <strong>На закрито</strong>
                         <small>Площадката е в закрито помещение</small>
@@ -134,7 +112,6 @@
         <section class="form-section">
             <div class="form-section-heading">
                 <span class="form-section-number">3</span>
-
                 <div>
                     <h2>Локация</h2>
                     <p>Промени адреса или премести маркера върху картата.</p>
@@ -151,76 +128,163 @@
                     Използвай текущото ми местоположение
                 </button>
 
-                <p id="location-message"
-                   class="location-message"></p>
+                <p id="location-message" class="location-message"></p>
             </div>
 
             <div class="form-grid">
                 <div class="form-field">
-                    <label asp-for="Input.City"
-                           class="form-label">
-                        Град
-                    </label>
-
+                    <label asp-for="Input.City" class="form-label">Град</label>
                     <input asp-for="Input.City"
                            class="form-input"
                            placeholder="Например: Велико Търново" />
-
                     <span asp-validation-for="Input.City"
                           class="form-validation-message"></span>
                 </div>
 
                 <div class="form-field">
-                    <label asp-for="Input.District"
-                           class="form-label">
-                        Квартал
-                    </label>
-
+                    <label asp-for="Input.District" class="form-label">Квартал</label>
                     <input asp-for="Input.District"
                            class="form-input"
                            placeholder="Например: Картала" />
-
                     <span asp-validation-for="Input.District"
                           class="form-validation-message"></span>
                 </div>
 
                 <div class="form-field">
-                    <label asp-for="Input.Latitude"
-                           class="form-label">
-                        Географска ширина
-                    </label>
-
-                    <input asp-for="Input.Latitude"
-                           class="form-input"
-                           step="any" />
-
+                    <label asp-for="Input.Latitude" class="form-label">Географска ширина</label>
+                    <input asp-for="Input.Latitude" class="form-input" step="any" />
                     <span asp-validation-for="Input.Latitude"
                           class="form-validation-message"></span>
                 </div>
 
                 <div class="form-field">
-                    <label asp-for="Input.Longitude"
-                           class="form-label">
-                        Географска дължина
-                    </label>
-
-                    <input asp-for="Input.Longitude"
-                           class="form-input"
-                           step="any" />
-
+                    <label asp-for="Input.Longitude" class="form-label">Географска дължина</label>
+                    <input asp-for="Input.Longitude" class="form-input" step="any" />
                     <span asp-validation-for="Input.Longitude"
                           class="form-validation-message"></span>
                 </div>
             </div>
         </section>
 
-        <div class="create-spot-actions">
-            <p>
-                Промените на потребителска площадка ще изискват ново одобрение.
-            </p>
+        <section class="form-section">
+            <div class="form-section-heading">
+                <span class="form-section-number">4</span>
+                <div>
+                    <h2>Снимки</h2>
+                    <p>Премахни текущи снимки или добави нови. Максимумът е 5 снимки общо.</p>
+                </div>
+            </div>
 
-            <button type="submit"
-                    class="create-spot-submit">
+            <div id="edit-images-manager"
+                 class="edit-images-manager"
+                 data-max-images="3">
+
+                <div class="edit-images-group">
+                    <div class="edit-images-group-heading">
+                        <div>
+                            <h3>Текущи снимки</h3>
+                            <p>Маркираните снимки ще бъдат изтрити едва след записване.</p>
+                        </div>
+
+                        <span id="existing-images-count"
+                              class="edit-images-counter">
+                            @(Model.Input.ExistingImages.Count - Model.Input.ImagesToDelete.Distinct().Count())
+                        </span>
+                    </div>
+
+                    @if (Model.Input.ExistingImages.Count > 0)
+                    {
+                        <div id="existing-images-grid" class="edit-images-grid">
+                            @foreach (var image in Model.Input.ExistingImages)
+                            {
+                                var isMarkedForDeletion =
+                                    Model.Input.ImagesToDelete.Contains(image.Id);
+
+                                <article class="edit-image-card existing-image-card @(isMarkedForDeletion ? "marked-for-delete" : string.Empty)"
+                                         data-image-id="@image.Id">
+                                    <div class="edit-image-preview">
+                                        <img src="@image.Url"
+                                             alt="Снимка на площадката" />
+
+                                        <div class="edit-image-delete-overlay">
+                                            <span>Снимката ще бъде изтрита</span>
+                                        </div>
+                                    </div>
+
+                                    <button type="button"
+                                            class="edit-image-action existing-image-toggle"
+                                            aria-pressed="@(isMarkedForDeletion.ToString().ToLowerInvariant())">
+                                        <span class="edit-image-action-icon">
+                                            @(isMarkedForDeletion ? "↶" : "✕")
+                                        </span>
+                                        <span class="edit-image-action-text">
+                                            @(isMarkedForDeletion ? "Отмени" : "Премахни")
+                                        </span>
+                                    </button>
+
+                                    @if (isMarkedForDeletion)
+                                    {
+                                        <input type="hidden"
+                                               name="Input.ImagesToDelete"
+                                               value="@image.Id"
+                                               data-delete-input="@image.Id" />
+                                    }
+                                </article>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="edit-images-empty">
+                            Площадката все още няма качени снимки.
+                        </div>
+                    }
+                </div>
+
+                <div class="edit-images-group">
+                    <div class="edit-images-group-heading">
+                        <div>
+                            <h3>Добави нови снимки</h3>
+                            <p>JPG, PNG или WEBP, до 5 MB на файл.</p>
+                        </div>
+
+                        <span id="new-images-count" class="edit-images-counter">0</span>
+                    </div>
+
+                    <label for="new-images-input" class="edit-images-upload">
+                        <span class="edit-images-upload-icon">＋</span>
+                        <span class="edit-images-upload-content">
+                            <strong id="new-images-upload-title">Добави снимки</strong>
+                            <small id="new-images-upload-description">
+                                Можеш да избираш няколко изображения наведнъж
+                            </small>
+                        </span>
+                    </label>
+
+                    <input asp-for="Input.NewImages"
+                           id="new-images-input"
+                           class="edit-images-file-input"
+                           type="file"
+                           accept="image/jpeg,image/png,image/webp"
+                           multiple />
+
+                    <span asp-validation-for="Input.NewImages"
+                          class="form-validation-message"></span>
+
+                    <p id="images-limit-message"
+                       class="form-validation-message edit-images-message"
+                       hidden></p>
+
+                    <div id="new-images-grid"
+                         class="edit-images-grid new-images-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="create-spot-actions">
+            <p>Промените от собственик ще върнат площадката за ново одобрение.</p>
+
+            <button type="submit" class="create-spot-submit">
                 Запази промените
             </button>
         </div>
@@ -231,5 +295,8 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script src="~/js/create-spot-map.js"
+            asp-append-version="true"></script>
+
+    <script src="~/js/edit-spot-images.js"
             asp-append-version="true"></script>
 }

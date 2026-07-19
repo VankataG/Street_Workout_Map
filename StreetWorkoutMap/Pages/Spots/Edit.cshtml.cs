@@ -4,63 +4,95 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
 using StreetWorkoutMap.Services.Contrancts;
 
-namespace StreetWorkoutMap.Pages.Spots
+namespace StreetWorkoutMap.Pages.Spots;
+
+[Authorize]
+public class EditModel : PageModel
 {
+    private readonly IWorkoutSpotService workoutSpotService;
 
-
-    [Authorize]
-    public class EditModel : PageModel
+    public EditModel(IWorkoutSpotService workoutSpotService)
     {
-        [BindProperty]
-        public EditSpotDto Input { get; set; } = new();
+        this.workoutSpotService = workoutSpotService;
+    }
 
-        private readonly IWorkoutSpotService workoutSpotService;
+    [BindProperty]
+    public EditSpotDto Input { get; set; } = new();
 
-        public EditModel(IWorkoutSpotService workoutSpotService)
+    public async Task<IActionResult> OnGetAsync(Guid id)
+    {
+        var spot = await workoutSpotService.GetForEditAsync(id, User);
+
+        if (spot is null)
         {
-            this.workoutSpotService = workoutSpotService;
+            return NotFound();
         }
 
-        public async Task<IActionResult> OnGetAsync(Guid id)
+        Input = spot;
+
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
         {
-            var dto = await workoutSpotService.GetForEditAsync(id, User);
-
-            if (dto is null)
-            {
-                return NotFound();
-            }
-
-            Input = dto;
-
+            await ReloadExistingImagesAsync();
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        try
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            try
-            {
-                await workoutSpotService.EditAsync(Input, User);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Forbid();
-            }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
-
-            TempData["SuccessMessage"] =
-                "Площадката беше редактирана успешно.";
-
-            return RedirectToPage(
-                "/Spots/Details",
-                new { id = Input.Id });
+            await workoutSpotService.EditAsync(Input, User);
         }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (ArgumentException exception)
+        {
+            ModelState.AddModelError(string.Empty, exception.Message);
+            await ReloadExistingImagesAsync();
+            return Page();
+        }
+        catch (InvalidOperationException exception)
+        {
+            ModelState.AddModelError(string.Empty, exception.Message);
+            await ReloadExistingImagesAsync();
+            return Page();
+        }
+
+        TempData["SuccessMessage"] =
+            "Площадката беше редактирана успешно.";
+
+        return RedirectToPage(
+            "/Spots/Details",
+            new { id = Input.Id });
+    }
+
+    private async Task ReloadExistingImagesAsync()
+    {
+        var originalSpot = await workoutSpotService
+            .GetForEditAsync(Input.Id, User);
+
+        if (originalSpot is null)
+        {
+            return;
+        }
+
+        Input.ExistingImages = originalSpot.ExistingImages;
+
+        var validExistingImageIds = originalSpot.ExistingImages
+            .Select(image => image.Id)
+            .ToHashSet();
+
+        Input.ImagesToDelete = Input.ImagesToDelete
+            .Where(validExistingImageIds.Contains)
+            .Distinct()
+            .ToList();
     }
 }
