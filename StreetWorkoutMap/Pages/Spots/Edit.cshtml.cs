@@ -42,11 +42,25 @@ namespace StreetWorkoutMap.Pages.Spots
                 return Page();
             }
 
-            await workoutSpotService.EditAsync(Input, User);
+            try
+            {
+                await workoutSpotService.EditAsync(Input, User);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
 
-            TempData["SuccessMessage"] = "Workout spot updated successfully.";
+            TempData["SuccessMessage"] =
+                "Площадката беше редактирана успешно.";
 
-            return RedirectToPage("/Spots/Details", new { id = Input.Id });
+            return RedirectToPage(
+                "/Spots/Details",
+                new { id = Input.Id });
         }
     }
 }

@@ -1,4 +1,235 @@
-﻿@page
+﻿@page "{id:guid}"
 @model StreetWorkoutMap.Pages.Spots.EditModel
+
 @{
+    ViewData["Title"] = "Редактиране на площадка";
+}
+
+<div class="create-spot-page">
+    <header class="create-spot-header">
+        <span class="create-spot-eyebrow">Редактиране</span>
+
+        <h1>Редактирай площадката</h1>
+
+        <p>
+            Актуализирай информацията, оборудването и локацията на площадката.
+        </p>
+    </header>
+
+    <form method="post" class="create-spot-form">
+        <input asp-for="Input.Id" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="form-validation-summary"></div>
+
+        <section class="form-section">
+            <div class="form-section-heading">
+                <span class="form-section-number">1</span>
+
+                <div>
+                    <h2>Основна информация</h2>
+                    <p>Промени името и описанието на площадката.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-field form-field-full">
+                    <label asp-for="Input.Name"
+                           class="form-label">
+                        Име
+                    </label>
+
+                    <input asp-for="Input.Name"
+                           class="form-input"
+                           placeholder="Например: Стрийт фитнес парк Център" />
+
+                    <span asp-validation-for="Input.Name"
+                          class="form-validation-message"></span>
+                </div>
+
+                <div class="form-field form-field-full">
+                    <label asp-for="Input.Description"
+                           class="form-label">
+                        Описание
+                    </label>
+
+                    <textarea asp-for="Input.Description"
+                              class="form-input form-textarea"
+                              placeholder="Опиши площадката, състоянието и достъпа до нея."></textarea>
+
+                    <span asp-validation-for="Input.Description"
+                          class="form-validation-message"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="form-section-heading">
+                <span class="form-section-number">2</span>
+
+                <div>
+                    <h2>Оборудване</h2>
+                    <p>Отбележи какво има на площадката.</p>
+                </div>
+            </div>
+
+            <div class="equipment-options">
+                <label class="equipment-option">
+                    <input asp-for="Input.HasPullUpBars" />
+
+                    <span class="equipment-option-indicator"></span>
+
+                    <span class="equipment-option-text">
+                        <strong>Лостове</strong>
+                        <small>Единични или комбинирани лостове</small>
+                    </span>
+                </label>
+
+                <label class="equipment-option">
+                    <input asp-for="Input.HasParallelBars" />
+
+                    <span class="equipment-option-indicator"></span>
+
+                    <span class="equipment-option-text">
+                        <strong>Успоредка</strong>
+                        <small>За кофички и други упражнения</small>
+                    </span>
+                </label>
+
+                <label class="equipment-option">
+                    <input asp-for="Input.HasRings" />
+
+                    <span class="equipment-option-indicator"></span>
+
+                    <span class="equipment-option-text">
+                        <strong>Халки</strong>
+                        <small>Гимнастически халки</small>
+                    </span>
+                </label>
+
+                <label class="equipment-option">
+                    <input asp-for="Input.HasLighting" />
+
+                    <span class="equipment-option-indicator"></span>
+
+                    <span class="equipment-option-text">
+                        <strong>Осветление</strong>
+                        <small>Подходяща за вечерни тренировки</small>
+                    </span>
+                </label>
+
+                <label class="equipment-option">
+                    <input asp-for="Input.IsIndoor" />
+
+                    <span class="equipment-option-indicator"></span>
+
+                    <span class="equipment-option-text">
+                        <strong>На закрито</strong>
+                        <small>Площадката е в закрито помещение</small>
+                    </span>
+                </label>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="form-section-heading">
+                <span class="form-section-number">3</span>
+
+                <div>
+                    <h2>Локация</h2>
+                    <p>Промени адреса или премести маркера върху картата.</p>
+                </div>
+            </div>
+
+            <div class="create-map-wrapper">
+                <div id="create-spot-map"></div>
+
+                <button type="button"
+                        id="use-current-location"
+                        class="current-location-button">
+                    <span>⌖</span>
+                    Използвай текущото ми местоположение
+                </button>
+
+                <p id="location-message"
+                   class="location-message"></p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label asp-for="Input.City"
+                           class="form-label">
+                        Град
+                    </label>
+
+                    <input asp-for="Input.City"
+                           class="form-input"
+                           placeholder="Например: Велико Търново" />
+
+                    <span asp-validation-for="Input.City"
+                          class="form-validation-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Input.District"
+                           class="form-label">
+                        Квартал
+                    </label>
+
+                    <input asp-for="Input.District"
+                           class="form-input"
+                           placeholder="Например: Картала" />
+
+                    <span asp-validation-for="Input.District"
+                          class="form-validation-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Input.Latitude"
+                           class="form-label">
+                        Географска ширина
+                    </label>
+
+                    <input asp-for="Input.Latitude"
+                           class="form-input"
+                           step="any" />
+
+                    <span asp-validation-for="Input.Latitude"
+                          class="form-validation-message"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Input.Longitude"
+                           class="form-label">
+                        Географска дължина
+                    </label>
+
+                    <input asp-for="Input.Longitude"
+                           class="form-input"
+                           step="any" />
+
+                    <span asp-validation-for="Input.Longitude"
+                          class="form-validation-message"></span>
+                </div>
+            </div>
+        </section>
+
+        <div class="create-spot-actions">
+            <p>
+                Промените на потребителска площадка ще изискват ново одобрение.
+            </p>
+
+            <button type="submit"
+                    class="create-spot-submit">
+                Запази промените
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/create-spot-map.js"
+            asp-append-version="true"></script>
 }
