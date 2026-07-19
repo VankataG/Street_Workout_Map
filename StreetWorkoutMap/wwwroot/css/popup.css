@@ -185,6 +185,19 @@ html[data-theme="dark"] .equipment-content li {
     margin-top: 16px;
 }
 
+/*.spot-details-button {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: transparent;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}*/
+
 .spot-directions-button {
     display: block;
     width: 100%;

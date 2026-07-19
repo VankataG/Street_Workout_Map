@@ -81,6 +81,12 @@
 
                 <div class="spot-popup-actions">
                     <a
+                        href="/Spots/Details/${spot.Id}"
+                        class="spot-directions-button">
+                        Детайли
+                    </a>
+                    <br/>
+                    <a
                         href="${mapsUrl}"
                         target="_blank"
                         rel="noopener noreferrer"
