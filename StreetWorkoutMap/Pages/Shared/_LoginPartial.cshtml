@@ -3,29 +3,95 @@
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+
 @{
-    var currentUser = await UserManager.GetUserAsync(User);
+    var currentUser = SignInManager.IsSignedIn(User)
+        ? await UserManager.GetUserAsync(User)
+        : null;
 }
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@currentUser?.FirstName</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Изход</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Вход</a>
-    </li>
-}
+<ul class="navbar-nav align-items-sm-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown">
+            <a id="userDropdown"
+               class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+               href="#"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+
+                <span class="navbar-user-avatar">
+                    @(string.IsNullOrWhiteSpace(currentUser?.FirstName)
+                        ? "U"
+                        : currentUser.FirstName[..1].ToUpper())
+                </span>
+
+                <span>@currentUser?.FirstName</span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end navbar-user-menu"
+                aria-labelledby="userDropdown">
+
+                <li class="navbar-user-info">
+                    <strong>
+                        @currentUser?.FirstName @currentUser?.LastName
+                    </strong>
+
+                    <span>@currentUser?.Email</span>
+                </li>
+
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+
+                <li>
+                    <a class="dropdown-item"
+                       asp-area="Identity"
+                       asp-page="/Account/Manage/Index">
+                        Моят профил
+                    </a>
+                </li>
+
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+
+                <li>
+                    <form id="logoutForm"
+                          asp-area="Identity"
+                          asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Page("/Index", new { area = "" })"
+                          method="post">
+
+                        <button id="logout"
+                                type="submit"
+                                class="dropdown-item navbar-user-logout">
+                            Изход
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark"
+               id="register"
+               asp-area="Identity"
+               asp-page="/Account/Register">
+                Регистрация
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark"
+               id="login"
+               asp-area="Identity"
+               asp-page="/Account/Login">
+                Вход
+            </a>
+        </li>
+    }
 </ul>
