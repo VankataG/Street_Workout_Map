@@ -52,25 +52,29 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            [Required]
+            [StringLength(50)]
+            [Display(Name = "Име")]
+            public string FirstName { get; set; } = string.Empty;
+
+            [Required]
+            [StringLength(50)]
+            [Display(Name = "Фамилия")]
+            public string LastName { get; set; } = string.Empty;
+
+            [Display(Name = "Имейл")]
+            public string Email { get; set; } = string.Empty;
         }
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            Username = userName;
+            Username = user.UserName!;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email!
             };
         }
 
@@ -100,19 +104,33 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+            var changed = false;
+
+            if (user.FirstName != Input.FirstName.Trim())
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                user.FirstName = Input.FirstName.Trim();
+                changed = true;
+            }
+
+            if (user.LastName != Input.LastName.Trim())
+            {
+                user.LastName = Input.LastName.Trim();
+                changed = true;
+            }
+
+            if (changed)
+            {
+                var result = await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Възникна грешка при запазването.";
                     return RedirectToPage();
                 }
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Профилът беше обновен успешно.";
             return RedirectToPage();
         }
     }
