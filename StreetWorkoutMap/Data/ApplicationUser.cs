@@ -12,5 +12,7 @@ namespace StreetWorkoutMap.Data
         [PersonalData]
         [MaxLength(50)]
         public string? LastName { get; set; }
+
+        public string FullName => $"{FirstName} {LastName}";
     }
 }
