@@ -16,5 +16,7 @@ namespace StreetWorkoutMap.Services.Contrancts
         public Task<EditSpotDto?> GetForEditAsync(Guid id, ClaimsPrincipal user);
 
         public Task EditAsync(EditSpotDto dto, ClaimsPrincipal user);
+
+        public Task<ICollection<MySpotDto>> GetMySpotsAsync(ClaimsPrincipal user);
     }
 }

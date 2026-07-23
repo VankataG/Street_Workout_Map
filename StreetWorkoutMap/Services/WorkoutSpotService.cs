@@ -363,5 +363,10 @@ namespace StreetWorkoutMap.Services
                 }
             }
         }
+
+        public Task<ICollection<MySpotDto>> GetMySpotsAsync(ClaimsPrincipal user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
