@@ -1,4 +1,132 @@
 ﻿@page
+@using StreetWorkoutMap.Models
 @model StreetWorkoutMap.Pages.Spots.MySpotsModel
+
 @{
+    ViewData["Title"] = "Моите площадки";
 }
+
+<section class="my-spots-page">
+
+    <header class="my-spots-header">
+        <div>
+            <p class="my-spots-eyebrow">Твоите предложения</p>
+            <h1>Моите площадки</h1>
+            <p class="my-spots-description">
+                Преглеждай и редактирай площадките, които си добавил.
+            </p>
+        </div>
+
+        <a asp-page="/Spots/Create"
+           class="my-spots-create-button">
+            + Добави площадка
+        </a>
+    </header>
+
+    @if (Model.MySpots.Count == 0)
+    {
+        <div class="my-spots-empty">
+            <div class="my-spots-empty-icon">+</div>
+
+            <h2>Все още нямаш добавени площадки</h2>
+
+            <p>
+                След като добавиш площадка, ще можеш да следиш нейния
+                статус и да я редактираш оттук.
+            </p>
+
+            <a asp-page="/Spots/Create"
+               class="my-spots-create-button">
+                Добави първата си площадка
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="my-spots-grid">
+
+            @foreach (var spot in Model.MySpots)
+            {
+                var statusClass = spot.Status switch
+                {
+                    SpotStatus.Approved => "spot-status-approved",
+                    SpotStatus.Pending => "spot-status-pending",
+                    SpotStatus.Rejected => "spot-status-rejected",
+                    _ => "spot-status-default"
+                };
+
+                var statusText = spot.Status switch
+                {
+                    SpotStatus.Approved => "Одобрена",
+                    SpotStatus.Pending => "Очаква одобрение",
+                    SpotStatus.Rejected => "Отхвърлена",
+                    _ => "Неизвестен статус"
+                };
+
+                <article class="my-spot-card">
+
+                    <div class="my-spot-image-wrapper">
+
+                        @if (!string.IsNullOrWhiteSpace(spot.ImageUrl))
+                        {
+                            <img src="@spot.ImageUrl"
+                                 alt="@spot.Name"
+                                 class="my-spot-image" />
+                        }
+                        else
+                        {
+                            <div class="my-spot-image-placeholder">
+                                Няма снимка
+                            </div>
+                        }
+
+                        
+
+                    </div>
+
+                    <div class="my-spot-content">
+
+                        <div class="my-spot-title-row">
+
+                            <h2>@spot.Name</h2>
+
+                            <span class="spot-status-badge @statusClass">
+                                @statusText
+                            </span>
+
+                        </div>
+
+                        <p class="my-spot-location">
+                            @spot.City
+
+                            @if (!string.IsNullOrWhiteSpace(spot.District))
+                            {
+                                <span> · @spot.District</span>
+                            }
+                        </p>
+
+                        <div class="my-spot-actions">
+
+                            <a asp-page="/Spots/Details"
+                               asp-route-id="@spot.Id"
+                               class="my-spot-details-button">
+                                Преглед
+                            </a>
+
+                            <a asp-page="/Spots/Edit"
+                               asp-route-id="@spot.Id"
+                               class="my-spot-edit-button">
+                                Редактирай
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+
+</section>

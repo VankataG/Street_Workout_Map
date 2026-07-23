@@ -336,7 +336,7 @@ namespace StreetWorkoutMap.Services
                     }
                     catch
                     {
-                        // По-късно може да се добави ILogger за orphan файлове.
+                        //Add ILogger for orphan files
                     }
                 }
 
@@ -358,15 +358,42 @@ namespace StreetWorkoutMap.Services
                 }
                 catch
                 {
-                    // DB промените вече са записани. При нужда orphan
-                    // файловете могат да се логват и почистват отделно.
+                    
+                    // Log and clear orphan files if necessary
                 }
             }
         }
 
-        public Task<ICollection<MySpotDto>> GetMySpotsAsync(ClaimsPrincipal user)
+        public async Task<ICollection<MySpotDto>> GetMySpotsAsync(ClaimsPrincipal user)
         {
-            throw new NotImplementedException();
+            var userId = userManager.GetUserId(user);
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("Потребителят трябва да е влязъл в профила си.");
+            }
+
+
+            return await dbContext.WorkoutSpots
+                        .AsNoTracking()
+                        .Include(spot => spot.Images)
+                        .Where(spot => spot.SubmittedByUserId == userId)
+                        .OrderByDescending(spot => spot.Status == SpotStatus.Pending)
+                        .ThenBy(spot => spot.Name)
+                        .Select(spot => new MySpotDto
+                        {
+                            Id = spot.Id,
+                            Name = spot.Name,
+                            City = spot.City,
+                            District = spot.District,
+                            Status = spot.Status,
+                            ImageUrl = spot.Images
+                                .Select(image => image.StoragePath)
+                                .Select(path => imageStorageService.GetPublicUrl(path))
+                                .FirstOrDefault()
+                        })
+                        .ToListAsync();
+              
         }
     }
 }
