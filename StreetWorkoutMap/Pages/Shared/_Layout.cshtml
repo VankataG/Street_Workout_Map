@@ -42,7 +42,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Spots/Create">Добави площадка</a>
                             </li>
                             }
-                            
+                        @if (User.IsInRole("Admin"))
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Admin/PendingSpots">Заявки</a>
+                            </li>
+                            }
+
                         
                     </ul>
                     <button id="theme-toggle"
