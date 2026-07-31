@@ -395,5 +395,29 @@ namespace StreetWorkoutMap.Services
                         .ToListAsync();
               
         }
+
+        public async Task<ICollection<PendingSpotDto>> GetPendingSpotsAsync()
+        {
+            return await dbContext.WorkoutSpots
+                .AsNoTracking()
+                .Where(spot => spot.Status == SpotStatus.Pending)
+                .OrderBy(spot => spot.Name)
+                .Select(spot => new PendingSpotDto
+                {
+                    Id = spot.Id,
+                    Name = spot.Name,
+                    City = spot.City,
+                    District = spot.District,
+
+                    SubmittedByName = (spot.SubmittedByUser!.FirstName + " " + spot.SubmittedByUser.LastName).Trim(),
+
+                    ImageUrl = spot.Images
+                            .Select(img => img.StoragePath)
+                            .Select(path => imageStorageService.GetPublicUrl(path))
+                            .FirstOrDefault()
+
+                })
+                .ToListAsync();
+        }
     }
 }

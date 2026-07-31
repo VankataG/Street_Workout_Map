@@ -1,4 +1,43 @@
 ﻿@page
 @model StreetWorkoutMap.Pages.Admin.PendingSpotsModel
+
 @{
+    ViewData["Title"] = "Чакащи заявки";
+}
+
+<h1>Чакащи заявки</h1>
+
+@if (Model.PendingSpots.Count == 0)
+{
+    <p>Няма площадки, чакащи одобрение.</p>
+}
+else
+{
+    @foreach (var spot in Model.PendingSpots)
+    {
+        <article>
+            @if (!string.IsNullOrWhiteSpace(spot.ImageUrl))
+            {
+                <img src="@spot.ImageUrl"
+                     alt="@spot.Name" />
+            }
+
+            <h2>@spot.Name</h2>
+
+            <p>
+                @spot.City
+                @if (!string.IsNullOrWhiteSpace(spot.District))
+                {
+                    <span> – @spot.District</span>
+                }
+            </p>
+
+            <p>Добавена от: @spot.SubmittedByName</p>
+
+            <a asp-page="/Spots/Details"
+               asp-route-id="@spot.Id">
+                Преглед
+            </a>
+        </article>
+    }
 }
