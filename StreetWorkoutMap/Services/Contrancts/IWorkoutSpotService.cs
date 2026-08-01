@@ -21,5 +21,6 @@ namespace StreetWorkoutMap.Services.Contrancts
 
         public Task<ICollection<PendingSpotDto>> GetPendingSpotsAsync();
 
+        public Task ApproveAsync(Guid id);
     }
 }

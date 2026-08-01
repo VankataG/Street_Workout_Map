@@ -329,6 +329,49 @@
                     </div>
                 </section>
             }
+            @if (Model.Spot.IsAdmin &&
+     Model.Spot.Status == "Pending")
+            {
+                <section class="spot-admin-card">
+
+                    <div class="spot-admin-heading">
+                        <span class="spot-admin-icon"
+                              aria-hidden="true">
+                            ✓
+                        </span>
+
+                        <div>
+                            <h2>Административни действия</h2>
+
+                            <p>
+                                Тази площадка очаква преглед.
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="spot-admin-description">
+                        След одобрение площадката ще стане видима
+                        на картата за всички потребители.
+                    </p>
+
+                    <form method="post"
+                          asp-page-handler="Approve">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Spot.Id" />
+
+                        <button type="submit"
+                                class="spot-admin-approve-button">
+                            <span aria-hidden="true">✓</span>
+                            Одобри площадката
+                        </button>
+
+                    </form>
+
+                </section>
+            }
+
 
             @if (Model.Spot.CanEdit)
             {

@@ -419,5 +419,19 @@ namespace StreetWorkoutMap.Services
                 })
                 .ToListAsync();
         }
+
+        public async Task ApproveAsync(Guid id)
+        {
+            var pendingSpot = await dbContext.WorkoutSpots
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(spot => spot.Id == id);
+
+            if (pendingSpot != null)
+            {
+                pendingSpot.Status = SpotStatus.Approved;
+
+                await dbContext.SaveChangesAsync();
+            }
+        }
     }
 }

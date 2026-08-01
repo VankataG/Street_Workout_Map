@@ -5,39 +5,127 @@
     ViewData["Title"] = "Чакащи заявки";
 }
 
-<h1>Чакащи заявки</h1>
+<section class="pending-spots-page">
 
-@if (Model.PendingSpots.Count == 0)
-{
-    <p>Няма площадки, чакащи одобрение.</p>
-}
-else
-{
-    @foreach (var spot in Model.PendingSpots)
-    {
-        <article>
-            @if (!string.IsNullOrWhiteSpace(spot.ImageUrl))
-            {
-                <img src="@spot.ImageUrl"
-                     alt="@spot.Name" />
-            }
-
-            <h2>@spot.Name</h2>
-
-            <p>
-                @spot.City
-                @if (!string.IsNullOrWhiteSpace(spot.District))
-                {
-                    <span> – @spot.District</span>
-                }
+    <header class="pending-spots-header">
+        <div>
+            <p class="pending-spots-eyebrow">
+                Администрация
             </p>
 
-            <p>Добавена от: @spot.SubmittedByName</p>
+            <h1>Чакащи заявки</h1>
 
-            <a asp-page="/Spots/Details"
-               asp-route-id="@spot.Id">
-                Преглед
+            <p class="pending-spots-description">
+                Прегледай предложените площадки, преди да станат
+                видими за всички потребители.
+            </p>
+        </div>
+
+        @if (Model.PendingSpots.Count > 0)
+        {
+            <div class="pending-spots-count">
+                <span>@Model.PendingSpots.Count</span>
+
+                @(Model.PendingSpots.Count == 1
+                    ? "чакаща заявка"
+                    : "чакащи заявки")
+            </div>
+        }
+    </header>
+
+    @if (Model.PendingSpots.Count == 0)
+    {
+        <div class="pending-spots-empty">
+
+            <div class="pending-spots-empty-icon">
+                ✓
+            </div>
+
+            <h2>Няма чакащи заявки</h2>
+
+            <p>
+                В момента всички изпратени площадки са прегледани.
+            </p>
+
+            <a asp-page="/Index"
+               class="pending-spots-back-button">
+                Към картата
             </a>
-        </article>
+
+        </div>
     }
-}
+    else
+    {
+        <div class="pending-spots-grid">
+
+            @foreach (var spot in Model.PendingSpots)
+            {
+                <article class="pending-spot-card">
+
+                    <div class="pending-spot-media">
+
+                        @if (!string.IsNullOrWhiteSpace(spot.ImageUrl))
+                        {
+                            <img src="@spot.ImageUrl"
+                                 alt="@spot.Name"
+                                 class="pending-spot-image" />
+                        }
+                        else
+                        {
+                            <div class="pending-spot-placeholder">
+                                <span>SW-MAP</span>
+                                <small>Няма снимка</small>
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="pending-spot-content">
+
+                        <div class="pending-spot-main">
+                            <h2>@spot.Name</h2>
+
+                            <p class="pending-spot-location">
+                                <span aria-hidden="true">⌖</span>
+
+                                @spot.City
+
+                                @if (!string.IsNullOrWhiteSpace(spot.District))
+                                {
+                                    <text> · @spot.District</text>
+                                }
+                            </p>
+                        </div>
+
+                        <div class="pending-spot-submitter">
+                            <span class="pending-spot-user-icon"
+                                  aria-hidden="true">
+                                @(
+                                    string.IsNullOrWhiteSpace(spot.SubmittedByName)
+                                        ? "?"
+                                        : spot.SubmittedByName[..1].ToUpper()
+                                )
+                            </span>
+
+                            <div>
+                                <small>Добавена от</small>
+                                <strong>@spot.SubmittedByName</strong>
+                            </div>
+                        </div>
+
+                        <a asp-page="/Spots/Details"
+                           asp-route-id="@spot.Id"
+                           class="pending-spot-details-button">
+                            Прегледай заявката
+                            <span aria-hidden="true">→</span>
+                        </a>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+
+</section>

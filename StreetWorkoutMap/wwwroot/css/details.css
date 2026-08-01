@@ -730,3 +730,96 @@ html[data-theme="dark"] .spot-owner-edit-link:hover {
         text-align: center;
     }
 }
+
+/* =========================================================
+   ADMIN APPROVAL
+   ========================================================= */
+
+.spot-admin-card {
+    padding: 22px;
+    border: 1px solid rgba(224, 157, 44, 0.38);
+    border-radius: 22px;
+    background: linear-gradient( 145deg, rgba(224, 157, 44, 0.08), transparent ), var(--surface-color);
+    box-shadow: 0 15px 42px var(--shadow-color);
+}
+
+.spot-admin-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.spot-admin-icon {
+    display: grid;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 11px;
+    background-color: #d99a2b;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.spot-admin-heading h2 {
+    margin: 1px 0 4px;
+    color: var(--text-color);
+    font-size: 1.03rem;
+    font-weight: 850;
+}
+
+.spot-admin-heading p {
+    margin: 0;
+    color: var(--secondary-text-color);
+    font-size: 0.84rem;
+}
+
+.spot-admin-description {
+    margin: 16px 0 18px;
+    color: var(--secondary-text-color);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.spot-admin-card form {
+    margin: 0;
+}
+
+.spot-admin-approve-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 16px;
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    background-color: var(--accent-color);
+    color: var(--surface-color);
+    font: inherit;
+    font-weight: 850;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+html[data-theme="dark"] .spot-admin-approve-button {
+    color: #071008;
+}
+
+.spot-admin-approve-button:hover {
+    border-color: var(--accent-hover-color);
+    background-color: var(--accent-hover-color);
+    box-shadow: 0 9px 22px var(--accent-soft-color);
+    transform: translateY(-1px);
+}
+
+.spot-admin-approve-button:active {
+    transform: translateY(0);
+}
+
+.spot-admin-approve-button:focus-visible {
+    outline: 3px solid var(--accent-soft-color);
+    outline-offset: 3px;
+}
