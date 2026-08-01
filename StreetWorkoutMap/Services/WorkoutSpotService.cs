@@ -420,18 +420,32 @@ namespace StreetWorkoutMap.Services
                 .ToListAsync();
         }
 
-        public async Task ApproveAsync(Guid id)
+        public async Task ApproveAsync(Guid id, ClaimsPrincipal user)
         {
+            if (!user.IsInRole("Administrator"))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+
             var pendingSpot = await dbContext.WorkoutSpots
-                            .AsNoTracking()
                             .FirstOrDefaultAsync(spot => spot.Id == id);
 
-            if (pendingSpot != null)
+            if (pendingSpot is null)
             {
-                pendingSpot.Status = SpotStatus.Approved;
-
-                await dbContext.SaveChangesAsync();
+                throw new ArgumentException("Площадката не беше намерена.");
             }
+
+            if (pendingSpot.Status != SpotStatus.Pending)
+            {
+                throw new InvalidOperationException(
+                    "Само чакащи площадки могат да бъдат одобрени.");
+            }
+
+            pendingSpot.Status = SpotStatus.Approved;
+
+            await dbContext.SaveChangesAsync();
+            
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
@@ -27,6 +28,20 @@ namespace StreetWorkoutMap.Pages.Spots
             return Page();
         }
 
+
+        public async Task<IActionResult> OnPostApproveAsync(Guid id)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
+            await workoutSpotService.ApproveAsync(id, User);
+
+            TempData["SuccessMessage"] = "Площадката беше одобрена успешно.";
+
+            return RedirectToPage("/Admin/PendingSpots");
+        }
 
     }
 }
