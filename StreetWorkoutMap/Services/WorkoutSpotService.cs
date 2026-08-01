@@ -422,7 +422,7 @@ namespace StreetWorkoutMap.Services
 
         public async Task ApproveAsync(Guid id, ClaimsPrincipal user)
         {
-            if (!user.IsInRole("Administrator"))
+            if (!user.IsInRole("Admin"))
             {
                 throw new UnauthorizedAccessException();
             }
