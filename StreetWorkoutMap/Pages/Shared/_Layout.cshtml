@@ -1,7 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using StreetWorkoutMap.Data
+@using StreetWorkoutMap.Services.Contrancts
 
+@inject IWorkoutSpotService WorkoutSpotService
 @inject SignInManager<ApplicationUser> SignInManager
+
+
+@{
+    var pendingSpotsCount = 0;
+
+    if (User.IsInRole("Admin"))
+    {
+        pendingSpotsCount = await WorkoutSpotService.GetPendingSpotsCountAsync();
+    }
+}
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,18 +51,33 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (SignInManager.IsSignedIn(User))
+                        @if (User.Identity?.IsAuthenticated == true)
                             {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Spots/Create">Добави площадка</a>
                             </li>
                             }
                         @if (User.IsInRole("Admin"))
-                            {
+                        {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Admin/PendingSpots">Заявки</a>
+                                <a class="nav-link text-dark admin-requests-link"
+                                   asp-area=""
+                                   asp-page="/Admin/PendingSpots">
+
+                                    <span>Заявки</span>
+
+                                    @if (pendingSpotsCount > 0)
+                                    {
+                                        <span class="admin-requests-count">
+                                            @(pendingSpotsCount > 99
+                                                ? "99+"
+                                                : pendingSpotsCount)
+                                        </span>
+                                    }
+
+                                </a>
                             </li>
-                            }
+                        }
 
                         
                     </ul>

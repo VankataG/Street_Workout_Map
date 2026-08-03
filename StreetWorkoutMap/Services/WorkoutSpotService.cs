@@ -420,6 +420,13 @@ namespace StreetWorkoutMap.Services
                 .ToListAsync();
         }
 
+        public async Task<int> GetPendingSpotsCountAsync()
+        {
+            return await dbContext.WorkoutSpots
+                .AsNoTracking()
+                .CountAsync(spot => spot.Status == SpotStatus.Pending);
+        }
+
         public async Task ApproveAsync(Guid id, ClaimsPrincipal user)
         {
             if (!user.IsInRole("Admin"))

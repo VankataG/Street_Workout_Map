@@ -163,3 +163,29 @@ html[data-theme="dark"] .navbar {
 .navbar-user-menu .dropdown-divider {
     border-color: var(--border-color);
 }
+
+
+/* =========================================================
+   ADMIN REQUESTS
+   ========================================================= */
+
+.admin-requests-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-requests-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #e53935;
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 700;
+    line-height: 1;
+}
