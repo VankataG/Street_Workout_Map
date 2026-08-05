@@ -39,7 +39,7 @@ namespace StreetWorkoutMap.Models.UpdateRequest
         //Other
         public string SubmittedByUserId { get; set; } = string.Empty;
 
-        public ApplicationUser? SubmittedByUser { get; set; } = null!;
+        public ApplicationUser SubmittedByUser { get; set; } = null!;
 
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }

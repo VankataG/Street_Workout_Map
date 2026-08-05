@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StreetWorkoutMap.Models;
+using StreetWorkoutMap.Models.UpdateRequest;
 
 namespace StreetWorkoutMap.Data
 {
@@ -13,5 +14,9 @@ namespace StreetWorkoutMap.Data
         public DbSet<WorkoutSpot> WorkoutSpots { get; set; }
 
         public DbSet<SpotImage> SpotImages { get; set; }
+
+        public DbSet<WorkoutSpotUpdateRequest> WorkoutSpotsUpdateRequests { get; set; }
+
+        public DbSet<WorkoutSpotUpdateImage> WorkoutSpotUpdateImages { get; set; }
     }
 }
