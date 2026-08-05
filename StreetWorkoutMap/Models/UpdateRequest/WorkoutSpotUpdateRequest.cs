@@ -1,12 +1,15 @@
 ﻿using StreetWorkoutMap.Data;
 
-namespace StreetWorkoutMap.Models
+namespace StreetWorkoutMap.Models.UpdateRequest
 {
-    public class WorkoutSpot
+    public class WorkoutSpotUpdateRequest
     {
         public Guid Id { get; set; }
 
-    
+        public Guid WorkoutSpotId { get; set; }
+
+        public WorkoutSpot WorkoutSpot { get; set; } = null!;
+
         //General
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -18,7 +21,7 @@ namespace StreetWorkoutMap.Models
         public double Longitude { get; set; }
 
         //Media
-        public ICollection<SpotImage> Images { get; set; } = [];
+        public ICollection<WorkoutSpotUpdateImage> Images { get; set; } = [];
 
         //Equipment
         public bool HasPullUpBars { get; set; }
@@ -32,12 +35,12 @@ namespace StreetWorkoutMap.Models
 
         public bool IsIndoor { get; set; }
 
-        public SpotStatus Status { get; set; } = SpotStatus.Pending;
 
         //Other
-        public string? SubmittedByUserId { get; set; }
+        public string SubmittedByUserId { get; set; } = string.Empty;
 
-        public ApplicationUser? SubmittedByUser { get; set; }
+        public ApplicationUser? SubmittedByUser { get; set; } = null!;
 
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }
 }
