@@ -34,6 +34,7 @@ namespace StreetWorkoutMap
             builder.Services.AddControllers().AddJsonOptions( options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IWorkoutSpotService, WorkoutSpotService>();
+            builder.Services.AddScoped<IWorkoutSpotUpdateRequestService, WorkoutSpotUpdateRequestService>();
             builder.Services.AddHttpClient<IImageStorageService, SupabaseImageStorageService>();
 
             var app = builder.Build();

@@ -5,6 +5,7 @@ using StreetWorkoutMap.Data;
 using StreetWorkoutMap.DTOs;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
 using StreetWorkoutMap.Models;
+using StreetWorkoutMap.Models.UpdateRequest;
 using StreetWorkoutMap.Services.Contrancts;
 using StreetWorkoutMap.Services.ImageStorage;
 using System.Security.Claims;
@@ -19,12 +20,15 @@ namespace StreetWorkoutMap.Services
 
         private readonly IImageStorageService imageStorageService;
 
+        private readonly IWorkoutSpotUpdateRequestService updateRequestService;
 
-        public WorkoutSpotService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IImageStorageService imageStorageService)
+
+        public WorkoutSpotService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IImageStorageService imageStorageService, IWorkoutSpotUpdateRequestService updateRequestService)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
             this.imageStorageService = imageStorageService;
+            this.updateRequestService = updateRequestService;
         }
 
         public async Task<ICollection<MapSpotDto>> GetAllApprovedAsync()
@@ -209,13 +213,12 @@ namespace StreetWorkoutMap.Services
 
         }
 
-        public async Task EditAsync(
-            EditSpotDto dto,
-            ClaimsPrincipal user)
+        public async Task EditAsync( EditSpotDto dto, ClaimsPrincipal user)
         {
             var maxImages = SpotConstants.MaxImages;
 
             var currentUserId = userManager.GetUserId(user);
+
             var isAdmin =
                 user.Identity?.IsAuthenticated == true &&
                 user.IsInRole("Admin");
@@ -237,6 +240,12 @@ namespace StreetWorkoutMap.Services
             if (!isAdmin && !isOwner)
             {
                 throw new UnauthorizedAccessException();
+            }
+
+            if (!isAdmin && spot.Status != SpotStatus.Approved)
+            {
+                throw new InvalidOperationException(
+                    "Може да се предлага редакция само на одобрена площадка.");
             }
 
             dto.ImagesToDelete ??= [];
@@ -273,10 +282,22 @@ namespace StreetWorkoutMap.Services
                     "Площадката трябва да има поне една снимка.");
             }
 
+
+
+            //NORMAL USER
+            if (!isAdmin)
+            {
+                await updateRequestService.SubmitAsync(dto, spot, currentUserId!);
+
+                return;
+            }
+
+
             var uploadedPaths = new List<string>();
 
             try
             {
+
                 if (dto.NewImages.Count > 0)
                 {
                     uploadedPaths = await imageStorageService
@@ -298,10 +319,7 @@ namespace StreetWorkoutMap.Services
                 spot.HasLighting = dto.HasLighting;
                 spot.IsIndoor = dto.IsIndoor;
 
-                if (!isAdmin)
-                {
-                    spot.Status = SpotStatus.Pending;
-                }
+              
 
                 if (imagesToDelete.Count > 0)
                 {

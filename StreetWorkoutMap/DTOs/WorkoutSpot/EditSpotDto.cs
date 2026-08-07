@@ -25,9 +25,9 @@
         public List<ExistingImageDto> ExistingImages { get; set; } = [];
 
         // Images to delete
-        public List<Guid> ImagesToDelete { get; set; } = [];
+        public List<Guid>? ImagesToDelete { get; set; } = [];
 
         // New images
-        public List<IFormFile> NewImages { get; set; } = [];
+        public List<IFormFile>? NewImages { get; set; } = [];
     }
 }
