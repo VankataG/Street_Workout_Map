@@ -3,15 +3,24 @@
 @using StreetWorkoutMap.Services.Contrancts
 
 @inject IWorkoutSpotService WorkoutSpotService
+@inject IWorkoutSpotUpdateRequestService WorkoutSpotUpdateRequestService
 @inject SignInManager<ApplicationUser> SignInManager
 
 
+
 @{
-    var pendingSpotsCount = 0;
+    var pendingRequestsCount = 0;
 
     if (User.IsInRole("Admin"))
     {
-        pendingSpotsCount = await WorkoutSpotService.GetPendingSpotsCountAsync();
+        var pendingSpotsCount =
+            await WorkoutSpotService.GetPendingSpotsCountAsync();
+
+        var pendingUpdateRequestsCount =
+            await WorkoutSpotUpdateRequestService.GetPendingRequestsCountAsync();
+
+        pendingRequestsCount =
+            pendingSpotsCount + pendingUpdateRequestsCount;
     }
 }
 
@@ -66,12 +75,12 @@
 
                                     <span>Заявки</span>
 
-                                    @if (pendingSpotsCount > 0)
+                                    @if (pendingRequestsCount > 0)
                                     {
                                         <span class="admin-requests-count">
-                                            @(pendingSpotsCount > 99
+                                            @(pendingRequestsCount > 99
                                                 ? "99+"
-                                                : pendingSpotsCount)
+                                                : pendingRequestsCount)
                                         </span>
                                     }
 

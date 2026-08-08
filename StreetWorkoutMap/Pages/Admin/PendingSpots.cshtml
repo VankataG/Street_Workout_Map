@@ -16,24 +16,24 @@
             <h1>Чакащи заявки</h1>
 
             <p class="pending-spots-description">
-                Прегледай предложените площадки, преди да станат
-                видими за всички потребители.
+                Прегледай новите площадки и предложените редакции,
+                преди промените да станат видими за всички потребители.
             </p>
         </div>
 
-        @if (Model.PendingSpots.Count > 0)
+        @if (Model.PendingRequests.Count > 0)
         {
             <div class="pending-spots-count">
-                <span>@Model.PendingSpots.Count</span>
+                <span>@Model.PendingRequests.Count</span>
 
-                @(Model.PendingSpots.Count == 1
+                @(Model.PendingRequests.Count == 1
                     ? "чакаща заявка"
                     : "чакащи заявки")
             </div>
         }
     </header>
 
-    @if (Model.PendingSpots.Count == 0)
+    @if (Model.PendingRequests.Count == 0)
     {
         <div class="pending-spots-empty">
 
@@ -44,7 +44,7 @@
             <h2>Няма чакащи заявки</h2>
 
             <p>
-                В момента всички изпратени площадки са прегледани.
+                В момента всички изпратени заявки са прегледани.
             </p>
 
             <a asp-page="/Index"
@@ -58,16 +58,16 @@
     {
         <div class="pending-spots-grid">
 
-            @foreach (var spot in Model.PendingSpots)
+            @foreach (var request in Model.PendingRequests)
             {
                 <article class="pending-spot-card">
 
                     <div class="pending-spot-media">
 
-                        @if (!string.IsNullOrWhiteSpace(spot.ImageUrl))
+                        @if (!string.IsNullOrWhiteSpace(request.ImageUrl))
                         {
-                            <img src="@spot.ImageUrl"
-                                 alt="@spot.Name"
+                            <img src="@request.ImageUrl"
+                                 alt="@request.Name"
                                  class="pending-spot-image" />
                         }
                         else
@@ -82,17 +82,32 @@
 
                     <div class="pending-spot-content">
 
+                        <div class="pending-request-type">
+                            @if (request.IsUpdateRequest)
+                            {
+                                <span class="pending-request-badge pending-request-badge-edit">
+                                    Редакция
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="pending-request-badge pending-request-badge-new">
+                                    Нова площадка
+                                </span>
+                            }
+                        </div>
+
                         <div class="pending-spot-main">
-                            <h2>@spot.Name</h2>
+                            <h2>@request.Name</h2>
 
                             <p class="pending-spot-location">
                                 <span aria-hidden="true">⌖</span>
 
-                                @spot.City
+                                @request.City
 
-                                @if (!string.IsNullOrWhiteSpace(spot.District))
+                                @if (!string.IsNullOrWhiteSpace(request.District))
                                 {
-                                    <text> · @spot.District</text>
+                                    <text> · @request.District</text>
                                 }
                             </p>
                         </div>
@@ -101,20 +116,21 @@
                             <span class="pending-spot-user-icon"
                                   aria-hidden="true">
                                 @(
-                                    string.IsNullOrWhiteSpace(spot.SubmittedByName)
+                                    string.IsNullOrWhiteSpace(request.SubmittedByName)
                                         ? "?"
-                                        : spot.SubmittedByName[..1].ToUpper()
+                                        : request.SubmittedByName[..1].ToUpper()
                                 )
                             </span>
 
                             <div>
-                                <small>Добавена от</small>
-                                <strong>@spot.SubmittedByName</strong>
+                                <small>Заявка от</small>
+                                <strong>@request.SubmittedByName</strong>
                             </div>
                         </div>
 
-                        <a asp-page="/Spots/Details"
-                           asp-route-id="@spot.Id"
+                        <a asp-page="/Admin/RequestDetails"
+                           asp-route-id="@request.Id"
+                           asp-route-isUpdate="@request.IsUpdateRequest"
                            class="pending-spot-details-button">
                             Прегледай заявката
                             <span aria-hidden="true">→</span>

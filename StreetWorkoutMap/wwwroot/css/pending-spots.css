@@ -144,6 +144,40 @@
     }
 
 
+
+/* =========================================================
+   REQUEST TYPE
+   ========================================================= */
+
+.pending-request-type {
+    display: flex;
+    align-items: center;
+}
+
+.pending-request-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.pending-request-badge-new {
+    background-color: var(--accent-soft-color);
+    color: var(--accent-color);
+}
+
+.pending-request-badge-edit {
+    background-color: rgba(224, 157, 44, 0.12);
+    color: #c88718;
+}
+
+
+
+
 /* =========================================================
    CONTENT
    ========================================================= */

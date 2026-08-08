@@ -62,6 +62,7 @@ namespace StreetWorkoutMap.Services
         public async Task CreateAsync(CreateSpotDto dto, ClaimsPrincipal user)
         {
             var userId = userManager.GetUserId(user);
+            var isAdmin = user.Identity?.IsAuthenticated == true && user.IsInRole("Admin");
 
             if (userId is null)
             {
@@ -86,6 +87,11 @@ namespace StreetWorkoutMap.Services
                 Status = SpotStatus.Pending,
                 SubmittedByUserId = userId
             };
+
+            if (isAdmin)
+            {
+                workoutSpot.Status = SpotStatus.Approved;
+            }
 
 
             var uploadedPaths = new List<string>();
@@ -414,13 +420,13 @@ namespace StreetWorkoutMap.Services
               
         }
 
-        public async Task<ICollection<PendingSpotDto>> GetPendingSpotsAsync()
+        public async Task<ICollection<PendingRequestDto>> GetPendingSpotsAsync()
         {
             return await dbContext.WorkoutSpots
                 .AsNoTracking()
                 .Where(spot => spot.Status == SpotStatus.Pending)
                 .OrderBy(spot => spot.Name)
-                .Select(spot => new PendingSpotDto
+                .Select(spot => new PendingRequestDto
                 {
                     Id = spot.Id,
                     Name = spot.Name,
@@ -432,7 +438,9 @@ namespace StreetWorkoutMap.Services
                     ImageUrl = spot.Images
                             .Select(img => img.StoragePath)
                             .Select(path => imageStorageService.GetPublicUrl(path))
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+
+                    IsUpdateRequest = false
 
                 })
                 .ToListAsync();

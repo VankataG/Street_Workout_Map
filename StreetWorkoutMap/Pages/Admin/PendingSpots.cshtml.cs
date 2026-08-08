@@ -11,17 +11,27 @@ namespace StreetWorkoutMap.Pages.Admin
     {
         private readonly IWorkoutSpotService workoutSpotService;
 
-        public PendingSpotsModel(IWorkoutSpotService workoutSpotService)
+        private readonly IWorkoutSpotUpdateRequestService workoutSpotUpdateRequestService;
+
+        public PendingSpotsModel(IWorkoutSpotService workoutSpotService, IWorkoutSpotUpdateRequestService workoutSpotUpdateRequestService)
         {
             this.workoutSpotService = workoutSpotService;
+            this.workoutSpotUpdateRequestService = workoutSpotUpdateRequestService;
         }
 
 
-        public ICollection<PendingSpotDto> PendingSpots { get; set; } = [];
+        public ICollection<PendingRequestDto> PendingRequests { get; set; } = [];
 
         public async Task OnGet()
         {
-            PendingSpots = await workoutSpotService.GetPendingSpotsAsync();
+            var newSpots = await workoutSpotService.GetPendingSpotsAsync();
+
+            var updateRequests = await workoutSpotUpdateRequestService.GetPendingRequestsAsync();
+
+            PendingRequests = newSpots
+                        .Concat(updateRequests)
+                        .OrderBy(request => request.Name)
+                        .ToList();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace StreetWorkoutMap.Services.Contrancts
 
         public Task<ICollection<MySpotDto>> GetMySpotsAsync(ClaimsPrincipal user);
 
-        public Task<ICollection<PendingSpotDto>> GetPendingSpotsAsync();
+        public Task<ICollection<PendingRequestDto>> GetPendingSpotsAsync();
 
         public Task<int> GetPendingSpotsCountAsync();
 
