@@ -11,5 +11,7 @@ namespace StreetWorkoutMap.Services.Contrancts
 
         public Task<int> GetPendingRequestsCountAsync();
 
+        public Task<SpotDetailsDto?> GetDetailsAsync(Guid id);
+
     }
 }

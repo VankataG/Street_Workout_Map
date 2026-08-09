@@ -22,6 +22,42 @@ namespace StreetWorkoutMap.Services
             this.imageStorageService = imageStorageService;
         }
 
+        public async Task<SpotDetailsDto?> GetDetailsAsync(Guid id)
+        {
+            var request = await dbContext.WorkoutSpotsUpdateRequests
+                          .AsNoTracking()
+                          .Include(request => request.Images)
+                          .FirstOrDefaultAsync(request => request.Id == id);
+
+            if (request is null) return null;
+
+            return new SpotDetailsDto
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Description = request.Description,
+                City = request.City,
+                District = request.District,
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
+
+                HasPullUpBars = request.HasPullUpBars,
+                HasParallelBars = request.HasParallelBars,
+                HasRings = request.HasRings,
+
+                HasLighting = request.HasLighting,
+                IsIndoor = request.IsIndoor,
+
+                SubmittedByUserId = request.SubmittedByUserId,
+
+                ImageUrls = request.Images
+                        .Select(image => imageStorageService.GetPublicUrl(image.StoragePath))
+                        .ToList(),
+
+                Status = "Pending"
+            };
+        }
+
         public async Task<ICollection<PendingRequestDto>> GetPendingRequestsAsync()
         {
             return await dbContext.WorkoutSpotsUpdateRequests

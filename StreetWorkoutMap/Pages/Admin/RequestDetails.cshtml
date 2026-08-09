@@ -5,4 +5,13 @@
     ViewData["Title"] = "Преглед на заявка";
 }
 
-<h1>Преглед на заявка</h1>
+<h1>@Model.Request.Name</h1>
+
+<p>@Model.Request.City</p>
+
+<p>
+    Тип:
+    @(Model.IsUpdateRequest
+        ? "Редакция"
+        : "Нова площадка")
+</p>
