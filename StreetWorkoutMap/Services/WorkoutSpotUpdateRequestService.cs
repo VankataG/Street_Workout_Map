@@ -58,6 +58,15 @@ namespace StreetWorkoutMap.Services
             };
         }
 
+        public async Task<Guid?> GetOriginalSpotIdAsync(Guid requestId)
+        {
+            return await dbContext.WorkoutSpotsUpdateRequests
+                    .AsNoTracking()
+                    .Where(request => request.Id == requestId)
+                    .Select(request => (Guid?)request.WorkoutSpotId)
+                    .FirstOrDefaultAsync();
+        }
+
         public async Task<ICollection<PendingRequestDto>> GetPendingRequestsAsync()
         {
             return await dbContext.WorkoutSpotsUpdateRequests

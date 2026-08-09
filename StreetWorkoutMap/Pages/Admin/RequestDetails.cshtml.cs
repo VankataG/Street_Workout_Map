@@ -22,6 +22,8 @@ namespace StreetWorkoutMap.Pages.Admin
 
         public SpotDetailsDto Request { get; private set; } = null!;
 
+        public SpotDetailsDto? OriginalSpot { get; private set; }
+
         public bool IsUpdateRequest { get; private set; }
 
 
@@ -32,16 +34,37 @@ namespace StreetWorkoutMap.Pages.Admin
             if (IsUpdateRequest)
             {
                 Request = await workoutSpotUpdateRequestService.GetDetailsAsync(id);
+
+                if (Request is null)
+                {
+                    return NotFound();
+                }
+
+                var originalSpotId = await workoutSpotUpdateRequestService.GetOriginalSpotIdAsync(id);
+
+                if (originalSpotId is null)
+                {
+                    return NotFound();
+                }
+
+                OriginalSpot = await workoutSpotService.GetDetailsAsync(originalSpotId.Value, User);
+
+                if (OriginalSpot is null)
+                {
+                    return NotFound();
+                }
             }
             else
             {
                 Request = await workoutSpotService.GetDetailsAsync(id, User);
+
+                if (Request is null)
+                {
+                    return NotFound();
+                }
             }
 
-            if (Request is null)
-            {
-                return NotFound();
-            }
+            
 
             return Page();
         }

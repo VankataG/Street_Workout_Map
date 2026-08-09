@@ -823,3 +823,424 @@ html[data-theme="dark"] .spot-admin-approve-button {
     outline: 3px solid var(--accent-soft-color);
     outline-offset: 3px;
 }
+
+
+/* =========================================================
+   REQUEST CHANGES
+   ========================================================= */
+
+.request-changed-badge,
+.request-inline-changed,
+.request-mini-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(224, 157, 44, 0.4);
+    border-radius: 999px;
+    background-color: rgba(224, 157, 44, 0.13);
+    color: #b7770b;
+    font-weight: 850;
+    text-transform: uppercase;
+}
+
+.request-changed-badge {
+    padding: 5px 9px;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+}
+
+.request-inline-changed {
+    margin-left: 5px;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.035em;
+}
+
+.spot-details-location .request-inline-changed {
+    color: #b7770b;
+    font-size: 0.65rem;
+}
+
+.request-mini-badge {
+    padding: 3px 7px;
+    font-size: 0.6rem;
+    letter-spacing: 0.035em;
+}
+
+html[data-theme="dark"] .request-changed-badge,
+html[data-theme="dark"] .request-inline-changed,
+html[data-theme="dark"] .request-mini-badge,
+html[data-theme="dark"] .spot-details-location .request-inline-changed {
+    color: #ffc869;
+}
+
+
+/* =========================================================
+   PREVIOUS VALUES
+   ========================================================= */
+
+.request-previous-value {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    margin-top: 9px;
+    color: var(--secondary-text-color);
+    font-size: 0.82rem;
+}
+
+    .request-previous-value > span,
+    .request-coordinate-previous > span,
+    .request-feature-previous > span {
+        flex-shrink: 0;
+        color: #b7770b;
+        font-size: 0.68rem;
+        font-weight: 850;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+html[data-theme="dark"] .request-previous-value > span,
+html[data-theme="dark"] .request-coordinate-previous > span,
+html[data-theme="dark"] .request-feature-previous > span {
+    color: #ffc869;
+}
+
+.request-previous-value strong {
+    color: var(--secondary-text-color);
+    font-weight: 650;
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+}
+
+.request-previous-value-header {
+    margin-top: 10px;
+}
+
+.request-previous-block {
+    align-items: flex-start;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(224, 157, 44, 0.35);
+}
+
+    .request-previous-block p {
+        margin: 0;
+        color: var(--secondary-text-color);
+        line-height: 1.6;
+        white-space: pre-line;
+    }
+
+
+/* =========================================================
+   CHANGED TEXT FIELD
+   ========================================================= */
+
+.request-field {
+    position: relative;
+}
+
+    .request-field.is-changed {
+        padding: 18px;
+        border: 1px solid rgba(224, 157, 44, 0.32);
+        border-radius: 15px;
+        background: linear-gradient( 145deg, rgba(224, 157, 44, 0.07), transparent ), var(--background-color);
+    }
+
+.request-section-change-badge {
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+
+/* =========================================================
+   IMAGE CHANGES
+   ========================================================= */
+
+.request-gallery-change {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 15px;
+    padding: 13px 16px;
+    border: 1px solid rgba(224, 157, 44, 0.32);
+    border-radius: 14px;
+    background-color: rgba(224, 157, 44, 0.07);
+}
+
+    .request-gallery-change > div {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .request-gallery-change strong {
+        color: var(--text-color);
+        font-size: 0.9rem;
+    }
+
+    .request-gallery-change small {
+        color: var(--secondary-text-color);
+        font-weight: 700;
+    }
+
+.spot-thumbnail-button.request-image-added {
+    position: relative;
+}
+
+.request-image-added-badge {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background-color: #2faf54;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.request-removed-images {
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid rgba(217, 74, 74, 0.3);
+    border-radius: 17px;
+    background-color: rgba(217, 74, 74, 0.06);
+}
+
+.request-removed-images-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+    .request-removed-images-heading > div {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .request-removed-images-heading strong {
+        color: var(--text-color);
+        font-size: 0.9rem;
+    }
+
+    .request-removed-images-heading span {
+        color: var(--secondary-text-color);
+        font-size: 0.78rem;
+    }
+
+.request-removed-count {
+    display: grid;
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 50%;
+    background-color: #d94a4a;
+    color: #ffffff !important;
+    font-size: 0.75rem !important;
+    font-weight: 900;
+}
+
+.request-removed-images-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.request-removed-image {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    margin: 0;
+    border: 1px solid rgba(217, 74, 74, 0.4);
+    border-radius: 13px;
+    background-color: var(--background-color);
+    opacity: 0.72;
+}
+
+    .request-removed-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(0.35);
+    }
+
+    .request-removed-image > span {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        background-color: #d94a4a;
+        color: #ffffff;
+        font-size: 0.62rem;
+        font-weight: 850;
+        letter-spacing: 0.035em;
+        text-transform: uppercase;
+    }
+
+
+/* =========================================================
+   FEATURE CHANGES
+   ========================================================= */
+
+.spot-feature.request-feature-changed {
+    border-color: rgba(224, 157, 44, 0.45);
+    background: linear-gradient( 145deg, rgba(224, 157, 44, 0.07), transparent ), var(--background-color);
+    opacity: 1;
+}
+
+.request-feature-body {
+    min-width: 0;
+    flex: 1;
+}
+
+.request-feature-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+    .request-feature-title-row h3 {
+        margin-right: auto;
+    }
+
+.request-feature-previous {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(224, 157, 44, 0.3);
+}
+
+    .request-feature-previous strong {
+        color: var(--secondary-text-color);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+
+/* =========================================================
+   COORDINATE CHANGE
+   ========================================================= */
+
+.request-coordinate-previous {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+    color: var(--secondary-text-color);
+    font-size: 0.78rem;
+}
+
+    .request-coordinate-previous strong {
+        font-weight: 650;
+        text-decoration: line-through;
+    }
+
+
+/* =========================================================
+   CHANGE COUNT
+   ========================================================= */
+
+.request-change-count {
+    display: inline-flex;
+    min-width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 9px;
+    border: 1px solid rgba(224, 157, 44, 0.38);
+    border-radius: 999px;
+    background-color: rgba(224, 157, 44, 0.11);
+    color: #b7770b;
+    font-weight: 900;
+}
+
+html[data-theme="dark"] .request-change-count {
+    color: #ffc869;
+}
+
+
+/* =========================================================
+   ADMIN ACTIONS
+   ========================================================= */
+
+.spot-admin-actions {
+    display: grid;
+    gap: 10px;
+}
+
+.spot-admin-reject-button {
+    display: inline-flex;
+    width: 100%;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 16px;
+    border: 1px solid rgba(217, 74, 74, 0.55);
+    border-radius: 12px;
+    background-color: rgba(217, 74, 74, 0.08);
+    color: #c13d3d;
+    font: inherit;
+    font-weight: 850;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+    .spot-admin-reject-button:hover {
+        border-color: #d94a4a;
+        background-color: rgba(217, 74, 74, 0.15);
+        transform: translateY(-1px);
+    }
+
+html[data-theme="dark"] .spot-admin-reject-button {
+    color: #ff8181;
+}
+
+
+/* =========================================================
+   REQUEST RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .request-gallery-change {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .request-section-change-badge {
+        margin-left: 0;
+    }
+
+    .request-removed-images-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+
+    .request-removed-images-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .request-coordinate-previous {
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
+    }
+}

@@ -13,5 +13,7 @@ namespace StreetWorkoutMap.Services.Contrancts
 
         public Task<SpotDetailsDto?> GetDetailsAsync(Guid id);
 
+        public Task<Guid?> GetOriginalSpotIdAsync(Guid requestId);
+
     }
 }

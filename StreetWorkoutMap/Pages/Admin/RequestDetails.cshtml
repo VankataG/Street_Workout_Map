@@ -4,16 +4,185 @@
 @{
     ViewData["Title"] = Model.Request.Name;
 
-    var hasImages = Model.Request.ImageUrls.Count > 0;
+    var original = Model.OriginalSpot;
 
-    var location = string.IsNullOrWhiteSpace(Model.Request.District)
-        ? Model.Request.City
-        : $"{Model.Request.City}, {Model.Request.District}";
+    var hasOriginal =
+        Model.IsUpdateRequest &&
+        original is not null;
 
-    var requestTypeText = Model.IsUpdateRequest
-        ? "Редакция"
-        : "Нова площадка";
+    var hasImages =
+        Model.Request.ImageUrls.Count > 0;
+
+    var location =
+        string.IsNullOrWhiteSpace(Model.Request.District)
+            ? Model.Request.City
+            : $"{Model.Request.City}, {Model.Request.District}";
+
+    var previousLocation =
+        hasOriginal
+            ? string.IsNullOrWhiteSpace(original!.District)
+                ? original.City
+                : $"{original.City}, {original.District}"
+            : string.Empty;
+
+    var requestTypeText =
+        Model.IsUpdateRequest
+            ? "Редакция"
+            : "Нова площадка";
+
+
+    // =====================================================
+    // TEXT CHANGES
+    // =====================================================
+
+    var nameChanged =
+        hasOriginal &&
+        !string.Equals(
+            Model.Request.Name,
+            original!.Name,
+            StringComparison.Ordinal);
+
+    var descriptionChanged =
+        hasOriginal &&
+        !string.Equals(
+            Model.Request.Description,
+            original!.Description,
+            StringComparison.Ordinal);
+
+    var cityChanged =
+        hasOriginal &&
+        !string.Equals(
+            Model.Request.City,
+            original!.City,
+            StringComparison.Ordinal);
+
+    var districtChanged =
+        hasOriginal &&
+        !string.Equals(
+            Model.Request.District,
+            original!.District,
+            StringComparison.Ordinal);
+
+    var locationChanged =
+        cityChanged || districtChanged;
+
+
+    // =====================================================
+    // COORDINATE CHANGES
+    // =====================================================
+
+    var coordinatesChanged =
+        hasOriginal &&
+        (
+            Math.Abs(
+                Model.Request.Latitude -
+                original!.Latitude) > 0.000001
+            ||
+            Math.Abs(
+                Model.Request.Longitude -
+                original.Longitude) > 0.000001
+        );
+
+
+    // =====================================================
+    // EQUIPMENT / FEATURE CHANGES
+    // =====================================================
+
+    var pullUpBarsChanged =
+        hasOriginal &&
+        Model.Request.HasPullUpBars !=
+        original!.HasPullUpBars;
+
+    var parallelBarsChanged =
+        hasOriginal &&
+        Model.Request.HasParallelBars !=
+        original!.HasParallelBars;
+
+    var ringsChanged =
+        hasOriginal &&
+        Model.Request.HasRings !=
+        original!.HasRings;
+
+    var lightingChanged =
+        hasOriginal &&
+        Model.Request.HasLighting !=
+        original!.HasLighting;
+
+    var indoorChanged =
+        hasOriginal &&
+        Model.Request.IsIndoor !=
+        original!.IsIndoor;
+
+
+    // =====================================================
+    // IMAGE CHANGES
+    // =====================================================
+
+    var addedImages = hasOriginal
+        ? Model.Request.ImageUrls
+            .Where(requestImage =>
+                !original!.ImageUrls.Any(originalImage =>
+                    string.Equals(
+                        requestImage,
+                        originalImage,
+                        StringComparison.OrdinalIgnoreCase)))
+            .ToList()
+        : [];
+
+    var removedImages = hasOriginal
+        ? original!.ImageUrls
+            .Where(originalImage =>
+                !Model.Request.ImageUrls.Any(requestImage =>
+                    string.Equals(
+                        originalImage,
+                        requestImage,
+                        StringComparison.OrdinalIgnoreCase)))
+            .ToList()
+        : [];
+
+    var imagesChanged =
+        addedImages.Count > 0 ||
+        removedImages.Count > 0;
+
+    var imageChangeParts =
+        new List<string>();
+
+    if (addedImages.Count > 0)
+    {
+        imageChangeParts.Add(
+            $"Добавени: {addedImages.Count}");
+    }
+
+    if (removedImages.Count > 0)
+    {
+        imageChangeParts.Add(
+            $"Премахнати: {removedImages.Count}");
+    }
+
+    var imageChangeSummary =
+        string.Join(" · ", imageChangeParts);
+
+
+    // =====================================================
+    // TOTAL CHANGES
+    // =====================================================
+
+    var changesCount =
+        (nameChanged ? 1 : 0) +
+        (descriptionChanged ? 1 : 0) +
+        (locationChanged ? 1 : 0) +
+        (coordinatesChanged ? 1 : 0) +
+        (pullUpBarsChanged ? 1 : 0) +
+        (parallelBarsChanged ? 1 : 0) +
+        (ringsChanged ? 1 : 0) +
+        (lightingChanged ? 1 : 0) +
+        (indoorChanged ? 1 : 0) +
+        (imagesChanged ? 1 : 0);
+
+    string BooleanLabel(bool value) =>
+        value ? "✓ Да" : "× Не";
 }
+
 
 <section class="spot-details-page">
 
@@ -27,7 +196,13 @@
         <span aria-hidden="true">›</span>
 
         <span>@Model.Request.Name</span>
+
     </nav>
+
+
+    @* =====================================================
+       HEADER
+       ===================================================== *@
 
     <header class="spot-details-header">
 
@@ -43,14 +218,79 @@
 
             </div>
 
+
+            @if (nameChanged)
+            {
+                <div class="request-previous-value
+                    request-previous-value-header">
+
+                    <span>Преди</span>
+
+                    <strong>@original!.Name</strong>
+
+                </div>
+            }
+
+
             <p class="spot-details-location">
+
                 <span aria-hidden="true">⌖</span>
+
                 @location
+
+                @if (locationChanged)
+                {
+                    <span class="request-inline-changed">
+                        Променено
+                    </span>
+                }
+
             </p>
+
+
+            @if (locationChanged)
+            {
+                <div class="request-previous-value">
+
+                    <span>Преди</span>
+
+                    <strong>@previousLocation</strong>
+
+                </div>
+            }
 
         </div>
 
     </header>
+
+
+    @* =====================================================
+       IMAGE CHANGE SUMMARY
+       ===================================================== *@
+
+    @if (imagesChanged)
+    {
+        <div class="request-gallery-change">
+
+            <div>
+                <span class="request-changed-badge">
+                    Снимки
+                </span>
+
+                <strong>Галерията е променена</strong>
+            </div>
+
+            <small>
+                @imageChangeSummary
+            </small>
+
+        </div>
+    }
+
+
+    @* =====================================================
+       IMAGE GALLERY
+       ===================================================== *@
 
     <section class="spot-gallery"
              aria-label="Снимки на площадката">
@@ -66,30 +306,50 @@
 
                 <span id="spot-image-counter"
                       class="spot-image-counter">
+
                     1 / @Model.Request.ImageUrls.Count
+
                 </span>
 
             </div>
+
 
             @if (Model.Request.ImageUrls.Count > 1)
             {
                 <div class="spot-gallery-thumbnails">
 
-                    @for (var index = 0;
-                          index < Model.Request.ImageUrls.Count;
-                          index++)
+                    @for (
+                        var index = 0;
+                        index < Model.Request.ImageUrls.Count;
+                        index++)
                     {
                         var imageUrl =
                             Model.Request.ImageUrls[index];
 
+                        var isAddedImage =
+                            addedImages.Any(image =>
+                                string.Equals(
+                                    image,
+                                    imageUrl,
+                                    StringComparison.OrdinalIgnoreCase));
+
                         <button type="button"
-                                class="spot-thumbnail-button @(index == 0 ? "is-active" : "")"
+                                class="spot-thumbnail-button
+                            @(index == 0 ? "is-active" : "")
+                            @(isAddedImage ? "request-image-added" : "")"
                                 data-image-url="@imageUrl"
                                 data-image-index="@index"
                                 aria-label="Покажи снимка @(index + 1)">
 
                             <img src="@imageUrl"
                                  alt="Снимка @(index + 1) на @Model.Request.Name" />
+
+                            @if (isAddedImage)
+                            {
+                                <span class="request-image-added-badge">
+                                    Нова
+                                </span>
+                            }
 
                         </button>
                     }
@@ -114,11 +374,61 @@
             </div>
         }
 
+
+        @if (removedImages.Count > 0)
+        {
+            <div class="request-removed-images">
+
+                <div class="request-removed-images-heading">
+
+                    <div>
+                        <strong>Премахнати снимки</strong>
+
+                        <span>
+                            Тези снимки няма да останат
+                            след одобрение.
+                        </span>
+                    </div>
+
+                    <span class="request-removed-count">
+                        @removedImages.Count
+                    </span>
+
+                </div>
+
+
+                <div class="request-removed-images-grid">
+
+                    @foreach (var imageUrl in removedImages)
+                    {
+                        <figure class="request-removed-image">
+
+                            <img src="@imageUrl"
+                                 alt="Премахната снимка" />
+
+                            <span>
+                                Премахната
+                            </span>
+
+                        </figure>
+                    }
+
+                </div>
+
+            </div>
+        }
+
     </section>
+
 
     <div class="spot-details-layout">
 
         <main class="spot-details-content">
+
+
+            @* =================================================
+               DESCRIPTION
+               ================================================= *@
 
             <section class="spot-details-card">
 
@@ -134,23 +444,67 @@
                         <p>Описание и полезна информация</p>
                     </div>
 
+                    @if (descriptionChanged)
+                    {
+                        <span class="request-changed-badge
+                            request-section-change-badge">
+                            Променено
+                        </span>
+                    }
+
                 </div>
 
-                @if (!string.IsNullOrWhiteSpace(
-                    Model.Request.Description))
-                {
-                    <p class="spot-details-description">
-                        @Model.Request.Description
-                    </p>
-                }
-                else
-                {
-                    <p class="spot-details-empty-text">
-                        За тази площадка няма добавено описание.
-                    </p>
-                }
+
+                <div class="request-field
+                    @(descriptionChanged ? "is-changed" : "")">
+
+                    @if (!string.IsNullOrWhiteSpace(
+                        Model.Request.Description))
+                    {
+                        <p class="spot-details-description">
+                            @Model.Request.Description
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="spot-details-empty-text">
+                            За тази площадка няма добавено описание.
+                        </p>
+                    }
+
+
+                    @if (descriptionChanged)
+                    {
+                        <div class="request-previous-value
+                            request-previous-block">
+
+                            <span>Преди</span>
+
+                            @if (!string.IsNullOrWhiteSpace(
+                                original!.Description))
+                            {
+                                <p>
+                                    @original.Description
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    Няма описание
+                                </p>
+                            }
+
+                        </div>
+                    }
+
+                </div>
 
             </section>
+
+
+            @* =================================================
+               EQUIPMENT AND FEATURES
+               ================================================= *@
 
             <section class="spot-details-card">
 
@@ -168,69 +522,270 @@
 
                 </div>
 
+
                 <div class="spot-features-grid">
 
-                    <article class="spot-feature @(Model.Request.HasPullUpBars ? "is-available" : "is-unavailable")">
+
+                    @* PULL UP BARS *@
+
+                    <article class="spot-feature
+                        @(Model.Request.HasPullUpBars
+                                 ? "is-available"
+                                 : "is-unavailable")
+                        @(pullUpBarsChanged
+                                 ? "request-feature-changed"
+                                 : "")">
 
                         <span class="spot-feature-status">
                             @(Model.Request.HasPullUpBars ? "✓" : "×")
                         </span>
 
-                        <div>
-                            <h3>Лостове</h3>
-                            <p>Лостове за набирания и упражнения</p>
+                        <div class="request-feature-body">
+
+                            <div class="request-feature-title-row">
+
+                                <h3>Лостове</h3>
+
+                                @if (pullUpBarsChanged)
+                                {
+                                    <span class="request-mini-badge">
+                                        Променено
+                                    </span>
+                                }
+
+                            </div>
+
+                            <p>
+                                Лостове за набирания и упражнения
+                            </p>
+
+
+                            @if (pullUpBarsChanged)
+                            {
+                                <div class="request-feature-previous">
+
+                                    <span>Преди</span>
+
+                                    <strong>
+                                        @BooleanLabel(
+                                            original!.HasPullUpBars)
+                                    </strong>
+
+                                </div>
+                            }
+
                         </div>
 
                     </article>
 
-                    <article class="spot-feature @(Model.Request.HasParallelBars ? "is-available" : "is-unavailable")">
+
+                    @* PARALLEL BARS *@
+
+                    <article class="spot-feature
+                        @(Model.Request.HasParallelBars
+                                 ? "is-available"
+                                 : "is-unavailable")
+                        @(parallelBarsChanged
+                                 ? "request-feature-changed"
+                                 : "")">
 
                         <span class="spot-feature-status">
                             @(Model.Request.HasParallelBars ? "✓" : "×")
                         </span>
 
-                        <div>
-                            <h3>Успоредка</h3>
-                            <p>Подходяща за кофички и опори</p>
+                        <div class="request-feature-body">
+
+                            <div class="request-feature-title-row">
+
+                                <h3>Успоредка</h3>
+
+                                @if (parallelBarsChanged)
+                                {
+                                    <span class="request-mini-badge">
+                                        Променено
+                                    </span>
+                                }
+
+                            </div>
+
+                            <p>
+                                Подходяща за кофички и опори
+                            </p>
+
+
+                            @if (parallelBarsChanged)
+                            {
+                                <div class="request-feature-previous">
+
+                                    <span>Преди</span>
+
+                                    <strong>
+                                        @BooleanLabel(
+                                            original!.HasParallelBars)
+                                    </strong>
+
+                                </div>
+                            }
+
                         </div>
 
                     </article>
 
-                    <article class="spot-feature @(Model.Request.HasRings ? "is-available" : "is-unavailable")">
+
+                    @* RINGS *@
+
+                    <article class="spot-feature
+                        @(Model.Request.HasRings
+                                 ? "is-available"
+                                 : "is-unavailable")
+                        @(ringsChanged
+                                 ? "request-feature-changed"
+                                 : "")">
 
                         <span class="spot-feature-status">
                             @(Model.Request.HasRings ? "✓" : "×")
                         </span>
 
-                        <div>
-                            <h3>Халки</h3>
-                            <p>Постоянно монтирани халки</p>
+                        <div class="request-feature-body">
+
+                            <div class="request-feature-title-row">
+
+                                <h3>Халки</h3>
+
+                                @if (ringsChanged)
+                                {
+                                    <span class="request-mini-badge">
+                                        Променено
+                                    </span>
+                                }
+
+                            </div>
+
+                            <p>
+                                Постоянно монтирани халки
+                            </p>
+
+
+                            @if (ringsChanged)
+                            {
+                                <div class="request-feature-previous">
+
+                                    <span>Преди</span>
+
+                                    <strong>
+                                        @BooleanLabel(
+                                            original!.HasRings)
+                                    </strong>
+
+                                </div>
+                            }
+
                         </div>
 
                     </article>
 
-                    <article class="spot-feature @(Model.Request.HasLighting ? "is-available" : "is-unavailable")">
+
+                    @* LIGHTING *@
+
+                    <article class="spot-feature
+                        @(Model.Request.HasLighting
+                                 ? "is-available"
+                                 : "is-unavailable")
+                        @(lightingChanged
+                                 ? "request-feature-changed"
+                                 : "")">
 
                         <span class="spot-feature-status">
                             @(Model.Request.HasLighting ? "✓" : "×")
                         </span>
 
-                        <div>
-                            <h3>Осветление</h3>
-                            <p>Подходяща за вечерни тренировки</p>
+                        <div class="request-feature-body">
+
+                            <div class="request-feature-title-row">
+
+                                <h3>Осветление</h3>
+
+                                @if (lightingChanged)
+                                {
+                                    <span class="request-mini-badge">
+                                        Променено
+                                    </span>
+                                }
+
+                            </div>
+
+                            <p>
+                                Подходяща за вечерни тренировки
+                            </p>
+
+
+                            @if (lightingChanged)
+                            {
+                                <div class="request-feature-previous">
+
+                                    <span>Преди</span>
+
+                                    <strong>
+                                        @BooleanLabel(
+                                            original!.HasLighting)
+                                    </strong>
+
+                                </div>
+                            }
+
                         </div>
 
                     </article>
 
-                    <article class="spot-feature @(Model.Request.IsIndoor ? "is-available" : "is-unavailable")">
+
+                    @* INDOOR *@
+
+                    <article class="spot-feature
+                        @(Model.Request.IsIndoor
+                                 ? "is-available"
+                                 : "is-unavailable")
+                        @(indoorChanged
+                                 ? "request-feature-changed"
+                                 : "")">
 
                         <span class="spot-feature-status">
                             @(Model.Request.IsIndoor ? "✓" : "×")
                         </span>
 
-                        <div>
-                            <h3>Закрита площадка</h3>
-                            <p>На закрито или под постоянен навес</p>
+                        <div class="request-feature-body">
+
+                            <div class="request-feature-title-row">
+
+                                <h3>Закрита площадка</h3>
+
+                                @if (indoorChanged)
+                                {
+                                    <span class="request-mini-badge">
+                                        Променено
+                                    </span>
+                                }
+
+                            </div>
+
+                            <p>
+                                На закрито или под постоянен навес
+                            </p>
+
+
+                            @if (indoorChanged)
+                            {
+                                <div class="request-feature-previous">
+
+                                    <span>Преди</span>
+
+                                    <strong>
+                                        @BooleanLabel(
+                                            original!.IsIndoor)
+                                    </strong>
+
+                                </div>
+                            }
+
                         </div>
 
                     </article>
@@ -238,6 +793,11 @@
                 </div>
 
             </section>
+
+
+            @* =================================================
+               LOCATION
+               ================================================= *@
 
             <section class="spot-details-card">
 
@@ -253,13 +813,24 @@
                         <p>@location</p>
                     </div>
 
+
+                    @if (coordinatesChanged)
+                    {
+                        <span class="request-changed-badge
+                            request-section-change-badge">
+                            Променено
+                        </span>
+                    }
+
                 </div>
+
 
                 <div id="details-spot-map"
                      data-latitude="@Model.Request.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)"
                      data-longitude="@Model.Request.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)"
                      data-spot-name="@Model.Request.Name">
                 </div>
+
 
                 <div class="spot-map-actions">
 
@@ -270,20 +841,44 @@
                        rel="noopener noreferrer">
 
                         <span aria-hidden="true">➜</span>
+
                         Отвори в Google Maps
 
                     </a>
 
+
                     <p class="spot-coordinates">
+
                         @Model.Request.Latitude.ToString("F6"),
                         @Model.Request.Longitude.ToString("F6")
+
                     </p>
 
                 </div>
 
+
+                @if (coordinatesChanged)
+                {
+                    <div class="request-coordinate-previous">
+
+                        <span>Преди</span>
+
+                        <strong>
+                            @original!.Latitude.ToString("F6"),
+                            @original.Longitude.ToString("F6")
+                        </strong>
+
+                    </div>
+                }
+
             </section>
 
         </main>
+
+
+        @* =====================================================
+           SIDEBAR
+           ===================================================== *@
 
         <aside class="spot-details-sidebar">
 
@@ -298,27 +893,51 @@
                         <dd>@Model.Request.City</dd>
                     </div>
 
+
                     @if (!string.IsNullOrWhiteSpace(
                         Model.Request.District))
                     {
                         <div>
                             <dt>Квартал или район</dt>
-                            <dd>@Model.Request.District</dd>
+
+                            <dd>
+                                @Model.Request.District
+                            </dd>
                         </div>
                     }
 
+
                     <div>
                         <dt>Тип заявка</dt>
+
                         <dd>
-                            <span class="spot-summary-status spot-status-pending">
+                            <span class="spot-summary-status
+                                spot-status-pending">
+
                                 @requestTypeText
+
                             </span>
                         </dd>
                     </div>
 
+
+                    @if (Model.IsUpdateRequest)
+                    {
+                        <div>
+                            <dt>Променени елементи</dt>
+
+                            <dd>
+                                <span class="request-change-count">
+                                    @changesCount
+                                </span>
+                            </dd>
+                        </div>
+                    }
+
                 </dl>
 
             </section>
+
 
             <section class="spot-notice-card">
 
@@ -340,6 +959,7 @@
 
             </section>
 
+
             <section class="spot-admin-card">
 
                 <div class="spot-admin-heading">
@@ -354,37 +974,59 @@
                         <h2>Административни действия</h2>
 
                         <p>
-                            Прегледай информацията преди решение.
+                            Прегледай информацията
+                            преди решение.
                         </p>
 
                     </div>
 
                 </div>
 
+
                 <p class="spot-admin-description">
+
                     @if (Model.IsUpdateRequest)
                     {
                         <text>
                             При одобрение предложените промени
-                            ще заменят текущата версия на площадката.
+                            ще заменят текущата версия
+                            на площадката.
                         </text>
                     }
                     else
                     {
                         <text>
-                            При одобрение площадката ще стане
-                            видима за всички потребители.
+                            При одобрение площадката
+                            ще стане видима
+                            за всички потребители.
                         </text>
                     }
+
                 </p>
 
-                <button type="button"
-                        class="spot-admin-approve-button">
 
-                    <span aria-hidden="true">✓</span>
-                    Одобри заявката
+                <div class="spot-admin-actions">
 
-                </button>
+                    <button type="button"
+                            class="spot-admin-approve-button">
+
+                        <span aria-hidden="true">✓</span>
+
+                        Одобри заявката
+
+                    </button>
+
+
+                    <button type="button"
+                            class="spot-admin-reject-button">
+
+                        <span aria-hidden="true">×</span>
+
+                        Откажи заявката
+
+                    </button>
+
+                </div>
 
             </section>
 
@@ -393,6 +1035,7 @@
     </div>
 
 </section>
+
 
 @section Scripts {
 
