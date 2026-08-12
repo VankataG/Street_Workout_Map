@@ -1007,14 +1007,27 @@
 
                 <div class="spot-admin-actions">
 
-                    <button type="button"
-                            class="spot-admin-approve-button">
+                    <form method="post"
+                          asp-page-handler="Approve">
 
-                        <span aria-hidden="true">✓</span>
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Request.Id" />
 
-                        Одобри заявката
+                        <input type="hidden"
+                               name="isUpdate"
+                               value="@Model.IsUpdateRequest.ToString().ToLowerInvariant()" />
 
-                    </button>
+                        <button type="submit"
+                                class="spot-admin-approve-button">
+
+                            <span aria-hidden="true">✓</span>
+
+                            Одобри заявката
+
+                        </button>
+
+                    </form>
 
 
                     <button type="button"

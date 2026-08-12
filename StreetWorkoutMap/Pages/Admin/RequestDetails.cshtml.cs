@@ -68,5 +68,27 @@ namespace StreetWorkoutMap.Pages.Admin
 
             return Page();
         }
+
+
+        public async Task<IActionResult> OnPostApproveAsync(Guid id, bool isUpdate)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
+            if (isUpdate)
+            {
+                await workoutSpotUpdateRequestService.ApproveAsync(id);
+            }
+            else
+            {
+                await workoutSpotService.ApproveAsync(id, User);
+            }
+
+            TempData["SuccessMessage"] = "Заявката беше одобрена успешно.";
+
+            return RedirectToPage("/Admin/PendingSpots");
+        }
     }
 }

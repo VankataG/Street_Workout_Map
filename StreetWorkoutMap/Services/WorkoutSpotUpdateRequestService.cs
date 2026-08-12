@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 using StreetWorkoutMap.Data;
 using StreetWorkoutMap.DTOs.WorkoutSpot;
 using StreetWorkoutMap.Models;
@@ -20,6 +21,116 @@ namespace StreetWorkoutMap.Services
         {
             this.dbContext = dbContext;
             this.imageStorageService = imageStorageService;
+        }
+
+        public async Task ApproveAsync(Guid requestId)
+        {
+            var request = await dbContext.WorkoutSpotsUpdateRequests
+                        .Include(request => request.Images)
+                        .FirstOrDefaultAsync(request => request.Id == requestId);
+
+            if (request is null)
+            {
+                throw new KeyNotFoundException("Заявката не беше намерена.");
+            }
+
+
+            var spot = await dbContext.WorkoutSpots
+                        .Include(spot => spot.Images)
+                        .FirstOrDefaultAsync(spot => spot.Id == request.WorkoutSpotId);
+
+            if (spot is null)
+            {
+                throw new KeyNotFoundException("Оригиналната площадка не беше намерена.");
+            }
+
+
+            var requestedPaths = request.Images
+                                    .Select(image => image.StoragePath)
+                                    .ToHashSet();
+
+            var imagesToRemove = spot.Images
+                                .Where(image => !requestedPaths.Contains(image.StoragePath))
+                                .ToList();
+
+            var storagePathsToDelete = imagesToRemove
+                                   .Select(image => image.StoragePath)
+                                   .Where(path => !string.IsNullOrWhiteSpace(path))
+                                   .Distinct()
+                                   .ToList();
+
+
+            var currrentPaths = spot.Images
+                                .Select(image => image.StoragePath)
+                                .ToHashSet();
+
+            var imagesToAdd = request.Images
+                             .Where(image => !currrentPaths.Contains(image.StoragePath))
+                             .Select(image => new SpotImage
+                             {
+                                 Id = Guid.NewGuid(),
+                                 WorkoutSpotId = spot.Id,
+                                 StoragePath = image.StoragePath
+                             })
+                             .ToList();
+
+
+            await using var transaction = await dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                spot.Name = request.Name;
+                spot.Description = request.Description;
+                spot.City = request.City;
+                spot.District = request.District;
+                spot.Latitude = request.Latitude;
+                spot.Longitude = request.Longitude;
+
+                spot.HasPullUpBars = request.HasPullUpBars;
+                spot.HasParallelBars = request.HasParallelBars;
+                spot.HasRings = request.HasRings;
+                spot.HasLighting = request.HasLighting;
+                spot.IsIndoor = request.IsIndoor;
+
+                spot.Status = SpotStatus.Approved;
+
+
+                if (imagesToRemove.Count > 0)
+                {
+                    dbContext.SpotImages.RemoveRange(imagesToRemove);
+                }
+
+
+                if (imagesToAdd.Count > 0)
+                {
+                    await dbContext.SpotImages.AddRangeAsync(imagesToAdd);
+                }
+
+                dbContext.WorkoutSpotsUpdateRequests.Remove(request);
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
+
+            if (storagePathsToDelete.Count > 0)
+            {
+                try
+                {
+                    await imageStorageService
+                        .DeleteImagesAsync(storagePathsToDelete);
+                }
+                catch
+                {
+                    // TODO: ILogger - orphan files
+                }
+            }
         }
 
         public async Task<SpotDetailsDto?> GetDetailsAsync(Guid id)
@@ -156,7 +267,7 @@ namespace StreetWorkoutMap.Services
                 {
                     uploadedPaths =
                         await imageStorageService.UploadImagesAsync(
-                            updateRequest.Id,
+                            spot.Id,
                             dto.NewImages);
                 }
 
