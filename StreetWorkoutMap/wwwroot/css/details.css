@@ -1244,3 +1244,118 @@ html[data-theme="dark"] .spot-admin-reject-button {
         flex-direction: column;
     }
 }
+
+
+
+
+/* =========================================================
+   REQUEST CONFIRM MODAL
+   ========================================================= */
+
+body.request-modal-open {
+    overflow: hidden;
+}
+
+.request-confirm-backdrop {
+    position: fixed;
+    z-index: 2000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.68);
+    backdrop-filter: blur(4px);
+}
+
+    .request-confirm-backdrop[hidden] {
+        display: none;
+    }
+
+.request-confirm-modal {
+    width: min(100%, 440px);
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background-color: var(--surface-color);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.request-confirm-icon {
+    display: grid;
+    width: 45px;
+    height: 45px;
+    margin-bottom: 17px;
+    place-items: center;
+    border-radius: 13px;
+    background-color: rgba(217, 74, 74, 0.12);
+    color: #d94a4a;
+    font-size: 1.2rem;
+    font-weight: 900;
+}
+
+.request-confirm-content h2 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.request-confirm-content p {
+    margin: 10px 0 0;
+    color: var(--secondary-text-color);
+    line-height: 1.55;
+}
+
+    .request-confirm-content p strong {
+        color: var(--text-color);
+    }
+
+.request-confirm-content small {
+    display: block;
+    margin-top: 12px;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+}
+
+.request-confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 23px;
+}
+
+.request-confirm-cancel,
+.request-confirm-reject {
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 11px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.request-confirm-cancel {
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+    .request-confirm-cancel:hover {
+        background-color: var(--surface-hover-color);
+    }
+
+.request-confirm-reject {
+    border: 1px solid #d94a4a;
+    background-color: #d94a4a;
+    color: #ffffff;
+}
+
+    .request-confirm-reject:hover {
+        background-color: #c63f3f;
+    }
+
+@media (max-width: 480px) {
+    .request-confirm-actions {
+        grid-template-columns: 1fr;
+    }
+}

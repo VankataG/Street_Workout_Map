@@ -7,6 +7,30 @@
 
 <section class="pending-spots-page">
 
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="pending-success-message"
+             role="status">
+
+            <span class="pending-success-icon"
+                  aria-hidden="true">
+                ✓
+            </span>
+
+            <div>
+                <strong>Готово</strong>
+                <p>@successMessage</p>
+            </div>
+
+            <button type="button"
+                    class="pending-success-close"
+                    aria-label="Затвори съобщението">
+                ×
+            </button>
+
+        </div>
+    }
+
     <header class="pending-spots-header">
         <div>
             <p class="pending-spots-eyebrow">
@@ -145,3 +169,14 @@
     }
 
 </section>
+
+
+@section Scripts {
+    <script>
+        document
+            .querySelector(".pending-success-close")
+            ?.addEventListener("click", function () {
+                this.closest(".pending-success-message")?.remove();
+            });
+    </script>
+}

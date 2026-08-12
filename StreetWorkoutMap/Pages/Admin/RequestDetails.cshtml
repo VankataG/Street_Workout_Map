@@ -1031,7 +1031,8 @@
 
 
                     <form method="post"
-                          asp-page-handler="Reject">
+                          asp-page-handler="Reject"
+                          id="reject-request-form">
 
                         <input type="hidden"
                                name="id"
@@ -1041,8 +1042,9 @@
                                name="isUpdate"
                                value="@Model.IsUpdateRequest.ToString().ToLowerInvariant()" />
 
-                        <button type="submit"
-                                class="spot-admin-reject-button">
+                        <button type="button"
+                                class="spot-admin-reject-button"
+                                id="open-reject-modal">
 
                             <span aria-hidden="true">×</span>
 
@@ -1063,10 +1065,164 @@
 </section>
 
 
+<div class="request-confirm-backdrop"
+     id="reject-modal"
+     hidden>
+
+    <div class="request-confirm-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="reject-modal-title">
+
+        <div class="request-confirm-icon"
+             aria-hidden="true">
+            !
+        </div>
+
+        <div class="request-confirm-content">
+
+            <h2 id="reject-modal-title">
+                Отказ на заявката
+            </h2>
+
+            <p>
+                Сигурен ли си, че искаш да откажеш
+                заявката за
+                <strong>@Model.Request.Name</strong>?
+            </p>
+
+            @if (Model.IsUpdateRequest)
+            {
+                <small>
+                    Предложените промени ще бъдат изтрити,
+                    а текущата площадка ще остане непроменена.
+                </small>
+            }
+            else
+            {
+                <small>
+                    Площадката и качените към нея снимки
+                    ще бъдат изтрити.
+                </small>
+            }
+
+        </div>
+
+        <div class="request-confirm-actions">
+
+            <button type="button"
+                    class="request-confirm-cancel"
+                    id="cancel-reject">
+                Назад
+            </button>
+
+            <button type="button"
+                    class="request-confirm-reject"
+                    id="confirm-reject">
+                Да, откажи
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
 @section Scripts {
 
     <script src="~/js/details-spot.js"
             asp-append-version="true">
     </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const rejectModal =
+                document.getElementById("reject-modal");
+
+            const openRejectModal =
+                document.getElementById("open-reject-modal");
+
+            const cancelReject =
+                document.getElementById("cancel-reject");
+
+            const confirmReject =
+                document.getElementById("confirm-reject");
+
+            const rejectForm =
+                document.getElementById("reject-request-form");
+
+            if (
+                !rejectModal ||
+                !openRejectModal ||
+                !cancelReject ||
+                !confirmReject ||
+                !rejectForm
+            ) {
+                return;
+            }
+
+            function openModal() {
+                rejectModal.hidden = false;
+
+                document.body.classList.add(
+                    "request-modal-open");
+            }
+
+            function closeModal() {
+                rejectModal.hidden = true;
+
+                document.body.classList.remove(
+                    "request-modal-open");
+            }
+
+            openRejectModal.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    openModal();
+                });
+
+            cancelReject.addEventListener(
+                "click",
+                closeModal);
+
+            confirmReject.addEventListener(
+                "click",
+                () => {
+
+                    closeModal();
+
+                    rejectForm.requestSubmit();
+                });
+
+            rejectModal.addEventListener(
+                "click",
+                event => {
+
+                    if (event.target === rejectModal) {
+                        closeModal();
+                    }
+                });
+
+            document.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Escape" &&
+                        !rejectModal.hidden
+                    ) {
+                        closeModal();
+                    }
+                });
+        });
+    </script>
+
 
 }
