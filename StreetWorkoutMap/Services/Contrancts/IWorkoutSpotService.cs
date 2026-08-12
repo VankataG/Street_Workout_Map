@@ -24,5 +24,7 @@ namespace StreetWorkoutMap.Services.Contrancts
         public Task<int> GetPendingSpotsCountAsync();
 
         public Task ApproveAsync(Guid id, ClaimsPrincipal user);
+
+        public Task RejectAsync(Guid id, ClaimsPrincipal user);
     }
 }

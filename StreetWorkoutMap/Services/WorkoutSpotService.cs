@@ -480,5 +480,63 @@ namespace StreetWorkoutMap.Services
             await dbContext.SaveChangesAsync();
             
         }
+
+        public async Task RejectAsync(Guid id, ClaimsPrincipal user)
+        {
+            if (!user.IsInRole("Admin"))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var pendingSpot = await dbContext.WorkoutSpots
+                .Include(spot => spot.Images)
+                .FirstOrDefaultAsync(spot => spot.Id == id);
+
+            if (pendingSpot is null)
+            {
+                throw new ArgumentException("Площадката не беше намерена.");
+            }
+
+            if (pendingSpot.Status != SpotStatus.Pending)
+            {
+                throw new InvalidOperationException("Само чакащи площадки могат да бъдат отказани.");
+            }
+
+            var storagePaths = pendingSpot.Images
+                .Select(image => image.StoragePath)
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .Distinct()
+                .ToList();
+
+            await using var transaction =
+                await dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                dbContext.WorkoutSpots.Remove(pendingSpot);
+
+                await dbContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
+            if (storagePaths.Count > 0)
+            {
+                try
+                {
+                    await imageStorageService
+                        .DeleteImagesAsync(storagePaths);
+                }
+                catch
+                {
+                    // TODO: ILogger - orphan files
+                }
+            }
+        }
     }
 }

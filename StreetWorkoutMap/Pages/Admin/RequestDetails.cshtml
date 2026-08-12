@@ -1030,14 +1030,27 @@
                     </form>
 
 
-                    <button type="button"
-                            class="spot-admin-reject-button">
+                    <form method="post"
+                          asp-page-handler="Reject">
 
-                        <span aria-hidden="true">×</span>
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Request.Id" />
 
-                        Откажи заявката
+                        <input type="hidden"
+                               name="isUpdate"
+                               value="@Model.IsUpdateRequest.ToString().ToLowerInvariant()" />
 
-                    </button>
+                        <button type="submit"
+                                class="spot-admin-reject-button">
+
+                            <span aria-hidden="true">×</span>
+
+                            Откажи заявката
+
+                        </button>
+
+                    </form>
 
                 </div>
 

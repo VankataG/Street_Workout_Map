@@ -90,5 +90,27 @@ namespace StreetWorkoutMap.Pages.Admin
 
             return RedirectToPage("/Admin/PendingSpots");
         }
+
+
+        public async Task<IActionResult> OnPostRejectAsync(Guid id, bool isUpdate)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
+            if (isUpdate)
+            {
+                await workoutSpotUpdateRequestService.RejectAsync(id);
+            }
+            else
+            {
+                await workoutSpotService.RejectAsync(id, User);
+            }
+
+            TempData["SuccessMessage"] = "Заявката беше отказана.";
+
+            return RedirectToPage("/Admin/PendingSpots");
+        }
     }
 }

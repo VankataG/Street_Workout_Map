@@ -17,5 +17,7 @@ namespace StreetWorkoutMap.Services.Contrancts
 
         public Task ApproveAsync(Guid requestId);
 
+        public Task RejectAsync(Guid requestId);
+
     }
 }

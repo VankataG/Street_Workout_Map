@@ -133,6 +133,74 @@ namespace StreetWorkoutMap.Services
             }
         }
 
+
+        public async Task RejectAsync(Guid requestId)
+        {
+            var request = await dbContext.WorkoutSpotsUpdateRequests
+                        .Include(request => request.Images)
+                        .FirstOrDefaultAsync(request => request.Id == requestId);
+
+            if (request is null)
+            {
+                throw new KeyNotFoundException("Заявката не беше намерена.");
+            }
+
+
+            var spot = await dbContext.WorkoutSpots
+                        .Include(spot => spot.Images)
+                        .FirstOrDefaultAsync(spot => spot.Id == request.WorkoutSpotId);
+
+            if (spot is null)
+            {
+                throw new KeyNotFoundException("Оригиналната площадка не беше намерена.");
+            }
+
+
+
+            var originalPaths = spot.Images
+                                .Select(image => image.StoragePath)
+                                .ToHashSet();
+
+            var newStoragePaths = request.Images
+                                 .Select(image => image.StoragePath)
+                                 .Where(path => !originalPaths.Contains(path))
+                                 .Where(path => !string.IsNullOrWhiteSpace(path))
+                                 .Distinct()
+                                 .ToList();
+
+            await using var transaction = await dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                dbContext.WorkoutSpotsUpdateRequests.Remove(request);
+
+                await dbContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch 
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
+
+            if (newStoragePaths.Count > 0)
+            {
+                try
+                {
+                    await imageStorageService
+                        .DeleteImagesAsync(newStoragePaths);
+                }
+                catch
+                {
+                    // TODO: ILogger - orphan files
+                }
+            }
+
+
+        }
+
         public async Task<SpotDetailsDto?> GetDetailsAsync(Guid id)
         {
             var request = await dbContext.WorkoutSpotsUpdateRequests
@@ -208,6 +276,7 @@ namespace StreetWorkoutMap.Services
             return await dbContext.WorkoutSpotsUpdateRequests
                     .CountAsync();
         }
+
 
         public async Task SubmitAsync(
             EditSpotDto dto,
