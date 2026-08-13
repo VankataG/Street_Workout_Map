@@ -22,13 +22,16 @@ namespace StreetWorkoutMap.Services
 
         private readonly IWorkoutSpotUpdateRequestService updateRequestService;
 
+        private readonly ILogger<WorkoutSpotService> logger;
 
-        public WorkoutSpotService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IImageStorageService imageStorageService, IWorkoutSpotUpdateRequestService updateRequestService)
+
+        public WorkoutSpotService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IImageStorageService imageStorageService, IWorkoutSpotUpdateRequestService updateRequestService, ILogger<WorkoutSpotService> logger)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
             this.imageStorageService = imageStorageService;
             this.updateRequestService = updateRequestService;
+            this.logger = logger;
         }
 
         public async Task<ICollection<MapSpotDto>> GetAllApprovedAsync()
@@ -116,7 +119,18 @@ namespace StreetWorkoutMap.Services
             {
                 if (uploadedPaths.Count > 0)
                 {
-                    await imageStorageService.DeleteImagesAsync(uploadedPaths);
+                    try
+                    {
+                        await imageStorageService.DeleteImagesAsync(uploadedPaths);
+                    }
+                    catch (Exception exception)
+                    {
+                        logger.LogError(
+                            exception,
+                            "Failed to delete uploaded images after spot creation failed. SpotId: {SpotId}. Paths: {Paths}",
+                            workoutSpot.Id,
+                            string.Join(", ", uploadedPaths));
+                    }
                 }
 
                 throw;
@@ -303,7 +317,6 @@ namespace StreetWorkoutMap.Services
 
             try
             {
-
                 if (dto.NewImages.Count > 0)
                 {
                     uploadedPaths = await imageStorageService
@@ -325,8 +338,6 @@ namespace StreetWorkoutMap.Services
                 spot.HasLighting = dto.HasLighting;
                 spot.IsIndoor = dto.IsIndoor;
 
-              
-
                 if (imagesToDelete.Count > 0)
                 {
                     dbContext.SpotImages.RemoveRange(imagesToDelete);
@@ -343,7 +354,8 @@ namespace StreetWorkoutMap.Services
                         })
                         .ToList();
 
-                    await dbContext.SpotImages.AddRangeAsync(newImages);
+                    await dbContext.SpotImages
+                        .AddRangeAsync(newImages);
                 }
 
                 await dbContext.SaveChangesAsync();
@@ -358,9 +370,13 @@ namespace StreetWorkoutMap.Services
                         await imageStorageService
                             .DeleteImagesAsync(uploadedPaths);
                     }
-                    catch
+                    catch (Exception exception)
                     {
-                        //Add ILogger for orphan files
+                        logger.LogError(
+                            exception,
+                            "Failed to delete newly uploaded images after spot edit failed. SpotId: {SpotId}. Paths: {Paths}",
+                            spot.Id,
+                            string.Join(", ", uploadedPaths));
                     }
                 }
 
@@ -368,10 +384,10 @@ namespace StreetWorkoutMap.Services
             }
 
             var oldStoragePaths = imagesToDelete
-                .Select(image => image.StoragePath)
-                .Where(path => !string.IsNullOrWhiteSpace(path))
-                .Distinct()
-                .ToList();
+                                .Select(image => image.StoragePath)
+                                .Where(path => !string.IsNullOrWhiteSpace(path))
+                                .Distinct()
+                                .ToList();
 
             if (oldStoragePaths.Count > 0)
             {
@@ -380,10 +396,13 @@ namespace StreetWorkoutMap.Services
                     await imageStorageService
                         .DeleteImagesAsync(oldStoragePaths);
                 }
-                catch
+                catch (Exception exception)
                 {
-                    
-                    // Log and clear orphan files if necessary
+                    logger.LogError(
+                        exception,
+                        "Failed to delete old spot images after edit. SpotId: {SpotId}. Paths: {Paths}",
+                        spot.Id,
+                        string.Join(", ", oldStoragePaths));
                 }
             }
         }
@@ -532,9 +551,13 @@ namespace StreetWorkoutMap.Services
                     await imageStorageService
                         .DeleteImagesAsync(storagePaths);
                 }
-                catch
+                catch (Exception exception)
                 {
-                    // TODO: ILogger - orphan files
+                    logger.LogError(
+                        exception,
+                        "Failed to delete images after rejecting pending spot. SpotId: {SpotId}. Paths: {Paths}",
+                        pendingSpot.Id,
+                        string.Join(", ", storagePaths));
                 }
             }
         }

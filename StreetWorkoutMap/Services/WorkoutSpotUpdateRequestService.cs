@@ -14,13 +14,13 @@ namespace StreetWorkoutMap.Services
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IImageStorageService imageStorageService;
+        private readonly ILogger<WorkoutSpotUpdateRequestService> logger;
 
-        public WorkoutSpotUpdateRequestService(
-            ApplicationDbContext dbContext,
-            IImageStorageService imageStorageService)
+        public WorkoutSpotUpdateRequestService(ApplicationDbContext dbContext, IImageStorageService imageStorageService, ILogger<WorkoutSpotUpdateRequestService> logger)
         {
             this.dbContext = dbContext;
             this.imageStorageService = imageStorageService;
+            this.logger = logger;
         }
 
         public async Task ApproveAsync(Guid requestId)
@@ -126,9 +126,13 @@ namespace StreetWorkoutMap.Services
                     await imageStorageService
                         .DeleteImagesAsync(storagePathsToDelete);
                 }
-                catch
+                catch (Exception exception)
                 {
-                    // TODO: ILogger - orphan files
+                    logger.LogError(
+                        exception,
+                        "Failed to delete obsolete images after approving update request. RequestId: {RequestId}. Paths: {Paths}",
+                        requestId,
+                        string.Join(", ", storagePathsToDelete));
                 }
             }
         }
@@ -192,9 +196,13 @@ namespace StreetWorkoutMap.Services
                     await imageStorageService
                         .DeleteImagesAsync(newStoragePaths);
                 }
-                catch
+                catch (Exception exception)
                 {
-                    // TODO: ILogger - orphan files
+                    logger.LogError(
+                        exception,
+                        "Failed to delete newly uploaded images after rejecting update request. RequestId: {RequestId}. Paths: {Paths}",
+                        requestId,
+                        string.Join(", ", newStoragePaths));
                 }
             }
 
@@ -374,9 +382,13 @@ namespace StreetWorkoutMap.Services
                         await imageStorageService
                             .DeleteImagesAsync(uploadedPaths);
                     }
-                    catch
+                    catch (Exception exception)
                     {
-                        // TODO: ILogger for orphan files
+                        logger.LogError(
+                            exception,
+                            "Failed to delete uploaded images after update request submission failed. RequestId: {RequestId}. Paths: {Paths}",
+                            updateRequest.Id,
+                            string.Join(", ", uploadedPaths));
                     }
                 }
 
