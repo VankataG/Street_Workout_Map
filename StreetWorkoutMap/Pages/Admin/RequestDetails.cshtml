@@ -297,20 +297,26 @@
 
         @if (hasImages)
         {
-            <div class="spot-gallery-main">
+            <div class="spot-gallery-main"
+                 id="spot-gallery-main"
+                 role="button"
+                 tabindex="0"
+                 aria-label="Отвори снимката в цял размер">
 
                 <img id="spot-main-image"
                      src="@Model.Request.ImageUrls[0]"
                      alt="@Model.Request.Name"
                      class="spot-main-image" />
 
-                <span id="spot-image-counter"
-                      class="spot-image-counter">
-
-                    1 / @Model.Request.ImageUrls.Count
-
+                <span class="spot-gallery-expand"
+                      aria-hidden="true">
+                    ⛶
                 </span>
 
+                <span id="spot-image-counter"
+                      class="spot-image-counter">
+                    1 / @Model.Request.ImageUrls.Count
+                </span>
             </div>
 
 
@@ -419,6 +425,47 @@
         }
 
     </section>
+
+    <div class="spot-lightbox"
+         id="spot-lightbox"
+         hidden
+         role="dialog"
+         aria-modal="true"
+         aria-label="Преглед на снимка">
+
+        <button type="button"
+                class="spot-lightbox-close"
+                id="spot-lightbox-close"
+                aria-label="Затвори">
+            ×
+        </button>
+
+        <button type="button"
+                class="spot-lightbox-navigation spot-lightbox-previous"
+                id="spot-lightbox-previous"
+                aria-label="Предишна снимка">
+            ‹
+        </button>
+
+        <div class="spot-lightbox-image-container">
+            <img id="spot-lightbox-image"
+                 class="spot-lightbox-image"
+                 src=""
+                 alt="" />
+        </div>
+
+        <button type="button"
+                class="spot-lightbox-navigation spot-lightbox-next"
+                id="spot-lightbox-next"
+                aria-label="Следваща снимка">
+            ›
+        </button>
+
+        <span class="spot-lightbox-counter"
+              id="spot-lightbox-counter">
+        </span>
+
+    </div>
 
 
     <div class="spot-details-layout">

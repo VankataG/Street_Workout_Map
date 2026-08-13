@@ -169,7 +169,7 @@ html[data-theme="dark"] .spot-status-rejected {
 .spot-gallery-main {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 16 / 7;
+    aspect-ratio: 4/3;
     border: 1px solid var(--border-color);
     border-radius: 26px;
     background-color: var(--surface-hover-color);
@@ -300,6 +300,136 @@ html[data-theme="dark"] .spot-status-rejected {
 html[data-theme="dark"] .spot-placeholder-action {
     color: #071008;
 }
+
+
+
+/* =========================================================
+   IMAGE LIGHTBOX
+   ========================================================= */
+
+.spot-gallery-main {
+    cursor: zoom-in;
+}
+
+    .spot-gallery-main:focus-visible {
+        outline: 3px solid var(--accent-color);
+        outline-offset: 4px;
+    }
+
+.spot-gallery-expand {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    background-color: rgba(10, 14, 11, 0.72);
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 800;
+    pointer-events: none;
+    backdrop-filter: blur(9px);
+}
+
+body.spot-lightbox-open {
+    overflow: hidden;
+}
+
+.spot-lightbox {
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr) 80px;
+    align-items: center;
+    padding: 70px 24px 55px;
+    background-color: rgba(4, 6, 5, 0.94);
+    backdrop-filter: blur(8px);
+}
+
+    .spot-lightbox[hidden] {
+        display: none;
+    }
+
+.spot-lightbox-image-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.spot-lightbox-image {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 140px);
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
+}
+
+.spot-lightbox-close,
+.spot-lightbox-navigation {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .spot-lightbox-close:hover,
+    .spot-lightbox-navigation:hover {
+        background-color: rgba(255, 255, 255, 0.16);
+    }
+
+.spot-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.spot-lightbox-navigation {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    justify-self: center;
+    border-radius: 50%;
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+    .spot-lightbox-navigation:hover {
+        transform: scale(1.06);
+    }
+
+.spot-lightbox-counter {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    padding: 7px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 800;
+    transform: translateX(-50%);
+    backdrop-filter: blur(8px);
+}
+
 
 
 /* =========================================================
@@ -701,6 +831,36 @@ html[data-theme="dark"] .spot-owner-edit-link:hover {
     #details-spot-map {
         height: 320px;
     }
+
+    .spot-gallery-expand {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .spot-lightbox {
+        grid-template-columns: 48px minmax(0, 1fr) 48px;
+        padding: 65px 8px 55px;
+    }
+
+    .spot-lightbox-navigation {
+        width: 42px;
+        height: 42px;
+        font-size: 1.8rem;
+    }
+
+    .spot-lightbox-close {
+        top: 12px;
+        right: 12px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .spot-lightbox-image {
+        max-height: calc(100vh - 130px);
+        border-radius: 7px;
+    }
 }
 
 @media (max-width: 520px) {
@@ -729,6 +889,17 @@ html[data-theme="dark"] .spot-owner-edit-link:hover {
     .spot-coordinates {
         text-align: center;
     }
+
+    .spot-lightbox {
+        grid-template-columns: 42px minmax(0, 1fr) 42px;
+        padding-inline: 4px;
+    }
+
+    .spot-lightbox-navigation {
+        width: 38px;
+        height: 38px;
+    }
+    
 }
 
 /* =========================================================

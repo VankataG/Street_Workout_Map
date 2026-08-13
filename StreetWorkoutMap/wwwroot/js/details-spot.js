@@ -4,55 +4,283 @@
 });
 
 function initializeDetailsGallery() {
-    const mainImage = document.getElementById("spot-main-image");
-    const imageCounter = document.getElementById("spot-image-counter");
-    const thumbnailButtons = document.querySelectorAll(
-        ".spot-thumbnail-button"
+    const galleryMain =
+        document.getElementById("spot-gallery-main");
+
+    const mainImage =
+        document.getElementById("spot-main-image");
+
+    const imageCounter =
+        document.getElementById("spot-image-counter");
+
+    const thumbnailButtons = Array.from(
+        document.querySelectorAll(".spot-thumbnail-button")
     );
 
-    if (!mainImage || thumbnailButtons.length === 0) {
+    const lightbox =
+        document.getElementById("spot-lightbox");
+
+    const lightboxImage =
+        document.getElementById("spot-lightbox-image");
+
+    const lightboxCounter =
+        document.getElementById("spot-lightbox-counter");
+
+    const closeButton =
+        document.getElementById("spot-lightbox-close");
+
+    const previousButton =
+        document.getElementById("spot-lightbox-previous");
+
+    const nextButton =
+        document.getElementById("spot-lightbox-next");
+
+
+    if (!galleryMain || !mainImage || !lightbox || !lightboxImage) {
         return;
     }
 
-    thumbnailButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const imageUrl = button.dataset.imageUrl;
-            const imageIndex = Number(button.dataset.imageIndex);
 
-            if (!imageUrl || mainImage.src === imageUrl) {
+    const images = thumbnailButtons.length > 0
+        ? thumbnailButtons.map(button => button.dataset.imageUrl)
+        : [mainImage.src];
+
+    let currentIndex = 0;
+
+
+    function updateMainImage(index) {
+        const imageUrl = images[index];
+
+        if (!imageUrl) {
+            return;
+        }
+
+        currentIndex = index;
+
+        mainImage.classList.add("is-changing");
+
+        const preloadedImage = new Image();
+
+        preloadedImage.onload = () => {
+            mainImage.src = imageUrl;
+
+            thumbnailButtons.forEach((thumbnail, thumbnailIndex) => {
+                thumbnail.classList.toggle(
+                    "is-active",
+                    thumbnailIndex === index
+                );
+            });
+
+            if (imageCounter) {
+                imageCounter.textContent =
+                    `${index + 1} / ${images.length}`;
+            }
+
+            window.setTimeout(() => {
+                mainImage.classList.remove("is-changing");
+            }, 70);
+        };
+
+        preloadedImage.onerror = () => {
+            mainImage.classList.remove("is-changing");
+        };
+
+        preloadedImage.src = imageUrl;
+    }
+
+
+    function updateLightboxImage() {
+        lightboxImage.src = images[currentIndex];
+
+        if (lightboxCounter) {
+            lightboxCounter.textContent =
+                `${currentIndex + 1} / ${images.length}`;
+        }
+    }
+
+
+    function openLightbox() {
+        updateLightboxImage();
+
+        lightbox.hidden = false;
+
+        document.body.classList.add(
+            "spot-lightbox-open"
+        );
+
+        closeButton?.focus();
+    }
+
+
+    function closeLightbox() {
+        lightbox.hidden = true;
+
+        document.body.classList.remove(
+            "spot-lightbox-open"
+        );
+
+        galleryMain.focus();
+    }
+
+
+    function showPreviousImage() {
+        currentIndex =
+            (currentIndex - 1 + images.length) %
+            images.length;
+
+        updateLightboxImage();
+    }
+
+
+    function showNextImage() {
+        currentIndex =
+            (currentIndex + 1) %
+            images.length;
+
+        updateLightboxImage();
+    }
+
+
+    thumbnailButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            updateMainImage(index);
+        });
+    });
+
+
+    galleryMain.addEventListener(
+        "click",
+        openLightbox
+    );
+
+
+    galleryMain.addEventListener(
+        "keydown",
+        event => {
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+                event.preventDefault();
+                openLightbox();
+            }
+        }
+    );
+
+
+    closeButton?.addEventListener(
+        "click",
+        closeLightbox
+    );
+
+
+    previousButton?.addEventListener(
+        "click",
+        event => {
+            event.stopPropagation();
+            showPreviousImage();
+        }
+    );
+
+
+    nextButton?.addEventListener(
+        "click",
+        event => {
+            event.stopPropagation();
+            showNextImage();
+        }
+    );
+
+
+    lightbox.addEventListener(
+        "click",
+        event => {
+            if (event.target === lightbox) {
+                closeLightbox();
+            }
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (lightbox.hidden) {
                 return;
             }
 
-            mainImage.classList.add("is-changing");
+            if (event.key === "Escape") {
+                closeLightbox();
+            }
 
-            const preloadedImage = new Image();
+            if (
+                event.key === "ArrowLeft" &&
+                images.length > 1
+            ) {
+                showPreviousImage();
+            }
 
-            preloadedImage.onload = () => {
-                mainImage.src = imageUrl;
+            if (
+                event.key === "ArrowRight" &&
+                images.length > 1
+            ) {
+                showNextImage();
+            }
+        }
+    );
 
-                thumbnailButtons.forEach((thumbnail) => {
-                    thumbnail.classList.remove("is-active");
-                });
 
-                button.classList.add("is-active");
+    if (images.length <= 1) {
+        if (previousButton) {
+            previousButton.hidden = true;
+        }
 
-                if (imageCounter) {
-                    imageCounter.textContent =
-                        `${imageIndex + 1} / ${thumbnailButtons.length}`;
-                }
+        if (nextButton) {
+            nextButton.hidden = true;
+        }
+    }
 
-                window.setTimeout(() => {
-                    mainImage.classList.remove("is-changing");
-                }, 70);
-            };
 
-            preloadedImage.onerror = () => {
-                mainImage.classList.remove("is-changing");
-            };
+    let touchStartX = 0;
 
-            preloadedImage.src = imageUrl;
-        });
-    });
+    lightbox.addEventListener(
+        "touchstart",
+        event => {
+            touchStartX =
+                event.changedTouches[0].screenX;
+        },
+        { passive: true }
+    );
+
+
+    lightbox.addEventListener(
+        "touchend",
+        event => {
+
+            if (images.length <= 1) {
+                return;
+            }
+
+            const touchEndX =
+                event.changedTouches[0].screenX;
+
+            const difference =
+                touchEndX - touchStartX;
+
+            if (Math.abs(difference) < 50) {
+                return;
+            }
+
+            if (difference > 0) {
+                showPreviousImage();
+            }
+            else {
+                showNextImage();
+            }
+        },
+        { passive: true }
+    );
 }
 
 function initializeDetailsMap() {
