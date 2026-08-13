@@ -11,13 +11,11 @@
 @import url("pending-spots.css");
 
 
-
 /* =========================================================
     GLOBAL SETTINGS
    ========================================================= */
 
 html {
-    position: relative;
     min-height: 100%;
     font-size: 14px;
 }
@@ -33,7 +31,9 @@ html {
 }
 
 body {
+    display: flex;
     min-height: 100vh;
+    flex-direction: column;
     margin: 0;
     padding: 0;
     background: radial-gradient( circle at top, var(--background-glow) 0%, var(--background-color) 42% );
@@ -41,6 +41,14 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     transition: background-color 0.25s ease, color 0.25s ease;
 }
+
+    /*
+    Main content fills the available space between
+    the navigation and the footer.
+*/
+    body > .container {
+        flex: 1;
+    }
 
 
 /* =========================================================
@@ -88,4 +96,3 @@ html[data-theme="dark"] {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 0.12rem var(--surface-color), 0 0 0 0.28rem var(--accent-soft-color);
 }
-
