@@ -98,3 +98,22 @@
     padding: 16px 18px;
     color: var(--secondary-text-color);
 }
+
+
+@media (max-width: 576px) {
+    .spot-search-section {
+        margin-bottom: 18px;
+        padding: 0 10px;
+    }
+
+    #spot-search-input {
+        padding: 14px 46px 14px 16px;
+        border-radius: 14px;
+        font-size: 0.95rem;
+    }
+
+    .spot-search::after {
+        right: 16px;
+        font-size: 1.3rem;
+    }
+}

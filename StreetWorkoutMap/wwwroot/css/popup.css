@@ -293,3 +293,55 @@ html[data-theme="dark"] .equipment-content li {
 .equipment-unavailable .equipment-status {
     background-color: #d84a4a;
 }
+
+
+@media (max-width: 480px) {
+    .spot-popup {
+        width: min(270px, calc(100vw - 72px));
+    }
+
+    .spot-popup-media {
+        height: 125px;
+    }
+
+    .spot-popup-body {
+        padding: 14px 15px 15px;
+    }
+
+    .spot-popup-heading h3 {
+        font-size: 1.05rem;
+    }
+
+    .spot-description {
+        font-size: 0.88rem;
+        line-height: 1.45;
+    }
+
+    .spot-popup-actions {
+        margin-top: 12px;
+    }
+
+    .spot-directions-button {
+        min-height: 42px;
+        padding: 9px 12px;
+    }
+}
+
+@media (max-width: 390px) {
+    .spot-popup {
+        width: min(255px, calc(100vw - 64px));
+    }
+
+    .spot-popup-media {
+        height: 115px;
+    }
+
+    .spot-description {
+        margin-bottom: 10px !important;
+    }
+
+    .spot-equipment {
+        margin-top: 10px;
+        padding-top: 9px;
+    }
+}

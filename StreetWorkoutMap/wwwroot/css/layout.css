@@ -189,3 +189,66 @@ html[data-theme="dark"] .navbar {
     font-weight: 700;
     line-height: 1;
 }
+
+
+
+@media (max-width: 576px) {
+
+    .navbar {
+        min-height: 64px;
+    }
+
+    .navbar-brand {
+        margin-right: 12px;
+    }
+
+    .site-logo {
+        height: 48px;
+    }
+
+    .navbar-collapse {
+        margin-top: 10px;
+        padding: 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        background-color: var(--surface-color);
+    }
+
+    html[data-theme="dark"] .navbar-collapse {
+        background-color: #0b100c;
+    }
+
+    .navbar-nav {
+        gap: 4px;
+    }
+
+    .navbar .nav-link {
+        padding: 10px 12px !important;
+        border-radius: 9px;
+    }
+
+        .navbar .nav-link:hover {
+            background-color: var(--surface-hover-color);
+            transform: none;
+        }
+
+    #theme-toggle {
+        width: 100%;
+        height: 44px;
+        margin: 10px 0 !important;
+    }
+
+    .navbar-user-menu {
+        width: 100%;
+        min-width: 0;
+    }
+
+    
+    .footer {
+        padding: 16px 0;
+        font-size: 0.88rem;
+        text-align: center;
+    }
+    
+}
+
