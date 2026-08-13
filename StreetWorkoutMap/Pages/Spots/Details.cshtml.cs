@@ -29,19 +29,7 @@ namespace StreetWorkoutMap.Pages.Spots
         }
 
 
-        public async Task<IActionResult> OnPostApproveAsync(Guid id)
-        {
-            if (!User.IsInRole("Admin"))
-            {
-                return Forbid();
-            }
-
-            await workoutSpotService.ApproveAsync(id, User);
-
-            TempData["SuccessMessage"] = "Площадката беше одобрена успешно.";
-
-            return RedirectToPage("/Admin/PendingSpots");
-        }
+        
 
     }
 }
