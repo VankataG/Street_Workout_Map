@@ -147,8 +147,159 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    var encodedCallbackUrl =
+    HtmlEncoder.Default.Encode(callbackUrl);
+
+                    var emailBody = $"""
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body style="
+    margin:0;
+    padding:0;
+    background-color:#0b0f0c;
+    font-family:Arial,Helvetica,sans-serif;
+    color:#f2f7f3;
+">
+
+    <table role="presentation"
+           width="100%"
+           cellspacing="0"
+           cellpadding="0"
+           style="background-color:#0b0f0c;padding:32px 16px;">
+
+        <tr>
+            <td align="center">
+
+                <table role="presentation"
+                       width="100%"
+                       cellspacing="0"
+                       cellpadding="0"
+                       style="
+                           max-width:560px;
+                           background-color:#111713;
+                           border:1px solid #28352b;
+                           border-radius:18px;
+                           overflow:hidden;
+                       ">
+
+                    <tr>
+                        <td style="
+                            padding:28px 30px 20px;
+                            text-align:center;
+                        ">
+
+                            <div style="
+                                color:#72ff6a;
+                                font-size:28px;
+                                font-weight:900;
+                                letter-spacing:1px;
+                            ">
+                                SW-MAP
+                            </div>
+
+                            <div style="
+                                margin-top:5px;
+                                color:#9eada1;
+                                font-size:13px;
+                            ">
+                                Street Workout Map Bulgaria
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding:8px 30px 30px;">
+
+                            <h1 style="
+                                margin:0 0 16px;
+                                color:#f2f7f3;
+                                font-size:24px;
+                                line-height:1.3;
+                            ">
+                                Потвърди имейл адреса си
+                            </h1>
+
+                            <p style="
+                                margin:0 0 14px;
+                                color:#c5d0c7;
+                                font-size:15px;
+                                line-height:1.6;
+                            ">
+                                Здравей, {HtmlEncoder.Default.Encode(Input.FirstName)}!
+                            </p>
+
+                            <p style="
+                                margin:0 0 24px;
+                                color:#c5d0c7;
+                                font-size:15px;
+                                line-height:1.6;
+                            ">
+                                Благодарим ти, че се регистрира в SW-MAP.
+                                Потвърди имейл адреса си, за да активираш профила си.
+                            </p>
+
+                            <div style="text-align:center;margin:28px 0;">
+
+                                <a href="{encodedCallbackUrl}"
+                                   style="
+                                       display:inline-block;
+                                       padding:14px 24px;
+                                       border-radius:12px;
+                                       background-color:#72ff6a;
+                                       color:#071008;
+                                       font-size:15px;
+                                       font-weight:800;
+                                       text-decoration:none;
+                                   ">
+                                    Потвърди имейла
+                                </a>
+
+                            </div>
+
+                            <p style="
+                                margin:24px 0 0;
+                                color:#9eada1;
+                                font-size:13px;
+                                line-height:1.6;
+                            ">
+                                Ако не си създавал профил в SW-MAP,
+                                можеш спокойно да игнорираш този имейл.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="
+                            padding:18px 30px;
+                            border-top:1px solid #28352b;
+                            color:#77857a;
+                            font-size:12px;
+                            text-align:center;
+                        ">
+                            © 2026 SW-MAP
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+
+    </table>
+
+</body>
+</html>
+""";
+
+                    await _emailSender.SendEmailAsync(
+                        Input.Email,
+                        "Потвърди регистрацията си в SW-MAP",
+                        emailBody);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
