@@ -5,6 +5,8 @@ using StreetWorkoutMap.Data;
 using StreetWorkoutMap.Services;
 using StreetWorkoutMap.Services.ImageStorage;
 using StreetWorkoutMap.Services.Contrancts;
+using StreetWorkoutMap.Services.Email;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace StreetWorkoutMap
 {
@@ -23,7 +25,7 @@ namespace StreetWorkoutMap
             builder.Services
                 .AddDefaultIdentity<ApplicationUser>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = false;
+                    options.SignIn.RequireConfirmedAccount = true;
                     options.Password.RequiredLength = 8;
                     options.Password.RequireNonAlphanumeric = false;
                 })
@@ -36,6 +38,7 @@ namespace StreetWorkoutMap
             builder.Services.AddScoped<IWorkoutSpotService, WorkoutSpotService>();
             builder.Services.AddScoped<IWorkoutSpotUpdateRequestService, WorkoutSpotUpdateRequestService>();
             builder.Services.AddHttpClient<IImageStorageService, SupabaseImageStorageService>();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             var app = builder.Build();
 
