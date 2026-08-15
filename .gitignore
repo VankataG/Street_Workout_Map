@@ -1,3 +1,20 @@
+# Visual Studio
 .vs/
+*.user
+*.suo
+
+# Build output
 bin/
 obj/
+
+# Local secrets / environment variables
+.env
+*.env
+docker.env
+
+# Local backups
+*.dump
+SW-MAP_BACKUP/
+
+
+backup-swmap.ps1
