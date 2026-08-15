@@ -338,3 +338,79 @@ html[data-theme="dark"] .auth-validation-message {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* =========================================================
+   AUTH MESSAGE / CONFIRMATION PAGES
+   ========================================================= */
+
+.auth-message-card {
+    max-width: 520px;
+    text-align: center;
+}
+
+.auth-message-icon {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 20px;
+    place-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    background-color: var(--accent-soft-color);
+    color: var(--accent-color);
+    font-size: 1.7rem;
+    font-weight: 900;
+}
+
+.auth-message-icon-success {
+    border-color: color-mix( in srgb, var(--accent-color) 45%, var(--border-color) );
+}
+
+.auth-message-header {
+    margin-bottom: 22px;
+}
+
+.auth-info-box {
+    margin-bottom: 22px;
+    padding: 13px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 11px;
+    background-color: var(--surface-hover-color);
+    color: var(--secondary-text-color);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    text-align: left;
+}
+
+.auth-primary-link {
+    display: inline-flex;
+    width: 100%;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+html[data-theme="dark"] .auth-primary-link {
+    color: #071008;
+}
+
+.auth-primary-link:hover {
+    border-color: var(--accent-hover-color);
+    background-color: var(--accent-hover-color);
+    color: #ffffff;
+    box-shadow: 0 10px 24px var(--accent-soft-color);
+    transform: translateY(-1px);
+}
+
+html[data-theme="dark"] .auth-primary-link:hover {
+    color: #071008;
+}
