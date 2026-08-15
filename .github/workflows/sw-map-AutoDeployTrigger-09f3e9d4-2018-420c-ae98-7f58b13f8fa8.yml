@@ -1,4 +1,4 @@
-name: Build SW-MAP container
+name: Build and deploy SW-MAP
 
 on:
   push:
@@ -9,14 +9,17 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/vankatag/street-workout-map
+  CONTAINER_APP_NAME: sw-map
+  RESOURCE_GROUP: SW-MAP
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
       packages: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -41,3 +44,17 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.IMAGE_NAME }}:latest
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.SWMAP_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.SWMAP_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.SWMAP_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy image to Azure Container Apps
+        run: |
+          az containerapp update \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --image "${{ env.IMAGE_NAME }}:${{ github.sha }}"
