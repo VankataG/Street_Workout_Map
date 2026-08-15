@@ -1,49 +1,43 @@
-name: Trigger auto deployment for sw-map
+name: Build SW-MAP container
 
-# When this action will be executed
 on:
-  # Automatically trigger it when detected changes in repo
   push:
-    branches: 
-      [ main ]
-    paths:
-    - '**'
-    - '.github/workflows/sw-map-AutoDeployTrigger-09f3e9d4-2018-420c-ae98-7f58b13f8fa8.yml'
+    branches:
+      - main
 
-  # Allow manual trigger 
-  workflow_dispatch:      
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ghcr.io/vankatag/street-workout-map
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions: 
-      id-token: write #This is required for requesting the OIDC JWT Token
-      contents: read #Required when GH token is used to authenticate with private repo
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: Checkout to the branch
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Azure Login
-        uses: azure/login@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          client-id: ${{ secrets.SWMAP_AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.SWMAP_AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.SWMAP_AZURE_SUBSCRIPTION_ID }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push container image to registry
-        uses: azure/container-apps-deploy-action@v2
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
         with:
-          appSourcePath: ${{ github.workspace }}
-          _dockerfilePathKey_: _dockerfilePath_
-          _targetLabelKey_: _targetLabel_
-          registryUrl: 
-          registryUsername: ${{ secrets.SWMAP_REGISTRY_USERNAME }}
-          registryPassword: ${{ secrets.SWMAP_REGISTRY_PASSWORD }}
-          containerAppName: sw-map
-          resourceGroup: SW-MAP
-          imageToBuild: default/[parameters('containerAppName')]:${{ github.sha }}
-          _buildArgumentsKey_: |
-            _buildArgumentsValues_
-
-
+          context: .
+          file: ./StreetWorkoutMap/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:latest
