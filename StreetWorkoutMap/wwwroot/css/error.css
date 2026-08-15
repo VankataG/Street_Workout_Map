@@ -1,0 +1,220 @@
+﻿/* =========================================================
+   ERROR / STATUS CODE PAGES
+   ========================================================= */
+
+.error-page {
+    display: flex;
+    width: min(100% - 32px, 760px);
+    min-height: calc(100vh - 230px);
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 48px 0 70px;
+}
+
+.error-card {
+    width: 100%;
+    padding: 42px 38px;
+    border: 1px solid var(--border-color);
+    border-radius: 26px;
+    background: radial-gradient( circle at top, var(--accent-soft-color), transparent 48% ), var(--surface-color);
+    text-align: center;
+    box-shadow: 0 22px 65px var(--shadow-color);
+}
+
+.error-code {
+    display: inline-flex;
+    min-width: 82px;
+    height: 82px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+    padding: 0 18px;
+    border: 1px solid var(--accent-color);
+    border-radius: 24px;
+    background-color: var(--accent-soft-color);
+    color: var(--accent-color);
+    font-size: 1.65rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.error-code-danger {
+    border-color: rgba(217, 74, 74, 0.45);
+    background-color: rgba(217, 74, 74, 0.1);
+    color: #d94a4a;
+}
+
+html[data-theme="dark"] .error-code-danger {
+    color: #ff8181;
+}
+
+.error-eyebrow {
+    margin-bottom: 9px;
+    color: var(--accent-color);
+    font-size: 0.78rem;
+    font-weight: 850;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.error-card h1 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.error-description {
+    max-width: 560px;
+    margin: 17px auto 0;
+    color: var(--secondary-text-color);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.error-tip {
+    max-width: 520px;
+    margin: 24px auto 0;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 13px;
+    background-color: var(--background-color);
+    color: var(--secondary-text-color);
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.error-primary-button,
+.error-secondary-button {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font: inherit;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.error-primary-button {
+    border: 1px solid var(--accent-color);
+    background-color: var(--accent-color);
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .error-primary-button {
+    color: #071008;
+}
+
+.error-primary-button:hover {
+    border-color: var(--accent-hover-color);
+    background-color: var(--accent-hover-color);
+    color: #ffffff;
+    box-shadow: 0 10px 24px var(--accent-soft-color);
+    transform: translateY(-1px);
+}
+
+html[data-theme="dark"] .error-primary-button:hover {
+    color: #071008;
+}
+
+.error-secondary-button {
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+    .error-secondary-button:hover {
+        border-color: var(--accent-color);
+        background-color: var(--surface-hover-color);
+        transform: translateY(-1px);
+    }
+
+.error-request {
+    display: flex;
+    max-width: 560px;
+    flex-direction: column;
+    gap: 7px;
+    margin: 30px auto 0;
+    padding-top: 22px;
+    border-top: 1px solid var(--border-color);
+    color: var(--secondary-text-color);
+    font-size: 0.82rem;
+}
+
+    .error-request > span {
+        font-weight: 750;
+    }
+
+    .error-request code {
+        overflow-wrap: anywhere;
+        padding: 7px 10px;
+        border-radius: 8px;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    .error-request small {
+        line-height: 1.5;
+    }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .error-page {
+        width: min(100% - 20px, 760px);
+        min-height: auto;
+        padding: 28px 0 45px;
+    }
+
+    .error-card {
+        padding: 30px 20px;
+        border-radius: 20px;
+    }
+
+    .error-code {
+        min-width: 68px;
+        height: 68px;
+        margin-bottom: 18px;
+        border-radius: 19px;
+        font-size: 1.35rem;
+    }
+
+    .error-card h1 {
+        font-size: 2rem;
+    }
+
+    .error-description {
+        font-size: 0.95rem;
+    }
+
+    .error-actions {
+        flex-direction: column;
+    }
+
+    .error-primary-button,
+    .error-secondary-button {
+        width: 100%;
+    }
+
+    .error-request {
+        margin-top: 25px;
+    }
+}

@@ -1,0 +1,51 @@
+﻿@page "{code:int}"
+@model StatusCodeModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="error-page">
+
+    <div class="error-card">
+
+        <div class="error-code">
+            @Model.Symbol
+        </div>
+
+        <div class="error-eyebrow">
+            SW-MAP
+        </div>
+
+        <h1>@Model.Title</h1>
+
+        <p class="error-description">
+            @Model.Message
+        </p>
+
+        @if (Model.Code == 404)
+        {
+            <div class="error-tip">
+                Можеш да се върнеш към картата и да продължиш
+                да разглеждаш наличните тренировъчни площадки.
+            </div>
+        }
+
+        <div class="error-actions">
+
+            <a asp-page="/Index"
+               class="error-primary-button">
+                Към картата
+            </a>
+
+            <button type="button"
+                    class="error-secondary-button"
+                    onclick="history.back()">
+                Назад
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
