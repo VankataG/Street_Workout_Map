@@ -110,7 +110,31 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account
 
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                var message = error.Code switch
+                {
+                    "PasswordTooShort" =>
+                        "Паролата е твърде кратка.",
+
+                    "PasswordRequiresNonAlphanumeric" =>
+                        "Паролата трябва да съдържа поне един специален символ.",
+
+                    "PasswordRequiresDigit" =>
+                        "Паролата трябва да съдържа поне една цифра.",
+
+                    "PasswordRequiresLower" =>
+                        "Паролата трябва да съдържа поне една малка буква.",
+
+                    "PasswordRequiresUpper" =>
+                        "Паролата трябва да съдържа поне една главна буква.",
+
+                    "InvalidToken" =>
+                        "Линкът за смяна на паролата е невалиден или е изтекъл.",
+
+                    _ =>
+                        "Възникна грешка при смяната на паролата. Моля опитайте отново."
+                };
+
+                ModelState.AddModelError(string.Empty, message);
             }
             return Page();
         }
