@@ -72,29 +72,30 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required(ErrorMessage = "Моля въведете име.")]
-            [StringLength(50)]
+            [StringLength(50, ErrorMessage = "Името не може да бъде по-дълго от {1} символа.")]
             [Display(Name = "Име")]
             public string FirstName { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "Моля въведете фамилия.")]
-            [StringLength(50)]
+            [StringLength(50, ErrorMessage = "Фамилията не може да бъде по-дълга от {1} символа.")]
             [Display(Name = "Фамилия")]
             public string LastName { get; set; } = string.Empty;
 
-
             [Required(ErrorMessage = "Моля въведете имейл адрес.")]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage = "Моля въведете валиден имейл адрес.")]
             [Display(Name = "Имейл")]
             public string Email { get; set; }
 
-            
-            [Required]
-            [StringLength(100, ErrorMessage = "Паролата трябва да бъде между {2} и {1} символа.", MinimumLength = 8)]
+            [Required(ErrorMessage = "Моля въведете парола.")]
+            [StringLength(
+                100,
+                ErrorMessage = "Паролата трябва да бъде между {2} и {1} символа.",
+                MinimumLength = 8)]
             [DataType(DataType.Password)]
             [Display(Name = "Парола")]
             public string Password { get; set; }
 
-            
+            [Required(ErrorMessage = "Моля потвърдете паролата.")]
             [DataType(DataType.Password)]
             [Display(Name = "Потвърди парола")]
             [Compare("Password", ErrorMessage = "Паролите не съвпадат.")]
@@ -130,10 +131,7 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account
 
                     if (!roleResult.Succeeded)
                     {
-                        foreach (var error in roleResult.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
+                        ModelState.AddModelError(string.Empty, "Възникна грешка при създаването на профила. Моля опитайте отново.");
 
                         return Page();
                     }
@@ -313,7 +311,33 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account
                 }
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    var message = error.Code switch
+                    {
+                        "DuplicateUserName" => "Вече съществува профил с този имейл адрес.",
+                        "DuplicateEmail" => "Вече съществува профил с този имейл адрес.",
+
+                        "InvalidEmail" => "Имейл адресът е невалиден.",
+                        "InvalidUserName" => "Имейл адресът е невалиден.",
+
+                        "PasswordTooShort" =>
+                            "Паролата е твърде кратка.",
+
+                        "PasswordRequiresNonAlphanumeric" =>
+                            "Паролата трябва да съдържа поне един специален символ.",
+
+                        "PasswordRequiresDigit" =>
+                            "Паролата трябва да съдържа поне една цифра.",
+
+                        "PasswordRequiresLower" =>
+                            "Паролата трябва да съдържа поне една малка буква.",
+
+                        "PasswordRequiresUpper" =>
+                            "Паролата трябва да съдържа поне една главна буква.",
+
+                        _ => "Възникна грешка при създаването на профила. Моля опитайте отново."
+                    };
+
+                    ModelState.AddModelError(string.Empty, message);
                 }
             }
 
