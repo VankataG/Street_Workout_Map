@@ -7,6 +7,7 @@ $backupRoot = "D:\source\SW-MAP_BACKUP"
 
 $databaseBackupDir = Join-Path $backupRoot "Database"
 $storageBackupDir = Join-Path $backupRoot "Storage\Storage_$timestamp"
+$storageBackupRelativeDir = "../SW-MAP_BACKUP/Storage/Storage_$timestamp"
 
 $databaseBackupFile = Join-Path `
     $databaseBackupDir `
@@ -111,7 +112,7 @@ supabase `
     storage cp `
     -r `
     "ss:///$storageBucket/" `
-    $storageBackupDir `
+    $storageBackupRelativeDir `
     --linked
 
 if ($LASTEXITCODE -ne 0)
