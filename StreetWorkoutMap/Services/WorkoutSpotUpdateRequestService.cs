@@ -309,7 +309,7 @@ namespace StreetWorkoutMap.Services
                 WorkoutSpotId = spot.Id,
 
                 Name = dto.Name.Trim(),
-                Description = dto.Description.Trim(),
+                Description = dto.Description?.Trim(),
 
                 City = dto.City.Trim(),
                 District = dto.District.Trim(),

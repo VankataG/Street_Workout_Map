@@ -76,7 +76,7 @@ namespace StreetWorkoutMap.Services
             {
                 Id = Guid.NewGuid(),
                 Name = dto.Name.Trim(),
-                Description = dto.Description.Trim(),
+                Description = dto.Description?.Trim(),
                 City = dto.City.Trim(),
                 District = dto.District.Trim(),
                 Latitude = dto.Latitude,
@@ -327,7 +327,7 @@ namespace StreetWorkoutMap.Services
                     await dbContext.Database.BeginTransactionAsync();
 
                 spot.Name = dto.Name.Trim();
-                spot.Description = dto.Description.Trim();
+                spot.Description = dto.Description?.Trim();
                 spot.City = dto.City.Trim();
                 spot.District = dto.District.Trim();
                 spot.Latitude = dto.Latitude;
