@@ -1,8 +1,25 @@
 ﻿@page
 @model ConfirmEmailModel
 @{
-    ViewData["Title"] = "Confirm email";
+    ViewData["Title"] = "Потвърждение на имейл";
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="auth-page">
+    <div class="auth-card auth-message-card">
+
+        <div class="auth-message-icon auth-message-icon-success">
+            ✓
+        </div>
+
+        <div class="auth-header auth-message-header">
+            <div class="auth-eyebrow">SW-MAP</div>
+            <h1>Потвърждение на имейл</h1>
+            <p>@Model.StatusMessage</p>
+        </div>
+
+        <a asp-page="./Login" class="auth-primary-link">
+            Вход в профила
+        </a>
+
+    </div>
+</div>
