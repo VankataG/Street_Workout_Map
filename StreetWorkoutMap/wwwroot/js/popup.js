@@ -20,6 +20,14 @@
         `
         : "";
 
+    const descriptionContent = spot.Description
+        ? `
+        <p class="spot-description">
+            ${spot.Description}
+        </p>
+    `
+        : "";
+
     const destination = `${spot.Latitude},${spot.Longitude}`;
 
     const mapsUrl =
@@ -42,9 +50,7 @@
                     ${spot.District}, ${spot.City}
                 </p>
 
-                <p class="spot-description">
-                    ${spot.Description}
-                </p>
+                ${descriptionContent}
 
                 <div class="spot-equipment">
                     <button class="equipment-toggle"
