@@ -2,6 +2,20 @@
     NAVIGATION
    ========================================================= */
 
+.navbar-toggler {
+    border-color: var(--border-color);
+}
+
+.navbar-toggler-icon {
+    width: 24px;
+    height: 18px;
+    background-image: linear-gradient(var(--text-color), var(--text-color)), linear-gradient(var(--text-color), var(--text-color)), linear-gradient(var(--text-color), var(--text-color));
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
+    background-position: center top, center center, center bottom;
+}
+
+
 .navbar {
     min-height: 82px;
     border-bottom: 1px solid var(--border-color) !important;
