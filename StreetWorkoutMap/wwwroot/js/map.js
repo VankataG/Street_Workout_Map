@@ -24,7 +24,7 @@ async function getSpotsAsync() {
 }
 
 function createMap() {
-    const map = L.map('map').setView([43.0757, 25.6172], 14);
+    const map = L.map('map').setView([42.75, 25.50], 8);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
