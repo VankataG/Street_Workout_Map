@@ -1,4 +1,4 @@
-﻿function initializeNearestSpotButton(map, spots, spotMarkers) {
+﻿function initializeNearestSpotButton(map, spots, spotMarkers, markerCluster) {
     const button =
         document.getElementById("find-nearest-button");
 
@@ -13,16 +13,14 @@
 
         const nearestMarker = spotMarkers.find(x => x.spot.Id === result.spot.Id);
 
+        
         if (nearestMarker) {
-            map.setView(
-                [result.spot.Latitude, result.spot.Longitude],
-                17,
-                {
-                    animate: true
+            markerCluster.zoomToShowLayer(
+                nearestMarker.marker,
+                () => {
+                    nearestMarker.marker.openPopup();
                 }
             );
-
-            nearestMarker.marker.openPopup();
         }
     });
 }

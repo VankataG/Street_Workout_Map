@@ -10,11 +10,11 @@ async function InitializeMap() {
     const map = createMap();
     const spots = await getSpotsAsync();
 
-    const spotMarkers = addMarkers(map, spots);
+    const { spotMarkers, markerCluster } = addMarkers(map, spots);
 
     initializeSearch(map, spots, spotMarkers);
     addLocationControl(map);
-    initializeNearestSpotButton(map, spots, spotMarkers);
+    initializeNearestSpotButton(map, spots, spotMarkers, markerCluster);
 }
 
 async function getSpotsAsync() {
@@ -49,8 +49,22 @@ const workoutMarkerIcon = L.divIcon({
     popupAnchor: [0, -48]
 });
 
+
+
 function addMarkers(map, spots) {
     const spotMarkers = [];
+
+    const markerCluster = L.markerClusterGroup({
+        iconCreateFunction: function (cluster) {
+            const count = cluster.getChildCount();
+
+            return L.divIcon({
+                html: `<span>${count}</span>`,
+                className: "sw-map-cluster",
+                iconSize: [48, 48]
+            });
+        }
+    });
 
     spots.forEach(spot => {
         const popup = createPopup(spot);
@@ -62,11 +76,12 @@ function addMarkers(map, spots) {
                 title: spot.Name
             }
         )
-            .addTo(map)
             .bindPopup(popup, {
                 minWidth: 280,
                 maxWidth: 320
             });
+
+        markerCluster.addLayer(marker);
 
         spotMarkers.push({
             spot: spot,
@@ -74,5 +89,8 @@ function addMarkers(map, spots) {
         });
     });
 
-    return spotMarkers;
+    map.addLayer(markerCluster);
+
+    return {spotMarkers, markerCluster};
 }
+
