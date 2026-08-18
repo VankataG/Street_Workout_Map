@@ -68,6 +68,30 @@
 }
 
 
+.sw-map-cluster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px !important;
+    height: 48px !important;
+    margin: 0 !important;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    box-shadow: 0 0 0 4px var(--accent-soft-color), 0 8px 20px var(--shadow-color);
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+    .sw-map-cluster span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
 /* =========================================================
    LOCATION CONTROL
    ========================================================= */

@@ -49,8 +49,22 @@ const workoutMarkerIcon = L.divIcon({
     popupAnchor: [0, -48]
 });
 
+
+
 function addMarkers(map, spots) {
     const spotMarkers = [];
+
+    const markerCluster = L.markerClusterGroup({
+        iconCreateFunction: function (cluster) {
+            const count = cluster.getChildCount();
+
+            return L.divIcon({
+                html: `<span>${count}</span>`,
+                className: "sw-map-cluster",
+                iconSize: [48, 48]
+            });
+        }
+    });
 
     spots.forEach(spot => {
         const popup = createPopup(spot);
@@ -62,11 +76,12 @@ function addMarkers(map, spots) {
                 title: spot.Name
             }
         )
-            .addTo(map)
             .bindPopup(popup, {
                 minWidth: 280,
                 maxWidth: 320
             });
+
+        markerCluster.addLayer(marker);
 
         spotMarkers.push({
             spot: spot,
@@ -74,5 +89,35 @@ function addMarkers(map, spots) {
         });
     });
 
+    map.addLayer(markerCluster);
+
     return spotMarkers;
 }
+
+// function addMarkers(map, spots) {
+//     const spotMarkers = [];
+
+//     spots.forEach(spot => {
+//         const popup = createPopup(spot);
+
+//         const marker = L.marker(
+//             [spot.Latitude, spot.Longitude],
+//             {
+//                 icon: workoutMarkerIcon,
+//                 title: spot.Name
+//             }
+//         )
+//             .addTo(map)
+//             .bindPopup(popup, {
+//                 minWidth: 280,
+//                 maxWidth: 320
+//             });
+
+//         spotMarkers.push({
+//             spot: spot,
+//             marker: marker
+//         });
+//     });
+
+//     return spotMarkers;
+// }
