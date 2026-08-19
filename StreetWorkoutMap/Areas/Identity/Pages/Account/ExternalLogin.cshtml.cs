@@ -99,44 +99,131 @@ namespace StreetWorkoutMap.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
+
             if (remoteError != null)
             {
-                ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-            }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                ErrorMessage = "Error loading external login information.";
+                ErrorMessage = "Възникна грешка при входа с Google.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+
+            if (info == null)
+            {
+                ErrorMessage = "Неуспешно получаване на информацията от Google.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            // Ако Google акаунтът вече е свързан със SW-MAP профил
+            var result = await _signInManager.ExternalLoginSignInAsync(
+                info.LoginProvider,
+                info.ProviderKey,
+                isPersistent: false,
+                bypassTwoFactor: true);
+
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                _logger.LogInformation(
+                    "{Name} logged in with {LoginProvider} provider.",
+                    info.Principal.Identity?.Name,
+                    info.LoginProvider);
+
                 return LocalRedirect(returnUrl);
             }
+
             if (result.IsLockedOut)
             {
                 return RedirectToPage("./Lockout");
             }
-            else
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+            if (string.IsNullOrWhiteSpace(email))
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
-                {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
-                }
-                return Page();
+                ErrorMessage = "Google не предостави имейл адрес.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
+            // Проверяваме дали вече има SW-MAP профил със същия имейл
+            var existingUser = await _userManager.FindByEmailAsync(email);
+
+            if (existingUser != null)
+            {
+                var addLoginResult =
+                    await _userManager.AddLoginAsync(existingUser, info);
+
+                if (!addLoginResult.Succeeded)
+                {
+                    ErrorMessage = "Неуспешно свързване на Google профила.";
+                    return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                }
+
+                await _signInManager.SignInAsync(
+                    existingUser,
+                    isPersistent: false,
+                    info.LoginProvider);
+
+                return LocalRedirect(returnUrl);
+            }
+
+            // Нов потребител
+            var user = CreateUser();
+
+            user.FirstName =
+                info.Principal.FindFirstValue(ClaimTypes.GivenName)
+                ?? string.Empty;
+
+            user.LastName =
+                info.Principal.FindFirstValue(ClaimTypes.Surname)
+                ?? string.Empty;
+
+            user.EmailConfirmed = true;
+
+            await _userStore.SetUserNameAsync(
+                user,
+                email,
+                CancellationToken.None);
+
+            await _emailStore.SetEmailAsync(
+                user,
+                email,
+                CancellationToken.None);
+
+            var createResult = await _userManager.CreateAsync(user);
+
+            if (!createResult.Succeeded)
+            {
+                ErrorMessage = "Възникна грешка при създаването на профила.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
+            if (!roleResult.Succeeded)
+            {
+                ErrorMessage = "Възникна грешка при създаването на профила.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            var loginResult = await _userManager.AddLoginAsync(user, info);
+
+            if (!loginResult.Succeeded)
+            {
+                ErrorMessage = "Неуспешно свързване на Google профила.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            _logger.LogInformation(
+                "User created an account using {Name} provider.",
+                info.LoginProvider);
+
+            await _signInManager.SignInAsync(
+                user,
+                isPersistent: false,
+                info.LoginProvider);
+
+            return LocalRedirect(returnUrl);
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
