@@ -8,6 +8,8 @@ using StreetWorkoutMap.Services.Contrancts;
 using StreetWorkoutMap.Services.Email;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
+using Microsoft.AspNetCore.HttpOverrides;
+
 namespace StreetWorkoutMap
 {
     public class Program
@@ -15,6 +17,16 @@ namespace StreetWorkoutMap
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor |
+                    ForwardedHeaders.XForwardedProto;
+
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
 
             //Add DbContext
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -66,6 +78,8 @@ namespace StreetWorkoutMap
             }
 
             app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+
+            app.UseForwardedHeaders();
 
             app.UseHttpsRedirection();
 
