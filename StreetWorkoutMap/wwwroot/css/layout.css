@@ -206,7 +206,31 @@ html[data-theme="dark"] .navbar {
 
 
 
+.mobile-register-link {
+    display: none;
+}
+
 @media (max-width: 576px) {
+
+    .mobile-register-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: 12px;
+        padding: 8px 12px;
+        border-radius: 9px;
+        background-color: var(--accent-color);
+        color: #071008;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+        .mobile-register-link:hover {
+            color: #071008;
+            background-color: var(--accent-hover-color);
+        }
 
     .navbar {
         min-height: 64px;
