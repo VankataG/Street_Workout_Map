@@ -32,6 +32,18 @@ namespace StreetWorkoutMap
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+            //Add Google Auth
+            builder.Services
+                .AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+
+                    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+                });
+
+
             // Add services to the container.
             builder.Services.AddControllers().AddJsonOptions( options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             builder.Services.AddRazorPages();
