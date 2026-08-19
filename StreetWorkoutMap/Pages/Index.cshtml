@@ -45,7 +45,21 @@
 </section>
 
 
-
+<div class="map-contribute">
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <span>Липсва площадка?</span>
+        <a asp-page="/Spots/Create">Добави я.</a>
+    }
+    else
+    {
+        <span>Липсва площадка?</span>
+        <a asp-area="Identity"
+           asp-page="/Account/Register">
+            Регистрирай се и я добави.
+        </a>
+    }
+</div>
 <div class="map-wrapper">
     <div id="map" data-spots='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Spots))'></div>
 </div>
