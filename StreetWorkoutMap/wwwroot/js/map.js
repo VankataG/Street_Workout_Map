@@ -55,6 +55,8 @@ function addMarkers(map, spots) {
     const spotMarkers = [];
 
     const markerCluster = L.markerClusterGroup({
+        removeOutsideVisibleBounds: false,
+
         iconCreateFunction: function (cluster) {
             const count = cluster.getChildCount();
 
