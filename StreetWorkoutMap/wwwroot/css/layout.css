@@ -101,17 +101,17 @@ html[data-theme="dark"] .navbar {
     color: var(--secondary-text-color) !important;
 }
 
-
 .footer-content {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    gap: 40px;
 }
 
 .footer-brand {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 7px;
 }
 
@@ -122,6 +122,29 @@ html[data-theme="dark"] .navbar {
 
 .footer-separator {
     opacity: 0.5;
+}
+
+.footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+    .footer-contact a {
+        color: var(--accent-color);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+        .footer-contact a:hover {
+            text-decoration: underline;
+        }
+
+.footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .footer-link {
@@ -135,29 +158,26 @@ html[data-theme="dark"] .navbar {
         color: var(--accent-color);
     }
 
-.footer-right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+.footer-instagram {
+    color: var(--accent-color);
 }
 
-.footer-contact {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--secondary-text-color);
-}
-
-    .footer-contact a {
-        color: var(--accent-color);
-        font-weight: 700;
-        text-decoration: none;
+    .footer-instagram strong {
+        font-weight: 800;
     }
 
-        .footer-contact a:hover {
-            text-decoration: underline;
-        }
+.footer-legal {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
+.analytics-settings-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
 
 
 
@@ -341,37 +361,35 @@ html[data-theme="dark"] .navbar {
         min-width: 0;
     }
 
-    
+
     .footer {
-        padding: 16px 0;
+        padding: 18px 0;
         font-size: 0.88rem;
         text-align: center;
     }
 
-
     .footer-content {
+        display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 16px;
     }
 
     .footer-brand {
         justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .footer-right {
-        flex-direction: column;
-        gap: 8px;
     }
 
     .footer-contact {
-        display: block;
-        text-align: center;
+        align-items: center;
     }
 
-        .footer-contact a {
-            margin-left: 3px;
-        }
+    .footer-right {
+        align-items: center;
+        gap: 8px;
+    }
+
+    .footer-legal {
+        justify-content: center;
+    }
 
     
 }

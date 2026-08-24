@@ -157,32 +157,46 @@
     </div>
 
     <footer class="footer">
-        <div class="container footer-content">
+        <div class="container">
+            <div class="footer-content">
 
-            <div class="footer-brand">
-                <span>© 2026</span>
-                <strong>SW-MAP</strong>
-                <span class="footer-separator">•</span>
-                <span>Street Workout Map Bulgaria</span>
-            </div>
+                <div class="footer-brand">
+                    <span>© 2026</span>
+                    <span class="footer-separator">•</span>
+                    <strong>SW-MAP</strong>
+                    <span class="footer-separator">•</span>
+                    <span>Street Workout Map Bulgaria</span>
+                </div>
 
-            <div class="footer-right">
                 <div class="footer-contact">
                     <span>Забеляза бъг или нещо не работи както трябва?</span>
                     <a href="mailto:sw.map.eu@gmail.com">Пиши ни спокойно.</a>
                 </div>
 
-                <a class="footer-link" asp-area="" asp-page="/Privacy">
-                    Поверителност
-                </a>
+                <div class="footer-right">
+                    <a class="footer-link footer-instagram"
+                       href="https://www.instagram.com/sw.map.eu/"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Последвай ни в Instagram: <strong>@@sw.map.eu</strong>
+                    </a>
 
-                <button id="analytics-settings"
-                        type="button"
-                        class="footer-link analytics-settings-button">
-                    Настройки за бисквитки
-                </button>
+                    <div class="footer-legal">
+                        <a class="footer-link" asp-page="/Privacy">
+                            Поверителност
+                        </a>
+
+                        <span class="footer-separator">•</span>
+
+                        <button type="button"
+                                class="footer-link analytics-settings-button"
+                                id="analytics-settings">
+                            Бисквитки
+                        </button>
+                    </div>
+                </div>
+
             </div>
-
         </div>
     </footer>
 
