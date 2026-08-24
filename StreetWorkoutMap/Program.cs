@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 using StreetWorkoutMap.Data;
 using StreetWorkoutMap.Services;
@@ -17,6 +18,10 @@ namespace StreetWorkoutMap
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services
+                    .AddOpenTelemetry()
+                    .UseAzureMonitor();
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
