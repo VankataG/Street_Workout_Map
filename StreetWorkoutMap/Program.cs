@@ -19,10 +19,19 @@ namespace StreetWorkoutMap
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services
+
+            //AZURE Application Insights connection
+            var applicationInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+
+            if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
+            {
+                builder.Services
                     .AddOpenTelemetry()
                     .UseAzureMonitor();
+            }
 
+
+            //Configure Http-Https for DNS
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
