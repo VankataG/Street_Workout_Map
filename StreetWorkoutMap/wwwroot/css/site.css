@@ -250,3 +250,107 @@ html[data-theme="dark"] {
             font-size: 0.95rem;
         }
 }
+
+
+
+
+/* =========================================================
+   ANALYTICS CONSENT
+   ========================================================= */
+
+.analytics-consent {
+    position: fixed;
+    z-index: 9999;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+}
+
+.analytics-consent-content {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 16px 45px var(--shadow-color);
+}
+
+    .analytics-consent-content strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1rem;
+    }
+
+    .analytics-consent-content p {
+        margin: 0 0 4px;
+        color: var(--secondary-text-color);
+        line-height: 1.5;
+    }
+
+    .analytics-consent-content a {
+        color: var(--accent-color);
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+.analytics-consent-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.analytics-consent-accept,
+.analytics-consent-reject {
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.analytics-consent-accept {
+    border: 1px solid var(--accent-color);
+    background-color: var(--accent-color);
+    color: #071008;
+}
+
+.analytics-consent-reject {
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    color: var(--text-color);
+}
+
+.analytics-settings-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .analytics-consent {
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+    }
+
+    .analytics-consent-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .analytics-consent-actions {
+        width: 100%;
+    }
+
+    .analytics-consent-accept,
+    .analytics-consent-reject {
+        flex: 1;
+    }
+}

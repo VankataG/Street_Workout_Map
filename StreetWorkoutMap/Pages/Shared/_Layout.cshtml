@@ -46,6 +46,42 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 </head>
 <body>
+
+    <div id="analytics-consent"
+         class="analytics-consent"
+         hidden>
+
+        <div class="analytics-consent-content">
+            <div>
+                <strong>Бисквитки и анализи</strong>
+
+                <p>
+                    Използваме Google Analytics, за да разбираме
+                    как се използва SW-MAP и да подобряваме сайта.
+                </p>
+
+                <a asp-area="" asp-page="/Privacy">
+                    Научи повече
+                </a>
+            </div>
+
+            <div class="analytics-consent-actions">
+                <button id="analytics-reject"
+                        type="button"
+                        class="analytics-consent-reject">
+                    Отказвам
+                </button>
+
+                <button id="analytics-accept"
+                        type="button"
+                        class="analytics-consent-accept">
+                    Приемам
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -139,6 +175,12 @@
                 <a class="footer-link" asp-area="" asp-page="/Privacy">
                     Поверителност
                 </a>
+
+                <button id="analytics-settings"
+                        type="button"
+                        class="footer-link analytics-settings-button">
+                    Настройки за бисквитки
+                </button>
             </div>
 
         </div>
@@ -150,6 +192,96 @@
     <script src="~/js/theme.js" asp-append-version="true"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+    <script>
+            const analyticsMeasurementId = "G-4F9L10J0ZV";
+            const analyticsConsentKey = "swmap-analytics-consent";
+
+            const consentBanner =
+                document.getElementById("analytics-consent");
+
+            const acceptButton =
+                document.getElementById("analytics-accept");
+
+            const rejectButton =
+                document.getElementById("analytics-reject");
+
+            const settingsButton =
+                document.getElementById("analytics-settings");
+
+            const savedConsent =
+                localStorage.getItem(analyticsConsentKey);
+
+            if (savedConsent === "accepted") {
+                loadGoogleAnalytics();
+            }
+            else if (savedConsent !== "rejected") {
+                consentBanner.hidden = false;
+            }
+
+            acceptButton.addEventListener("click", () => {
+                localStorage.setItem(
+                    analyticsConsentKey,
+                    "accepted"
+                );
+
+                consentBanner.hidden = true;
+
+                loadGoogleAnalytics();
+            });
+
+            rejectButton.addEventListener("click", () => {
+                localStorage.setItem(
+                    analyticsConsentKey,
+                    "rejected"
+                );
+
+                consentBanner.hidden = true;
+            });
+
+            settingsButton.addEventListener("click", () => {
+                localStorage.removeItem(analyticsConsentKey);
+
+                consentBanner.hidden = false;
+            });
+
+            function loadGoogleAnalytics() {
+                if (window.swMapAnalyticsLoaded) {
+                    return;
+                }
+
+                window.swMapAnalyticsLoaded = true;
+
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+
+                window.gtag = gtag;
+
+                gtag("js", new Date());
+
+                gtag("consent", "default", {
+                    analytics_storage: "granted",
+                    ad_storage: "denied",
+                    ad_user_data: "denied",
+                    ad_personalization: "denied"
+                });
+
+                gtag("config", analyticsMeasurementId);
+
+                const script = document.createElement("script");
+
+                script.async = true;
+                script.src =
+                    "https://www.googletagmanager.com/gtag/js?id="
+                    + analyticsMeasurementId;
+
+                document.head.appendChild(script);
+            }
+    </script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
