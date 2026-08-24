@@ -143,6 +143,7 @@ namespace StreetWorkoutMap.Services
             var spot = await dbContext.WorkoutSpots
                        .AsNoTracking()
                        .Include(spot => spot.Images)
+                       .Include(spot => spot.SubmittedByUser)
                        .FirstOrDefaultAsync(spot => spot.Id == id);
 
             if (spot is null) return null;
@@ -177,6 +178,7 @@ namespace StreetWorkoutMap.Services
 
                 Status = spot.Status.ToString(),
                 SubmittedByUserId = spot.SubmittedByUserId,
+                SubmittedByUser = spot.SubmittedByUser != null ? $"{spot.SubmittedByUser.FirstName} {spot.SubmittedByUser.LastName}".Trim() : null,
 
                 ImageUrls = spot.Images
                             .Select(img => imageStorageService.GetPublicUrl(img.StoragePath))
